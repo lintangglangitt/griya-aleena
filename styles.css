@@ -95,6 +95,22 @@ nav a.nav-cta:hover { background: var(--amber-lt); }
   letter-spacing: 0.05em;
   margin: 0 auto; /* 🔥 Center badge */
 }
+
+.hero-badge2 {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(245,166,35,0.15);
+  border: 1px solid rgba(245,166,35,0.4);
+  color: var(--amber-lt);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: 50px;
+  letter-spacing: 0.05em;
+  margin: 0 auto; /* 🔥 Center badge */
+}
+
 .badge-dot {
   width: 6px;
   height: 6px;
