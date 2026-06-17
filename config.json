@@ -3,14 +3,14 @@
     "title": "Griya Aleena Sekaran",
     "tagline": "Kos Putri Kampus UNNES",
     "heroBadge": "Kamar Masih Tersedia",
-    "heroSub": "Fasilitas Lengkap. Harga Mahasiswa.\nDiskon Early Bird. Diskon Prestasi/Kurang Mampu."
+    "heroSub": "Fasilitas Lengkap. Harga Mahasiswa."
   },
   "whatsapp": {
     "template": "Assalamu'alaikum,\nSaya ingin bertanya tentang kos putri Griya Aleena Sekaran.\n\nDetail saya:\n- Nama: \n- Fakultas: \n- Kebutuhan: (AC/Non-AC)\n- Durasi: (Semester/Tahunan)\n\nMohon infonya. Terima kasih."
   },
   "countdown": {
     "visible": true,
-    "label": "Diskon Early Bird Berakhir Dalam:",
+    "label": "Diskon Early Bird Berakhir Dalam",
     "target": "2026-07-15T00:00:00"
   },
   "contacts": [
@@ -64,7 +64,7 @@
     },
     {
       "emoji": "🛵",
-      "text": "Garasi Motor Luas + Gerbang",
+      "text": "Garasi Motor + Gerbang",
       "desc": "Motor aman terlindungi, tidak perlu khawatir saat belajar."
     },
     {
@@ -75,16 +75,16 @@
     {
       "emoji": "💧",
       "text": "Free Iuran Air & Sampah",
-      "desc": "Tidak ada biaya tersembunyi."
+      "desc": "Tidak ada biaya tambahan."
     }
   ],
   "fasilitasPlus": [
-    "Ada yang bersihkan area kos secara rutin.",
-    "Nyaman dan tenang.",
-    "Bisa bawa alat elektronik.",
-    "Sapu dan alat pel disediakan.",
-    "Tempat jemuran tersedia.",
-    "Hubungi pemilik langsung."
+    "AAda yang bersihkan area kos secara rutin — kos selalu terawat.",
+    "Nyaman dan tenang, akses mudah ke mana-mana.",
+    "Bisa bawa alat elektronik — meteran per kamar, fleksibel.",
+    "Sapu + alat pel sudah disediakan untuk penghuni.",
+    "Tempat jemuran tersedia — dapat mencuci pakaian sendiri.",
+    "Hubungi pemilik langsung — tanpa perantara, lebih mudah."
   ],
   "pricing": {
     "l1ac": {
