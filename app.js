@@ -434,7 +434,7 @@ function renderEarlyBird(config) {
     <div class="diskon-syarat">
       <h4b>🐦 Syarat Diskon Early Bird</h4b>
       <div class="syarat-item">
-        <h5>⏱️ ${req}</h5>
+        <li>${req}</li>
       </div>
     </div>
   `;
