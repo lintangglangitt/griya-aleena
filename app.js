@@ -176,6 +176,12 @@ function renderHero(config) {
       badge.innerHTML = `<span class="badge-dot"></span> ${config.site.heroBadge}`;
     }
     
+    // Hero Badge
+    const badge = document.querySelector('.hero-badge2');
+    if (badge && config.site.heroBadge2) {
+      badge.innerHTML = `<span class="badge-dot"></span> ${config.site.heroBadge2}`;
+    }
+    
     // Hero Sub
     const sub = document.querySelector('.hero-sub');
     if (sub && config.site.heroSub) {
