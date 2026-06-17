@@ -159,8 +159,9 @@ h1 em {
 .container {
   max-width: 1000px;
   margin: 0 auto;
-  text-align: center; /* 🔥 Center semua di container */
-  width: 100%; /* 🔥 Full width */
+  
+  /* text-align: center; /* 🔥 Center semua di container */
+ /* width: 100%;  /* 🔥 Full width */
 }
 
 /* countdown */
