@@ -1,6 +1,6 @@
 // ============================================================
 // app.js - Griya Aleena Sekaran
-// Versi: 3.0 (Optimal - Tanpa Fallback)
+// Versi: 3.1 (Fix Path Config)
 // ============================================================
 
 // ─── CONFIG GLOBAL ────────────────────────────────────────────
@@ -9,9 +9,9 @@ let CONFIG = null;
 // ─── LOAD CONFIG ──────────────────────────────────────────────
 async function loadConfig() {
   try {
-    // Selalu gunakan path root dengan timestamp untuk cache busting
+    // Gunakan relative path (./) agar kompatibel dengan semua environment
     const timestamp = new Date().getTime();
-    const response = await fetch(`/config.json?v=${timestamp}`);
+    const response = await fetch(`./config.json?v=${timestamp}`);
     
     if (!response.ok) {
       throw new Error(`HTTP ${response.status} - ${response.statusText}`);
@@ -30,7 +30,7 @@ async function loadConfig() {
     // Render semua konten
     renderAll(config);
     
-    console.log('✅ Config loaded successfully from: /config.json');
+    console.log('✅ Config loaded successfully from: ./config.json');
     
   } catch (error) {
     console.error('❌ Failed to load config:', error);
@@ -491,5 +491,5 @@ window.__debug = {
   config: () => CONFIG,
 };
 
-console.log('✅ app.js v3.0 loaded');
+console.log('✅ app.js v3.1 loaded');
 console.log('🔧 Gunakan window.__debug untuk debugging');
