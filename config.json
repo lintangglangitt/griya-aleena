@@ -2,7 +2,7 @@
   "site": {
     "title": "Griya Aleena Sekaran",
     "tagline": "Kos Putri Kampus UNNES",
-    "heroBadge": "Coming Soon · Ready 1 Agustus 2026",
+    "heroBadge": "Kamar Masih Tersedia",
     "heroSub": "Fasilitas Lengkap. Harga Mahasiswa.\nDiskon Early Bird. Diskon Prestasi/Kurang Mampu."
   },
   "whatsapp": {
@@ -11,15 +11,15 @@
   "countdown": {
     "visible": true,
     "label": "Diskon Early Bird Berakhir Dalam:",
-    "target": "2026-08-01T00:00:00"
+    "target": "2026-07-15T00:00:00"
   },
   "contacts": [
     {
-      "name": "Nawang",
+      "name": "Nawang (0899-5677-419)",
       "wa": "628995677419"
     },
     {
-      "name": "Hakim",
+      "name": "Hakim (0813-9595-6434)",
       "wa": "6281395956434"
     }
   ],
