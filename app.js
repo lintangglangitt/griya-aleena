@@ -66,6 +66,7 @@ function renderMeta(c) {
   const fullImageUrl = baseUrl + '/' + ogImagePath.replace(/^\//, '');
   const cacheBuster = new Date().getTime();
 
+  // 🔥 Title untuk browser (pakai suffix)
   document.title = title + (s.titleSuffix || ' – Kos Putri Kampus UNNES');
   document.querySelector('meta[name="description"]')?.setAttribute('content', desc);
 
@@ -73,7 +74,8 @@ function renderMeta(c) {
   document.querySelectorAll('meta[property^="og:"], meta[name^="twitter:"]').forEach(el => el.remove());
 
   const tags = [
-    { property: 'og:title', content: document.title },
+    // 🔥 OG Title tanpa suffix (lebih bersih untuk WA)
+    { property: 'og:title', content: title + ' – Kos Putri Kampus UNNES' },
     { property: 'og:description', content: desc },
     { property: 'og:image', content: fullImageUrl + '?v=' + cacheBuster },
     { property: 'og:image:width', content: '1200' },
@@ -83,7 +85,7 @@ function renderMeta(c) {
     { property: 'og:site_name', content: title },
     { property: 'og:locale', content: 'id_ID' },
     { name: 'twitter:card', content: 'summary_large_image' },
-    { name: 'twitter:title', content: document.title },
+    { name: 'twitter:title', content: title + ' – Kos Putri Kampus UNNES' },
     { name: 'twitter:description', content: desc },
     { name: 'twitter:image', content: fullImageUrl + '?v=' + cacheBuster }
   ];
@@ -120,7 +122,14 @@ function renderMeta(c) {
   script.type = 'application/ld+json';
   script.textContent = JSON.stringify(schemaData);
   document.head.appendChild(script);
+  
+  console.log('✅ OG Tags updated:', {
+    title: document.title,
+    image: fullImageUrl + '?v=' + cacheBuster,
+    url: url
+  });
 }
+
 
 // ─── 2. NAV ─────────────────────────────────────────────────────
 function renderNav(c) {
