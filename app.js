@@ -61,44 +61,21 @@ function renderMeta(c) {
   const title = s.title || 'Griya Aleena Sekaran';
   const desc = s.metaDescription || s.heroSub || 'Kos Putri Kampus UNNES';
   const url = s.url || window.location.href;
-  const baseUrl = url.replace(/\/$/, '');
-  const ogImagePath = s.ogImage || 'foto/og.jpg';
-  const fullImageUrl = baseUrl + '/' + ogImagePath.replace(/^\//, '');
-  const cacheBuster = new Date().getTime();
 
-  // 🔥 Title untuk browser (pakai suffix)
+  // 1️⃣ Title untuk browser
   document.title = title + (s.titleSuffix || ' – Kos Putri Kampus UNNES');
   document.querySelector('meta[name="description"]')?.setAttribute('content', desc);
 
-  // Hapus OG tags lama
-  document.querySelectorAll('meta[property^="og:"], meta[name^="twitter:"]').forEach(el => el.remove());
+  // 2️⃣ Update OG tags yang sudah ada (hardcode di HTML)
+  const ogTitle = document.querySelector('meta[property="og:title"]');
+  const ogDesc = document.querySelector('meta[property="og:description"]');
+  const ogUrl = document.querySelector('meta[property="og:url"]');
+  
+  if (ogTitle) ogTitle.setAttribute('content', title + ' – Kos Putri Kampus UNNES');
+  if (ogDesc) ogDesc.setAttribute('content', desc);
+  if (ogUrl) ogUrl.setAttribute('content', url);
 
-  const tags = [
-    // 🔥 OG Title tanpa suffix (lebih bersih untuk WA)
-    { property: 'og:title', content: title + ' – Kos Putri Kampus UNNES' },
-    { property: 'og:description', content: desc },
-    { property: 'og:image', content: fullImageUrl + '?v=' + cacheBuster },
-    { property: 'og:image:width', content: '1200' },
-    { property: 'og:image:height', content: '630' },
-    { property: 'og:type', content: 'website' },
-    { property: 'og:url', content: url },
-    { property: 'og:site_name', content: title },
-    { property: 'og:locale', content: 'id_ID' },
-    { name: 'twitter:card', content: 'summary_large_image' },
-    { name: 'twitter:title', content: title + ' – Kos Putri Kampus UNNES' },
-    { name: 'twitter:description', content: desc },
-    { name: 'twitter:image', content: fullImageUrl + '?v=' + cacheBuster }
-  ];
-
-  tags.forEach(tag => {
-    const meta = document.createElement('meta');
-    if (tag.property) meta.setAttribute('property', tag.property);
-    if (tag.name) meta.setAttribute('name', tag.name);
-    meta.setAttribute('content', tag.content);
-    document.head.appendChild(meta);
-  });
-
-  // Schema.org JSON-LD
+  // 3️⃣ Schema.org JSON-LD (TETAP ADA)
   const schema = c.schema || {};
   const schemaData = {
     "@context": "https://schema.org",
@@ -123,12 +100,12 @@ function renderMeta(c) {
   script.textContent = JSON.stringify(schemaData);
   document.head.appendChild(script);
   
-  console.log('✅ OG Tags updated:', {
+  console.log('✅ Meta & Schema updated:', {
     title: document.title,
-    image: fullImageUrl + '?v=' + cacheBuster,
     url: url
   });
 }
+
 
 
 // ─── 2. NAV ─────────────────────────────────────────────────────
@@ -139,12 +116,13 @@ function renderNav(c) {
   const logo = document.getElementById('nav-logo');
   const cta = document.getElementById('nav-cta');
   
-  // 🔥 Gunakan navbarTitle dan navbarSubtitle
-  if (brand) brand.textContent = s.navbarTitle || s.titleBrowser || 'Griya Aleena Sekaran';
+  // Gunakan navbarTitle dan navbarSubtitle
+  if (brand) brand.textContent = s.navbarTitle || s.titleBrowser || s.title || 'Griya Aleena Sekaran';
   if (sub) sub.textContent = s.navbarSubtitle || s.tagline || 'Kos Putri Kampus UNNES';
   if (logo) logo.textContent = s.navLogo || '🏠';
   if (cta) cta.textContent = s.navCta || 'Hubungi Kami';
 }
+
 
 // ─── 3. HERO ────────────────────────────────────────────────────
 function renderHero(c) {
@@ -507,13 +485,15 @@ function renderFloatingWA(c) {
   btn.href = buildWhatsAppUrl(contacts[0].wa, contacts[0].name);
 }
 
+
 // ─── 15. FOOTER ─────────────────────────────────────────────────
 function renderFooter(c) {
   const brand = document.getElementById('footer-brand');
   const year = document.getElementById('footer-year');
-  if (brand) brand.textContent = c.site?.title || 'Griya Aleena Sekaran';
+  if (brand) brand.textContent = c.site?.titleBrowser || c.site?.title || 'Griya Aleena Sekaran';
   if (year) year.textContent = c.site?.footerYear || new Date().getFullYear();
 }
+
 
 // ─── COUNTDOWN ─────────────────────────────────────────────────
 function initCountdown(targetDate) {
