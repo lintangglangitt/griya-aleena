@@ -2,9 +2,12 @@
   "site": {
     "title": "Griya Aleena Sekaran",
     "tagline": "Kos Putri Kampus UNNES",
+
+
     "heroBadge1": "Kamar Masih Tersedia",
     "heroBadge2": "Silakan Baca Syarat dan Ketentuan di Bawah",
     "heroSub": "Fasilitas Lengkap. Harga Terjangkau."
+
   },
   "whatsapp": {
     "template": "Assalamu'alaikum,\nSaya ingin bertanya tentang kos putri Griya Aleena Sekaran.\n\nDetail saya:\n- Nama: \n- Fakultas: \n- Kebutuhan: (AC/Non-AC)\n- Durasi: (Semester/Tahunan)\n\nMohon infonya. Terima kasih."
@@ -27,43 +30,6 @@
   "location": {
     "mapsUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3959.7034771020703!2d110.3956973!3d-7.044090399999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e708bf0a28ca121%3A0x7d91be49e7134aef!2sGriya%20Aleena%20Sekaran!5e0!3m2!1sen!2sid!4v1781354903283!5m2!1sen!2sid"
   },
-  "galeri": [
-    {
-      "id": "tampak-depan",
-      "emoji": "🏠",
-      "title": "Tampak Depan",
-      "file": "tampak-depan.jpg",
-      "class": "main"
-    },
-    {
-      "id": "kamar-ac",
-      "emoji": "🛏️",
-      "title": "Kamar AC",
-      "file": "kamar-ac.jpg",
-      "class": ""
-    },
-    {
-      "id": "kamar-mandi",
-      "emoji": "🚿",
-      "title": "Kamar Mandi",
-      "file": "kamar-mandi.jpg",
-      "class": ""
-    },
-    {
-      "id": "dapur-bersama",
-      "emoji": "🍳",
-      "title": "Dapur Bersama",
-      "file": "dapur-bersama.jpg",
-      "class": ""
-    },
-    {
-      "id": "garasi",
-      "emoji": "🛵",
-      "title": "Garasi",
-      "file": "garasi.jpg",
-      "class": ""
-    }
-  ],
   "fasilitas": [
     {
       "emoji": "❄️",
