@@ -1,12 +1,10 @@
 // ============================================================
 // app.js - Griya Aleena Sekaran
-// Versi: 3.6 (Final - Cloudflare Ready)
+// Versi: 5.0 (100% Dinamis - Full dari config.json)
 // ============================================================
 
-// ─── CONFIG GLOBAL ────────────────────────────────────────────
+// ─── GLOBAL ──────────────────────────────────────────────────────
 let CONFIG = null;
-
-// ─── WORKER URL (HIT COUNTER GLOBAL) ────────────────────────
 const API = 'https://griya-counter.lintangglangitt.workers.dev';
 
 // ─── LOAD CONFIG ──────────────────────────────────────────────
@@ -14,190 +12,238 @@ async function loadConfig() {
   try {
     const timestamp = new Date().getTime();
     const response = await fetch(`./config.json?v=${timestamp}`);
-    
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status} - ${response.statusText}`);
-    }
-    
-    const config = await response.json();
-    
-    if (!config || typeof config !== 'object') {
-      throw new Error('Invalid config data');
-    }
-    
-    CONFIG = config;
-    renderAll(config);
-    
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    CONFIG = await response.json();
+    renderAll(CONFIG);
     console.log('✅ Config loaded successfully');
-    
   } catch (error) {
-    console.error('❌ Failed to load config:', error);
-    showErrorMessage('Gagal memuat data. Silakan refresh halaman.');
+    console.error('❌ Load config error:', error);
+    document.body.innerHTML = `
+      <div style="padding:40px;text-align:center;font-family:sans-serif;">
+        <h2>⚠️ Gagal memuat data</h2>
+        <p>${error.message}</p>
+        <button onclick="location.reload()" style="padding:10px 24px;margin-top:16px;cursor:pointer;">🔄 Refresh</button>
+      </div>
+    `;
   }
 }
 
-// ─── RENDER ALL SECTIONS ──────────────────────────────────────
-function renderAll(config) {
-  renderHero(config);
-  renderFasilitas(config);
-  renderFasilitasPlus(config);
-  renderPricing(config);
-  renderLokasi(config);
-  renderTestimoni(config);
-  renderContacts(config);
-  renderFloatingWA(config);
-  renderEarlyBird(config);
-  renderSpecialRequirements(config);
+// ─── RENDER ALL ─────────────────────────────────────────────────
+function renderAll(c) {
+  renderMeta(c);
+  renderNav(c);
+  renderHero(c);
+  renderChips(c);
+  renderStats(c);
+  renderGaleri(c);
+  renderFasilitas(c);
+  renderFasilitasPlus(c);
+  renderPricing(c);
+  renderEarlyBird(c);
+  renderSpecialRequirements(c);
+  renderLokasi(c);
+  renderContacts(c);
+  renderFloatingWA(c);
+  renderFooter(c);
+  renderHeroCTA(c);
   
-  if (config.countdown && config.countdown.target) {
-    initCountdown(config.countdown.target);
-  }
-  
-  // 🔥 Panggil hit counter
+  if (c.countdown?.target) initCountdown(c.countdown.target);
   initCounter();
   
-  document.querySelectorAll('.loading-text').forEach(el => {
-    el.style.display = 'none';
+  console.log('✅ All sections rendered');
+}
+
+
+
+// ─── 1. META & OG ──────────────────────────────────────────────
+function renderMeta(c) {
+  const s = c.site || {};
+  const title = s.title || 'Griya Aleena Sekaran';
+  const desc = s.metaDescription || s.heroSub || 'Kos Putri Kampus UNNES';
+  const url = s.url || window.location.href;
+  const baseUrl = url.replace(/\/$/, '');
+  const ogImagePath = s.ogImage || 'foto/og.jpg';
+  const fullImageUrl = baseUrl + '/' + ogImagePath.replace(/^\//, '');
+  const cacheBuster = new Date().getTime();
+
+  document.title = title + (s.titleSuffix || ' – Kos Putri Kampus UNNES');
+  document.querySelector('meta[name="description"]')?.setAttribute('content', desc);
+
+  // Hapus OG tags lama
+  document.querySelectorAll('meta[property^="og:"], meta[name^="twitter:"]').forEach(el => el.remove());
+
+  const tags = [
+    { property: 'og:title', content: document.title },
+    { property: 'og:description', content: desc },
+    { property: 'og:image', content: fullImageUrl + '?v=' + cacheBuster },
+    { property: 'og:image:width', content: '1200' },
+    { property: 'og:image:height', content: '630' },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:url', content: url },
+    { property: 'og:site_name', content: title },
+    { property: 'og:locale', content: 'id_ID' },
+    { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:title', content: document.title },
+    { name: 'twitter:description', content: desc },
+    { name: 'twitter:image', content: fullImageUrl + '?v=' + cacheBuster }
+  ];
+
+  tags.forEach(tag => {
+    const meta = document.createElement('meta');
+    if (tag.property) meta.setAttribute('property', tag.property);
+    if (tag.name) meta.setAttribute('name', tag.name);
+    meta.setAttribute('content', tag.content);
+    document.head.appendChild(meta);
   });
-  
-  console.log('✅ All sections rendered successfully');
+
+  // Schema.org JSON-LD
+  const schema = c.schema || {};
+  const schemaData = {
+    "@context": "https://schema.org",
+    "@type": schema.type || "LodgingBusiness",
+    "name": title,
+    "description": schema.description || desc,
+    "address": schema.address || {
+      "@type": "PostalAddress",
+      "streetAddress": "Sekaran",
+      "addressLocality": "Gunungpati",
+      "addressRegion": "Semarang",
+      "addressCountry": "ID"
+    },
+    "telephone": schema.telephone || "+628995677419",
+    "url": url,
+    "priceRange": schema.priceRange || "Rp800.000 – Rp1.150.000/bulan"
+  };
+
+  document.querySelectorAll('script[type="application/ld+json"]').forEach(el => el.remove());
+  const script = document.createElement('script');
+  script.type = 'application/ld+json';
+  script.textContent = JSON.stringify(schemaData);
+  document.head.appendChild(script);
 }
 
-// ─── ERROR MESSAGE ────────────────────────────────────────────
-function showErrorMessage(message) {
-  const existing = document.querySelector('.config-error');
-  if (existing) existing.remove();
+// ─── 2. NAV ─────────────────────────────────────────────────────
+function renderNav(c) {
+  const s = c.site || {};
+  const brand = document.getElementById('nav-brand-name');
+  const sub = document.getElementById('nav-brand-sub');
+  const logo = document.getElementById('nav-logo');
+  const cta = document.getElementById('nav-cta');
   
-  const div = document.createElement('div');
-  div.className = 'config-error';
-  div.style.cssText = `
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 9999;
-    background: #dc3545;
-    color: white;
-    padding: 20px;
-    text-align: center;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    box-shadow: 0 4px 20px rgba(220,53,69,0.3);
-    animation: slideDown 0.3s ease;
-  `;
-  div.innerHTML = `
-    <strong>⚠️ ${message}</strong>
-    <div style="margin-top: 12px;">
-      <button onclick="location.reload()" style="
-        background: white;
-        border: none;
-        color: #dc3545;
-        padding: 8px 24px;
-        border-radius: 20px;
-        font-weight: 700;
-        cursor: pointer;
-        margin-right: 8px;
-      ">🔄 Refresh Halaman</button>
-      <button onclick="this.parentElement.parentElement.remove()" style="
-        background: transparent;
-        border: 1px solid rgba(255,255,255,0.3);
-        color: white;
-        padding: 8px 24px;
-        border-radius: 20px;
-        cursor: pointer;
-      ">Tutup</button>
-    </div>
-  `;
-  document.body.prepend(div);
-  
-  if (!document.getElementById('error-animation')) {
-    const style = document.createElement('style');
-    style.id = 'error-animation';
-    style.textContent = `
-      @keyframes slideDown {
-        from { transform: translateY(-100%); opacity: 0; }
-        to { transform: translateY(0); opacity: 1; }
-      }
-    `;
-    document.head.appendChild(style);
-  }
+  // 🔥 Gunakan navbarTitle dan navbarSubtitle
+  if (brand) brand.textContent = s.navbarTitle || s.titleBrowser || 'Griya Aleena Sekaran';
+  if (sub) sub.textContent = s.navbarSubtitle || s.tagline || 'Kos Putri Kampus UNNES';
+  if (logo) logo.textContent = s.navLogo || '🏠';
+  if (cta) cta.textContent = s.navCta || 'Hubungi Kami';
 }
 
-// ─── COUNTDOWN ─────────────────────────────────────────────────
-function initCountdown(targetDate) {
-  const cdD = document.getElementById('cd-d');
-  const cdH = document.getElementById('cd-h');
-  const cdM = document.getElementById('cd-m');
-  const cdS = document.getElementById('cd-s');
+// ─── 3. HERO ────────────────────────────────────────────────────
+function renderHero(c) {
+  const s = c.site || {};
+  const title = document.getElementById('hero-title');
+  const subtitle = document.getElementById('hero-subtitle');
+  const sub = document.getElementById('hero-sub');
+  const badge2 = document.getElementById('hero-badge2');
+  const cdWrapper = document.getElementById('countdown-wrapper');
+  const cdLabel = document.getElementById('countdown-label');
+  const cdLabel2 = document.getElementById('countdown-label-2');
 
-  if (!cdD || !cdH || !cdM || !cdS) return;
-
-  const target = new Date(targetDate);
+  if (title) title.textContent = s.heroTitle || s.title || 'GRIYA ALEENA SEKARAN';
+  if (subtitle) subtitle.innerHTML = s.heroSubtitle || s.tagline || 'Kos Putri<br>UNIVERSITAS NEGERI SEMARANG';
+  if (sub) sub.textContent = s.heroSub || 'Fasilitas Lengkap. Harga Terjangkau.';
   
-  if (isNaN(target.getTime())) {
-    console.warn('⚠️ Invalid countdown target date:', targetDate);
-    return;
+  if (badge2 && s.heroBadge2) {
+    badge2.innerHTML = `<span class="badge-dot"></span> ${s.heroBadge2}`;
   }
 
-  function update() {
-    const now = new Date();
-    const diff = target - now;
-
-    if (diff <= 0) {
-      cdD.textContent = '00';
-      cdH.textContent = '00';
-      cdM.textContent = '00';
-      cdS.textContent = '00';
-      return;
+  if (cdWrapper) {
+    if (c.countdown?.visible === false) {
+      cdWrapper.style.display = 'none';
+    } else {
+      cdWrapper.style.display = 'block';
+      if (cdLabel) cdLabel.textContent = c.countdown?.label || 'Diskon Early Bird Berakhir Dalam';
+      if (cdLabel2) cdLabel2.textContent = c.countdown?.label2 || 'Diskon Prestasi/Kurang Mampu *)';
     }
-
-    cdD.textContent = String(Math.floor(diff / 86400000)).padStart(2, '0');
-    cdH.textContent = String(Math.floor((diff % 86400000) / 3600000)).padStart(2, '0');
-    cdM.textContent = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
-    cdS.textContent = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
-  }
-
-  update();
-  setInterval(update, 1000);
-}
-
-// ─── FORMAT RUPIAH ────────────────────────────────────────────
-function formatRupiah(num) {
-  if (typeof num !== 'number' || isNaN(num)) return '0';
-  return 'Rp' + new Intl.NumberFormat('id-ID').format(num);
-}
-
-// ─── RENDER HERO ──────────────────────────────────────────────
-function renderHero(config) {
-  if (!config || !config.site) return;
-  
-  const badge1 = document.querySelector('.hero-badge1');
-  if (badge1 && config.site.heroBadge1) {
-    badge1.innerHTML = `<span class="badge-dot"></span> ${config.site.heroBadge1}`;
-  }
-  
-  const badge2 = document.querySelector('.hero-badge2');
-  if (badge2 && config.site.heroBadge2) {
-    badge2.innerHTML = `<span class="badge-dot"></span> ${config.site.heroBadge2}`;
-  }
-  
-  const h3 = document.querySelector('h3');
-  if (h3 && config.site.heroSub) {
-    h3.textContent = config.site.heroSub;
   }
 }
 
-// ─── RENDER FASILITAS ─────────────────────────────────────────
-function renderFasilitas(config) {
-  const container = document.querySelector('.fas-grid');
+// ─── 4. CHIPS ────────────────────────────────────────────────────
+function renderChips(c) {
+  const container = document.getElementById('hero-chips');
   if (!container) return;
+  const chips = c.heroChips || ['🏢 Bangunan Baru', '✨ Penghuni Pertama', '🚿 Kamar Mandi Dalam'];
+  container.innerHTML = chips.map(chip => `<span class="chip">${chip}</span>`).join('');
+}
 
-  const items = config.fasilitas || [];
-  if (items.length === 0) {
-    container.innerHTML = '<p style="color:var(--muted);">Data fasilitas belum tersedia</p>';
-    return;
-  }
+// ─── 5. HERO CTA ───────────────────────────────────────────────
+function renderHeroCTA(c) {
+  const container = document.getElementById('hero-cta-row');
+  if (!container) return;
+  const ctas = c.heroCtas || [
+    { text: 'Cek Ketersediaan', href: '#kontak', class: 'btn-outline' },
+    { text: 'Lihat Fasilitas', href: '#fasilitas', class: 'btn-outline' }
+  ];
+  container.innerHTML = ctas.map(cta => 
+    `<a class="${cta.class}" href="${cta.href}">${cta.text}</a>`
+  ).join('');
+}
 
-  container.innerHTML = items.map((item) => `
+// ─── 6. STATS ──────────────────────────────────────────────────
+function renderStats(c) {
+  const container = document.getElementById('stats-row');
+  if (!container) return;
+  const stats = c.stats || [
+    { number: '10+', label: 'Kamar Tersedia' },
+    { number: '5', label: 'Menit ke Kampus' },
+    { number: '100%', label: 'Privasi Terjaga' },
+    { number: '24/7', label: 'Keamanan' }
+  ];
+  container.innerHTML = stats.map(stat => `
+    <div>
+      <div class="stat-num">${stat.number}</div>
+      <div class="stat-label">${stat.label}</div>
+    </div>
+  `).join('');
+}
+
+// ─── 7. GALERI ──────────────────────────────────────────────────
+function renderGaleri(c) {
+  const eye = document.getElementById('galeri-eye');
+  const title = document.getElementById('galeri-title');
+  const desc = document.getElementById('galeri-desc');
+  const container = document.getElementById('galeri-grid');
+
+  if (eye) eye.textContent = c.galeriEye || 'Foto Kos';
+  if (title) title.innerHTML = c.galeriTitle || 'Lihat Sendiri,<br>Bangunan Baru & Bersih';
+  if (desc) desc.textContent = c.galeriDesc || 'Kamar dan fasilitas siap ditempati.';
+
+  if (!container) return;
+  const items = c.galeri || [];
+  container.innerHTML = items.map((item, i) => `
+    <div class="galeri-item ${i === 0 ? 'main' : ''}" data-src="${item.src}">
+      <img src="${item.src}" alt="${item.alt}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="no-image" style="display:none;">
+        <span>${item.emoji || '📷'}</span>
+        <p>${item.label || 'Foto'}<br><small>Foto segera hadir</small></p>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ─── 8. FASILITAS ──────────────────────────────────────────────
+function renderFasilitas(c) {
+  const eye = document.getElementById('fasilitas-eye');
+  const title = document.getElementById('fasilitas-title');
+  const desc = document.getElementById('fasilitas-desc');
+  const container = document.getElementById('fas-grid');
+
+  if (eye) eye.textContent = c.fasilitasEye || 'Fasilitas Lengkap';
+  if (title) title.innerHTML = c.fasilitasTitle || 'Semua yang Kamu Butuhkan<br>Sudah Tersedia';
+  if (desc) desc.textContent = c.fasilitasDesc || 'Kamar dirancang nyaman dan fungsional.';
+
+  if (!container) return;
+  const items = c.fasilitas || [];
+  container.innerHTML = items.map(item => `
     <div class="fas-card">
       <div class="fas-icon amber">${item.emoji || '📦'}</div>
       <div class="fas-text">
@@ -208,18 +254,18 @@ function renderFasilitas(config) {
   `).join('');
 }
 
-// ─── RENDER FASILITAS PLUS ────────────────────────────────────
-function renderFasilitasPlus(config) {
-  const container = document.querySelector('.plus-list');
+// ─── 9. FASILITAS PLUS ────────────────────────────────────────
+function renderFasilitasPlus(c) {
+  const eye = document.getElementById('plus-eye');
+  const title = document.getElementById('plus-title');
+  const container = document.getElementById('plus-list');
+
+  if (eye) eye.textContent = c.plusEye || 'Lebih dari Sekadar Kos';
+  if (title) title.textContent = c.plusTitle || 'Kenyamanan Adalah Prioritas';
+
   if (!container) return;
-
-  const items = config.fasilitasPlus || [];
-  if (items.length === 0) {
-    container.innerHTML = '<p style="color:var(--muted);">Data fasilitas plus belum tersedia</p>';
-    return;
-  }
-
-  container.innerHTML = items.map((item) => `
+  const items = c.fasilitasPlus || [];
+  container.innerHTML = items.map(item => `
     <div class="plus-item">
       <div class="plus-check">✓</div>
       <p>${item}</p>
@@ -227,12 +273,19 @@ function renderFasilitasPlus(config) {
   `).join('');
 }
 
-// ─── RENDER PRICING ───────────────────────────────────────────
-function renderPricing(config) {
-  const container = document.querySelector('.harga-container');
-  if (!container) return;
+// ─── 10. PRICING ───────────────────────────────────────────────
+function renderPricing(c) {
+  const eye = document.getElementById('harga-eye');
+  const title = document.getElementById('harga-title');
+  const desc = document.getElementById('harga-desc');
+  const container = document.getElementById('harga-container');
 
-  const pricing = config.pricing;
+  if (eye) eye.textContent = c.hargaEye || 'Harga Terjangkau';
+  if (title) title.innerHTML = c.hargaTitle || 'Dapatkan Diskon Early Bird & Diskon Prestasi/Kurang Mampu';
+  if (desc) desc.textContent = c.hargaDesc || 'Pilih durasi yang sesuai kantong kamu. 1 Kamar untuk 1 Orang.';
+
+  if (!container) return;
+  const pricing = c.pricing;
   if (!pricing) {
     container.innerHTML = '<p style="color:rgba(255,255,255,0.5);text-align:center;">Data harga belum tersedia</p>';
     return;
@@ -281,7 +334,6 @@ function renderPricing(config) {
 function buildPriceCard(item) {
   const { data, label } = item;
   const { monthly, semesterMonths, yearMonths, semesterEB, semesterSpecial, yearEB, yearSpecial } = data;
-
   const semesterBase = monthly * semesterMonths;
   const yearBase = monthly * yearMonths;
 
@@ -313,87 +365,91 @@ function buildPriceCard(item) {
   `;
 }
 
-// ─── RENDER LOKASI ─────────────────────────────────────────────
-function renderLokasi(config) {
-  const mapContainer = document.querySelector('.lokasi-map iframe');
-  if (mapContainer && config.location && config.location.mapsUrl) {
-    mapContainer.src = config.location.mapsUrl;
-  }
-
-  const jarakContainer = document.querySelector('.jarak-list');
-  if (jarakContainer && config.jarak) {
-    jarakContainer.innerHTML = config.jarak.map((item) => `
-      <div class="jarak-item">
-        <span class="jarak-icon">${item.icon || '📍'}</span>
-        <div class="jarak-info">
-          <h5>${item.title || ''}</h5>
-          <p>${item.desc || ''}</p>
-        </div>
-        <span class="jarak-time">${item.time || ''}</span>
-      </div>
-    `).join('');
-  }
+function formatRupiah(num) {
+  if (typeof num !== 'number' || isNaN(num)) return '0';
+  return 'Rp' + new Intl.NumberFormat('id-ID').format(num);
 }
 
-// ─── RENDER TESTIMONI ──────────────────────────────────────────
-function renderTestimoni(config) {
-  const container = document.querySelector('.testi-grid');
+// ─── 11. EARLY BIRD ────────────────────────────────────────────
+function renderEarlyBird(c) {
+  const container = document.getElementById('early-bird-container');
   if (!container) return;
+  const req = c.earlyBirdRequirement || 'Booking kamar sebelum 15 Juli 2026.';
+  container.innerHTML = `
+    <div class="diskon-syarat">
+      <h4b>🐦 Syarat Diskon Early Bird</h4b>
+      <div class="syarat-item"><p>${req}</p></div>
+    </div>
+  `;
+}
 
-  const items = config.testimonials || [];
-  if (items.length === 0) {
-    container.innerHTML = '<p style="color:var(--muted);text-align:center;">Belum ada testimoni</p>';
-    return;
-  }
+// ─── 12. SPECIAL REQUIREMENTS ──────────────────────────────────
+function renderSpecialRequirements(c) {
+  const container = document.getElementById('diskon-syarat-container');
+  if (!container) return;
+  const req = c.specialRequirements;
+  if (!req) { container.innerHTML = ''; return; }
 
-  container.innerHTML = items.map((item) => {
-    const stars = '★'.repeat(Math.min(item.stars || 5, 5));
-    const initials = item.name.split(' ').map(w => w[0]).join('').toUpperCase();
-    return `
-      <div class="testi-card">
-        <div class="testi-stars">${stars}</div>
-        <p class="testi-text">"${item.text || ''}"</p>
-        <div class="testi-author">
-          <div class="testi-avatar">${initials || '?'}</div>
-          <div>
-            <div class="testi-name">${item.name || 'Anonim'}</div>
-            <div class="testi-role">${item.role || ''}</div>
-          </div>
-        </div>
+  let itemsHtml = '';
+  Object.keys(req).forEach((key) => {
+    const section = req[key];
+    if (!section?.items) return;
+    const items = section.items.map(item => `<li>${item}</li>`).join('');
+    itemsHtml += `
+      <div class="syarat-item">
+        <h5>${section.title || ''}</h5>
+        <ul>${items}</ul>
       </div>
     `;
-  }).join('');
+  });
+
+  container.innerHTML = `
+    <div class="diskon-syarat">
+      <h4>🎁 Syarat Diskon Prestasi/Kurang Mampu</h4>
+      <div class="syarat-grid">${itemsHtml}</div>
+    </div>
+  `;
 }
 
-// ─── WHATSAPP TEMPLATE ────────────────────────────────────────
-function getWhatsAppTemplate(contactName = '') {
-  if (CONFIG && CONFIG.whatsapp && CONFIG.whatsapp.template) {
-    let template = CONFIG.whatsapp.template;
-    if (contactName) {
-      template = template.replace(/{name}/g, contactName);
-    }
-    return encodeURIComponent(template);
-  }
-  return encodeURIComponent('Hello Griya Aleena..\nSaya ingin bertanya lebih lanjut.');
+// ─── 13. LOKASI ────────────────────────────────────────────────
+function renderLokasi(c) {
+  const eye = document.getElementById('lokasi-eye');
+  const title = document.getElementById('lokasi-title');
+  const iframe = document.getElementById('maps-iframe');
+  const jarakContainer = document.getElementById('jarak-list');
+
+  if (eye) eye.textContent = c.lokasiEye || 'Lokasi Strategis';
+  if (title) title.innerHTML = c.lokasiTitle || 'Di Jantung Sekaran,<br>Mana-mana Dekat';
+  if (iframe && c.location?.mapsUrl) iframe.src = c.location.mapsUrl;
+
+  if (!jarakContainer) return;
+  const jarak = c.jarak || [];
+  jarakContainer.innerHTML = jarak.map(item => `
+    <div class="jarak-item">
+      <span class="jarak-icon">${item.icon || '📍'}</span>
+      <div class="jarak-info">
+        <h5>${item.title || ''}</h5>
+        <p>${item.desc || ''}</p>
+      </div>
+      <span class="jarak-time">${item.time || ''}</span>
+    </div>
+  `).join('');
 }
 
-function buildWhatsAppUrl(phoneNumber, contactName = '') {
-  const cleanNumber = phoneNumber.replace(/[^0-9]/g, '');
-  let waNumber = cleanNumber;
-  if (!waNumber.startsWith('62')) {
-    waNumber = '62' + waNumber;
-  }
-  const template = getWhatsAppTemplate(contactName);
-  return `https://wa.me/${waNumber}?text=${template}`;
-}
+// ─── 14. KONTAK ─────────────────────────────────────────────────
+function renderContacts(c) {
+  const eye = document.getElementById('kontak-eye');
+  const title = document.getElementById('kontak-title');
+  const note = document.getElementById('kontak-note');
+  const container = document.getElementById('kontak-cards-wrap');
 
-// ─── RENDER CONTACTS ──────────────────────────────────────────
-function renderContacts(config) {
-  const container = document.querySelector('.kontak-cards-wrap');
+  if (eye) eye.textContent = c.kontakEye || 'Hubungi Kami';
+  if (title) title.textContent = c.kontakTitle || 'Amankan Kamarmu Sekarang';
+  if (note) note.innerHTML = c.kontakNote || 'Langsung hubungi pemilik tanpa perantara<br>cepat, mudah, dan bisa tanya apa saja.';
+
   if (!container) return;
-
-  const contacts = config.contacts || [];
-  if (contacts.length === 0) {
+  const contacts = c.contacts || [];
+  if (!contacts.length) {
     container.innerHTML = '<p style="color:rgba(255,255,255,0.5);text-align:center;">Kontak belum tersedia</p>';
     return;
   }
@@ -401,9 +457,9 @@ function renderContacts(config) {
   container.innerHTML = `
     <div style="display:flex; justify-content:center; margin-top:36px;">
       <div class="kontak-card">
-        <div class="k-label">Hubungi Langsung</div>
+        <div class="k-label">${c.kontakLabel || 'Hubungi Langsung'}</div>
         <div class="k-divider"></div>
-        ${contacts.map((contact, index) => {
+        ${contacts.map((contact, i) => {
           const waUrl = buildWhatsAppUrl(contact.wa, contact.name);
           return `
             <div class="k-item">
@@ -415,7 +471,7 @@ function renderContacts(config) {
                 Chat WhatsApp
               </a>
             </div>
-            ${index < contacts.length - 1 ? '<div class="k-item-spacer"></div>' : ''}
+            ${i < contacts.length - 1 ? '<div class="k-item-spacer"></div>' : ''}
           `;
         }).join('')}
       </div>
@@ -423,119 +479,89 @@ function renderContacts(config) {
   `;
 }
 
-// ─── RENDER FLOATING WA ──────────────────────────────────────
-function renderFloatingWA(config) {
-  const floatingBtn = document.getElementById('floating-wa');
-  if (!floatingBtn) return;
-
-  const contacts = config.contacts || [];
-  if (contacts.length === 0) return;
-
-  const primaryContact = contacts[0];
-  if (!primaryContact || !primaryContact.wa) return;
-
-  const waUrl = buildWhatsAppUrl(primaryContact.wa, primaryContact.name);
-  floatingBtn.href = waUrl;
-  
-  console.log('✅ Floating WA updated with template');
+function getWhatsAppTemplate(contactName = '') {
+  const template = CONFIG?.whatsapp?.template || 'Assalamu\'alaikum,\nSaya ingin bertanya tentang kos putri Griya Aleena Sekaran.';
+  return encodeURIComponent(template.replace(/{name}/g, contactName || ''));
 }
 
-// ─── RENDER EARLY BIRD ────────────────────────────────────────
-function renderEarlyBird(config) {
-  const container = document.querySelector('.early-bird-container');
-  if (!container) return;
-
-  const req = config.earlyBirdRequirement || 'Booking kamar sebelum 15 Juli 2026.';
-  container.innerHTML = `
-    <div class="diskon-syarat">
-      <h4b>🐦 Syarat Diskon Early Bird</h4b>
-      <div class="syarat-item">
-        <p>${req}</p>
-      </div>
-    </div>
-  `;
+function buildWhatsAppUrl(phoneNumber, contactName = '') {
+  const clean = phoneNumber.replace(/[^0-9]/g, '');
+  const waNumber = clean.startsWith('62') ? clean : '62' + clean;
+  return `https://wa.me/${waNumber}?text=${getWhatsAppTemplate(contactName)}`;
 }
 
-// ─── RENDER SPECIAL REQUIREMENTS ──────────────────────────────
-function renderSpecialRequirements(config) {
-  const container = document.querySelector('.diskon-syarat-container');
-  if (!container) return;
+function renderFloatingWA(c) {
+  const btn = document.getElementById('floating-wa');
+  if (!btn) return;
+  const contacts = c.contacts || [];
+  if (!contacts.length) return;
+  btn.href = buildWhatsAppUrl(contacts[0].wa, contacts[0].name);
+}
 
-  const req = config.specialRequirements;
-  if (!req) {
-    container.innerHTML = '';
-    return;
+// ─── 15. FOOTER ─────────────────────────────────────────────────
+function renderFooter(c) {
+  const brand = document.getElementById('footer-brand');
+  const year = document.getElementById('footer-year');
+  if (brand) brand.textContent = c.site?.title || 'Griya Aleena Sekaran';
+  if (year) year.textContent = c.site?.footerYear || new Date().getFullYear();
+}
+
+// ─── COUNTDOWN ─────────────────────────────────────────────────
+function initCountdown(targetDate) {
+  const els = {
+    d: document.getElementById('cd-d'),
+    h: document.getElementById('cd-h'),
+    m: document.getElementById('cd-m'),
+    s: document.getElementById('cd-s')
+  };
+  if (!els.d || !els.h || !els.m || !els.s) return;
+
+  const target = new Date(targetDate);
+  if (isNaN(target.getTime())) return;
+
+  function update() {
+    const diff = target - new Date();
+    if (diff <= 0) {
+      Object.values(els).forEach(el => el.textContent = '00');
+      return;
+    }
+    els.d.textContent = String(Math.floor(diff / 86400000)).padStart(2, '0');
+    els.h.textContent = String(Math.floor((diff % 86400000) / 3600000)).padStart(2, '0');
+    els.m.textContent = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
+    els.s.textContent = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
   }
-
-  let itemsHtml = '';
-  Object.keys(req).forEach((key) => {
-    const section = req[key];
-    if (!section || !section.items) return;
-    const items = section.items.map(item => `<li>${item}</li>`).join('');
-    itemsHtml += `
-      <div class="syarat-item">
-        <h5>${section.title || ''}</h5>
-        <ul>${items}</ul>
-      </div>
-    `;
-  });
-
-  if (!itemsHtml) {
-    container.innerHTML = '';
-    return;
-  }
-
-  container.innerHTML = `
-    <div class="diskon-syarat">
-      <h4>🎁 Syarat Diskon Prestasi/Kurang Mampu</h4>
-      <div class="syarat-grid">${itemsHtml}</div>
-    </div>
-  `;
+  update();
+  setInterval(update, 1000);
 }
 
-// ─── HIT COUNTER GLOBAL ──────────────────────────────────────
+// ─── HIT COUNTER ──────────────────────────────────────────────
 async function initCounter() {
   const el = document.getElementById('hc-num');
-  if (!el) {
-    console.warn('⚠️ Element #hc-num tidak ditemukan');
-    return;
-  }
-  
-  const counterDiv = document.getElementById('hit-counter');
-  if (!counterDiv) {
-    console.warn('⚠️ Element #hit-counter tidak ditemukan');
-    return;
-  }
-  
+  const div = document.getElementById('hit-counter');
+  if (!el || !div) return;
+
   const today = new Date().toDateString();
   const lastVisit = localStorage.getItem('griya_last_visit');
   const isNewDay = (lastVisit !== today);
   const sessionVisited = sessionStorage.getItem('counter_visited');
-  
+
   try {
     let res, count;
-    
     if (isNewDay || !sessionVisited) {
-      console.log('🔄 New day or new session, incrementing...');
       res = await fetch(`${API}/increment`, { method: 'POST' });
       localStorage.setItem('griya_last_visit', today);
       sessionStorage.setItem('counter_visited', '1');
     } else {
-      console.log('📊 Returning visitor, getting count...');
       res = await fetch(`${API}/count`);
     }
-    
     const data = await res.json();
     count = data.count || 121;
-    
     el.textContent = Number(count).toLocaleString('id-ID');
-    counterDiv.style.display = 'block';
-    console.log('✅ Counter displayed:', count);
-    
+    div.style.display = 'block';
   } catch (error) {
     console.error('❌ Counter error:', error);
     el.textContent = '💔';
-    counterDiv.style.display = 'block';
+    div.style.display = 'block';
   }
 }
 
@@ -546,12 +572,5 @@ if (document.readyState === 'loading') {
   loadConfig();
 }
 
-// ─── DEBUG ────────────────────────────────────────────────────
-window.__debug = {
-  reloadConfig: loadConfig,
-  formatRupiah: formatRupiah,
-  config: () => CONFIG,
-};
-
-console.log('✅ app.js v3.6 loaded (Final - Cloudflare Ready)');
+console.log('✅ app.js v5.0 - 100% Dinamis');
 console.log('🔧 Gunakan window.__debug untuk debugging');

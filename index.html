@@ -3,48 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Griya Aleena Sekaran – Kos Putri Kampus UNNES</title>
-<meta name="description" content="Kos putri baru di Sekaran dekat kampus UNNES. Fasilitas lengkap: AC, kamar mandi dalam, WiFi, dapur bersama, CCTV. Harga mahasiswa mulai Rp800.000/bulan. Diskon Early Bird & Prestasi.">
-<meta property="og:title" content="Griya Aleena Sekaran – Kos Putri Kampus UNNES">
-<meta property="og:description" content="Kos putri baru di Sekaran, 5–10 menit dari semua fakultas UNNES. Fasilitas lengkap, harga mahasiswa, diskon early bird & prestasi. Ready 1 Agustus 2026.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://griyaaleenasekaran.com">
-<meta property="og:image" content="https://griyaaleenasekaran.com/og-image.jpg">
-<meta name="twitter:card" content="summary_large_image">
-
-<!-- Favicon -->
+<title id="dynamic-title">Loading...</title>
+<meta name="description" id="dynamic-description" content="Loading...">
 <link rel="icon" type="image/png" sizes="32x32" href="foto/favicon.png">
 <link rel="icon" type="image/png" sizes="16x16" href="foto/favicon.png">
 <link rel="apple-touch-icon" href="foto/favicon.png">
-
-<!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
-
-<!-- CSS -->
 <link rel="stylesheet" href="styles.css">
-
-<!-- Schema.org JSON-LD -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "LodgingBusiness",
-  "name": "Griya Aleena Sekaran",
-  "description": "Kos putri dekat kampus UNNES Sekaran dengan fasilitas lengkap dan harga mahasiswa.",
-  "address": {
-    "@type": "PostalAddress",
-    "streetAddress": "Sekaran",
-    "addressLocality": "Gunungpati",
-    "addressRegion": "Semarang",
-    "addressCountry": "ID"
-  },
-  "telephone": "+628995677419",
-  "url": "https://griyaaleenasekaran.com",
-  "priceRange": "Rp800.000 – Rp1.150.000/bulan"
-}
-</script>
 </head>
 <body>
-
 
 <!-- FLOATING WA -->
 <a class="floating-wa" id="floating-wa" href="#" target="_blank" title="Chat WhatsApp">
@@ -54,158 +21,95 @@
 <!-- NAV -->
 <nav>
   <a class="nav-brand" href="#">
-    <div class="nav-logo">🏠</div>
-    <div class="nav-name">GRIYA ALEENA SEKARAN<span>Kos Putri Kampus UNNES</span></div>
+    <div class="nav-logo" id="nav-logo">🏠</div>
+    <div class="nav-name"><span id="nav-brand-name"></span><span id="nav-brand-sub"></span></div>
   </a>
-  <a class="nav-cta" href="#kontak">Hubungi Kami</a>
+  <a class="nav-cta" id="nav-cta" href="#kontak">Hubungi Kami</a>
 </nav>
 
 <!-- HERO -->
 <section id="hero">
-
   <div class="hero-inner">
+    <h1><em id="hero-title"></em></h1>
+    <h2 id="hero-subtitle"></h2>
+    <h3 id="hero-sub"></h3>
 
-     <!-- <div class="hero-badge1"><span class="badge-dot"></span>...</div> -->
-
-     <h1><em>GRIYA ALEENA SEKARAN</em><br></h1>
-     <h2>Kos Putri<br>UNIVERSITAS NEGERI SEMARANG<br></h2>
-     <h3>Fasilitas Lengkap. Harga Terjangkau.</h3>
-
-
-    <div class="diskon-syarat">
-      <p class="countdown-label">Diskon Early Bird Berakhir Dalam<br><br></p>
-      <div class="countdown">
+    <div class="diskon-syarat" id="countdown-wrapper">
+      <p class="countdown-label" id="countdown-label"></p><br>
+      <div class="countdown" id="countdown-display">
         <div class="cd-box"><span class="cd-num" id="cd-d">00</span><span class="cd-unit">Hari</span></div>
         <div class="cd-box"><span class="cd-num" id="cd-h">00</span><span class="cd-unit">Jam</span></div>
         <div class="cd-box"><span class="cd-num" id="cd-m">00</span><span class="cd-unit">Menit</span></div>
         <div class="cd-box"><span class="cd-num" id="cd-s">00</span><span class="cd-unit">Detik</span></div>
-      </div>
-
-      <p class="countdown-label"><br>Diskon Prestasi/Kurang Mampu *)<br><br></p>
-      <div class="hero-badge2"><span class="badge-dot"></span>Silakan Baca Syarat dan Ketentuan di Bawah</div>
+      </div><br>
+      <p class="countdown-label" id="countdown-label-2"></p> <br>
+      <div class="hero-badge2" id="hero-badge2"></div>
     </div>
 
-    <div class="hero-chips">
-      <span class="chip">🏢 Bangunan Baru</span>
-      <span class="chip">✨ Penghuni Pertama</span>
-      <span class="chip">🚿 Kamar Mandi Dalam</span>
-      <span class="chip">🍜 Dapur Bersama</span>
-      <span class="chip">☃️ Kulkas Bersama</span>
-      <span class="chip">❄️ AC/NON AC</span>
-      <span class="chip">🛜 Free WiFi</span>
-      <span class="chip">🛵 Garasi Motor & Gerbang</span>
-      <span class="chip">📹 CCTV</span>
-    </div>
+    <div class="hero-chips" id="hero-chips"></div>
 
-    <div class="hero-cta-row">
-      <a class="btn-outline" href="#kontak">Cek Ketersediaan</a>
-      <a class="btn-outline" href="#fasilitas">Lihat Fasilitas</a>
-    </div>
-
+    <div class="hero-cta-row" id="hero-cta-row"></div>
   </div>
 </section>
 
-<!-- STATS -->
+<!-- STATS 
 <section id="stats">
-  <div class="stats-row"></div>
+  <div class="stats-row" id="stats-row"></div>
 </section>
 
-<!-- GALERI FOTO -->
+-->
+
+<!-- GALERI -->
 <section id="galeri">
   <div class="container">
-    <p class="section-eye">Foto Kos</p>
-    <h2 class="section-title">Lihat Sendiri,<br>Bangunan Baru & Bersih</h2>
-    <p class="section-desc">Kamar dan fasilitas siap ditempati.</p>
-    <div class="galeri-grid">
-      <div class="galeri-item main">
-        <div class="galeri-placeholder"><span>🏠</span><p>Tampak Depan<br><small>Foto segera hadir</small></p></div>
-      </div>
-      <div class="galeri-item">
-        <div class="galeri-placeholder"><span>🛏️</span><p>Kamar AC<br><small>Foto segera hadir</small></p></div>
-      </div>
-      <div class="galeri-item">
-        <div class="galeri-placeholder"><span>🚿</span><p>Kamar Mandi<br><small>Foto segera hadir</small></p></div>
-      </div>
-      <div class="galeri-item">
-        <div class="galeri-placeholder"><span>🍳</span><p>Dapur Bersama<br><small>Foto segera hadir</small></p></div>
-      </div>
-      <div class="galeri-item">
-        <div class="galeri-placeholder"><span>🛵</span><p>Garasi<br><small>Foto segera hadir</small></p></div>
-      </div>
-    </div>
+    <p class="section-eye" id="galeri-eye"></p>
+    <h2 class="section-title" id="galeri-title"></h2>
+    <p class="section-desc" id="galeri-desc"></p>
+    <div class="galeri-grid" id="galeri-grid"></div>
   </div>
 </section>
 
-
-
-<!-- FASILITAS KAMAR -->
+<!-- FASILITAS -->
 <section id="fasilitas">
   <div class="container">
-    <p class="section-eye">Fasilitas Lengkap</p>
-    <h2 class="section-title">Semua yang Kamu Butuhkan<br>Sudah Tersedia</h2>
-    <p class="section-desc">Kamar dirancang nyaman dan fungsional.</p>
-    <div class="fas-grid"></div>
+    <p class="section-eye" id="fasilitas-eye"></p>
+    <h2 class="section-title" id="fasilitas-title"></h2>
+    <p class="section-desc" id="fasilitas-desc"></p>
+    <div class="fas-grid" id="fas-grid"></div>
   </div>
 </section>
 
 <!-- FASILITAS PLUS -->
 <section id="plus">
   <div class="container">
-    <p class="section-eye">Lebih dari Sekadar Kos</p>
-    <h2 class="section-title">Kenyamanan Adalah Prioritas</h2>
-    <div class="plus-list"></div>
+    <p class="section-eye" id="plus-eye"></p>
+    <h2 class="section-title" id="plus-title"></h2>
+    <div class="plus-list" id="plus-list"></div>
   </div>
 </section>
 
 <!-- HARGA -->
 <section id="harga">
   <div class="container">
-    <p class="section-eye">Harga Terjangkau</p>
-    <h2 class="section-title">Dapatkan Diskon Early Bird & Diskon Prestasi/Kurang Mampu</h2>
-    <p class="section-desc">Pilih durasi yang sesuai kantong kamu. 1 Kamar untuk 1 Orang.</p>
-
-    <div class="harga-container"></div>
-
-    <div class="early-bird-container"></div>
-    <div class="diskon-syarat-container"></div>
-
-    <!-- CTA SETELAH HARGA 
-    <div class="post-harga-cta">
-      <p>🔥 Kamar terbatas! Masih tersedia beberapa kamar untuk tahun ajaran baru 2026/2027.</p>
-      <a class="wa-btn" href="https://wa.me/628995677419" target="_blank">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-        Chat WhatsApp Sekarang
-      </a>
-    </div>
-    -->
+    <p class="section-eye" id="harga-eye"></p>
+    <h2 class="section-title" id="harga-title"></h2>
+    <p class="section-desc" id="harga-desc"></p>
+    <div class="harga-container" id="harga-container"></div>
+    <div class="early-bird-container" id="early-bird-container"></div>
+    <div class="diskon-syarat-container" id="diskon-syarat-container"></div>
   </div>
 </section>
 
-<!-- TESTIMONI 
-<section id="testimoni">
-  <div class="container">
-    <p class="section-eye">Kata Mereka</p>
-    <h2 class="section-title">Dipercaya Penghuni<br>& Orang Tua Mahasiswa</h2>
-    <p class="section-desc">Testimoni dari orang tua dan calon penghuni yang sudah survei langsung.</p>
-    <div class="testi-grid"></div>
-  </div>
-</section>
-
-  -->
 <!-- LOKASI -->
 <section id="lokasi">
   <div class="container">
-    <p class="section-eye">Lokasi Strategis</p>
-    <h2 class="section-title">Di Jantung Sekaran,<br>Mana-mana Dekat</h2>
-
+    <p class="section-eye" id="lokasi-eye"></p>
+    <h2 class="section-title" id="lokasi-title"></h2>
     <div class="lokasi-row">
       <div class="lokasi-map">
-        <iframe
-          src=""
-          allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade">
-        </iframe>
+        <iframe id="maps-iframe" src="" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
-      <div class="jarak-list"></div>
+      <div class="jarak-list" id="jarak-list"></div>
     </div>
   </div>
 </section>
@@ -213,13 +117,10 @@
 <!-- KONTAK -->
 <section id="kontak">
   <div class="container">
-    <p class="section-eye">Hubungi Kami</p>
-    <h2 class="section-title">Amankan Kamarmu Sekarang</h2>
-
-    <p class="kontak-note">Langsung hubungi pemilik tanpa perantara<br>cepat, mudah, dan bisa tanya apa saja.</p>
-
-    <!-- 🔥 Data kontak diisi oleh app.js dari config.json -->
-    <div class="kontak-cards-wrap"></div>
+    <p class="section-eye" id="kontak-eye"></p>
+    <h2 class="section-title" id="kontak-title"></h2>
+    <p class="kontak-note" id="kontak-note"></p>
+    <div class="kontak-cards-wrap" id="kontak-cards-wrap"></div>
   </div>
 </section>
 
@@ -234,10 +135,12 @@
 
 <!-- FOOTER -->
 <footer>
-  <p><span>Griya Aleena Sekaran</span> © 2026</p>
+  <p><span id="footer-brand"></span> © <span id="footer-year"></span></p>
 </footer>
 
-<!-- JavaScript -->
+<!-- ============================================================ -->
+<!-- 🔥 SEMUA LOGIKA DIAMBIL DARI app.js (TIDAK ADA SCRIPT DI SINI) -->
+<!-- ============================================================ -->
 <script src="app.js"></script>
 </body>
 </html>

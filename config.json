@@ -1,140 +1,114 @@
 {
   "site": {
     "title": "Griya Aleena Sekaran",
-    "tagline": "Kos Putri Kampus UNNES",
+    "titleSuffix": " – Kos Putri Kampus UNNES",
 
+    "navbarTitle": "GRIYA ALEENA SEKARAN",
+    "navbarSubtitle": "Kos Putri Kampus UNNES",
 
-    "heroBadge1": "Kamar Masih Tersedia",
+    "url": "https://lintangglangitt.github.io/griya-aleena/",
+    "ogImage": "foto/og.jpg",
+    "metaDescription": "Kos putri baru di Sekaran dekat UNNES. Fasilitas lengkap: AC, kamar mandi dalam, WiFi, dapur bersama, CCTV. Diskon Early Bird & Prestasi.",
+    "navLogo": "🏠",
+    "navCta": "Hubungi Kami",
+    "heroTitle": "GRIYA ALEENA SEKARAN",
+    "heroSubtitle": "Kos Putri<br>UNIVERSITAS NEGERI SEMARANG",
+    "heroSub": "Fasilitas Lengkap. Harga Terjangkau.",
     "heroBadge2": "Silakan Baca Syarat dan Ketentuan di Bawah",
-    "heroSub": "Fasilitas Lengkap. Harga Terjangkau."
-
+    "footerYear": 2026
   },
+  "heroChips": [
+    "🏢 Bangunan Baru",
+    "✨ Penghuni Pertama",
+    "🚿 Kamar Mandi Dalam",
+    "🍜 Dapur Bersama",
+    "☃️ Kulkas Bersama",
+    "❄️ AC/NON AC",
+    "🛜 Free WiFi",
+    "🛵 Garasi Motor & Gerbang",
+    "📹 CCTV"
+  ],
+  "heroCtas": [
+    { "text": "Cek Ketersediaan", "href": "#kontak", "class": "btn-outline" },
+    { "text": "Lihat Fasilitas", "href": "#fasilitas", "class": "btn-outline" }
+  ],
+  "stats": [
+    { "number": "10+", "label": "Kamar Tersedia" },
+    { "number": "5", "label": "Menit ke Kampus" },
+    { "number": "100%", "label": "Privasi Terjaga" },
+    { "number": "24/7", "label": "Keamanan" }
+  ],
+  "galeri": [
+    { "src": "foto/tampak-depan.jpg", "alt": "Tampak Depan", "emoji": "🏠", "label": "Tampak Depan" },
+    { "src": "foto/kamar-ac.jpg", "alt": "Kamar AC", "emoji": "🛏️", "label": "Kamar AC" },
+    { "src": "foto/kamar-mandi.jpg", "alt": "Kamar Mandi", "emoji": "🚿", "label": "Kamar Mandi" },
+    { "src": "foto/dapur-bersama.jpg", "alt": "Dapur Bersama", "emoji": "🍳", "label": "Dapur Bersama" },
+    { "src": "foto/garasi.jpg", "alt": "Garasi", "emoji": "🛵", "label": "Garasi" }
+  ],
+  "galeriEye": "Foto Kos",
+  "galeriTitle": "Lihat Sendiri,<br>Bangunan Baru & Bersih",
+  "galeriDesc": "Kamar dan fasilitas siap ditempati.",
+  "fasilitasEye": "Fasilitas Lengkap",
+  "fasilitasTitle": "Semua yang Kamu Butuhkan<br>Sudah Tersedia",
+  "fasilitasDesc": "Kamar dirancang nyaman dan fungsional.",
+  "plusEye": "Lebih dari Sekadar Kos",
+  "plusTitle": "Kenyamanan Adalah Prioritas",
+  "hargaEye": "Harga Terjangkau",
+  "hargaTitle": "Dapatkan Diskon Early Bird & Diskon Prestasi/Kurang Mampu",
+  "hargaDesc": "Pilih durasi yang sesuai kantong kamu. 1 Kamar untuk 1 Orang.",
+  "lokasiEye": "Lokasi Strategis",
+  "lokasiTitle": "Di Jantung Sekaran,<br>Mana-mana Dekat",
+  "kontakEye": "Hubungi Kami",
+  "kontakTitle": "Amankan Kamarmu Sekarang",
+  "kontakNote": "Langsung hubungi pemilik tanpa perantara<br>cepat, mudah, dan bisa tanya apa saja.",
+  "kontakLabel": "Hubungi Langsung",
   "whatsapp": {
     "template": "Assalamu'alaikum,\nSaya ingin bertanya tentang kos putri Griya Aleena Sekaran.\n\nDetail saya:\n- Nama: \n- Fakultas: \n- Kebutuhan: (AC/Non-AC)\n- Durasi: (Semester/Tahunan)\n\nMohon infonya. Terima kasih."
   },
   "countdown": {
     "visible": true,
     "label": "Diskon Early Bird Berakhir Dalam",
+    "label2": "Diskon Prestasi/Kurang Mampu *)",
     "target": "2026-07-15T00:00:00"
   },
   "contacts": [
-    {
-      "name": "Nawang (0899-5677-419)",
-      "wa": "628995677419"
-    },
-    {
-      "name": "Hakim (0813-9595-6434)",
-      "wa": "6281395956434"
-    }
+    { "name": "Nawang (0899-5677-419)", "wa": "628995677419" },
+    { "name": "Hakim (0813-9595-6434)", "wa": "6281395956434" }
   ],
   "location": {
     "mapsUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3959.7034771020703!2d110.3956973!3d-7.044090399999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e708bf0a28ca121%3A0x7d91be49e7134aef!2sGriya%20Aleena%20Sekaran!5e0!3m2!1sen!2sid!4v1781354903283!5m2!1sen!2sid"
   },
   "fasilitas": [
-    {
-      "emoji": "❄️",
-      "text": "AC/Kipas Tiap Kamar",
-      "desc": "Nyaman sepanjang hari, tidur berkualitas tanpa kepanasan."
-    },
-    {
-      "emoji": "🚿",
-      "text": "Kamar Mandi Dalam + Shower",
-      "desc": "Privasi terjaga, lengkap dengan shower dan keran."
-    },
-    {
-      "emoji": "🪞",
-      "text": "Lemari Besi Anti Karat + Locker",
-      "desc": "Baju rapi tersimpan aman, dilengkapi cermin besar."
-    },
-    {
-      "emoji": "🛏️",
-      "text": "Kasur Busa Empuk + Bantal Guling",
-      "desc": "Tidur berkualitas setelah hari yang panjang di kampus."
-    },
-    {
-      "emoji": "🛜",
-      "text": "Free WiFi",
-      "desc": "Internet lancar untuk kuliah online, tugas, dan hiburan."
-    },
-    {
-      "emoji": "⚡",
-      "text": "Meteran Listrik per Kamar",
-      "desc": "Token prabayar sendiri — bayar sesuai pemakaianmu."
-    },
-    {
-      "emoji": "🍳",
-      "text": "Dapur Bersama + Kulkas",
-      "desc": "Lengkap dengan kompor gas, alat masak, dan wastafel."
-    },
-    {
-      "emoji": "🛵",
-      "text": "Garasi Motor + Gerbang",
-      "desc": "Motor aman terlindungi, tidak perlu khawatir saat belajar."
-    },
-    {
-      "emoji": "📹",
-      "text": "CCTV Area Kos",
-      "desc": "Keamanan 24 jam."
-    },
-    {
-      "emoji": "💧",
-      "text": "Free Iuran Air & Sampah",
-      "desc": "Tidak ada biaya tambahan."
-    }
+    { "emoji": "❄️", "text": "AC/Kipas Tiap Kamar", "desc": "Nyaman sepanjang hari, tidur berkualitas tanpa kepanasan." },
+    { "emoji": "🚿", "text": "Kamar Mandi Dalam + Shower", "desc": "Privasi terjaga, lengkap dengan shower dan keran." },
+    { "emoji": "🪞", "text": "Lemari Besi Anti Karat + Locker", "desc": "Baju rapi tersimpan aman, dilengkapi cermin besar." },
+    { "emoji": "🛏️", "text": "Kasur Busa Empuk + Bantal Guling", "desc": "Tidur berkualitas setelah hari yang panjang di kampus." },
+    { "emoji": "🛜", "text": "Free WiFi", "desc": "Internet lancar untuk kuliah online, tugas, dan hiburan." },
+    { "emoji": "⚡", "text": "Meteran Listrik per Kamar", "desc": "Token prabayar sendiri — bayar sesuai pemakaianmu." },
+    { "emoji": "🍳", "text": "Dapur Bersama + Kulkas", "desc": "Lengkap dengan kompor gas, alat masak, dan wastafel." },
+    { "emoji": "🛵", "text": "Garasi Motor + Gerbang", "desc": "Motor aman terlindungi, tidak perlu khawatir saat belajar." },
+    { "emoji": "📹", "text": "CCTV Area Kos", "desc": "Keamanan 24 jam." },
+    { "emoji": "💧", "text": "Free Iuran Air & Sampah", "desc": "Tidak ada biaya tambahan." }
   ],
   "fasilitasPlus": [
     "Ada yang bersihkan area kos secara rutin — kos selalu terawat.",
-    "Sangat dekat dengan pusat kampus - akses mudah ke mana-mana.",
+    "Sangat dekat dengan pusat kampus — akses mudah ke mana-mana.",
     "Bisa bawa alat elektronik — meteran listrik per kamar, fleksibel.",
     "Tempat jemuran tersedia — dapat mencuci pakaian sendiri.",
     "Keamanan 24 jam dengan CCTV — hati lebih tenang.",
     "Hubungi pemilik langsung — tanpa perantara, lebih mudah."
   ],
   "pricing": {
-    "l1ac": {
-      "monthly": 1100000,
-      "semesterMonths": 6,
-      "yearMonths": 12,
-      "semesterEB": 200000,
-      "semesterSpecial": 400000,
-      "yearEB": 500000,
-      "yearSpecial": 900000
-    },
-    "l1nac": {
-      "monthly": 800000,
-      "semesterMonths": 6,
-      "yearMonths": 12,
-      "semesterEB": 200000,
-      "semesterSpecial": 400000,
-      "yearEB": 500000,
-      "yearSpecial": 900000
-    },
-    "l2ac": {
-      "monthly": 1150000,
-      "semesterMonths": 6,
-      "yearMonths": 12,
-      "semesterEB": 200000,
-      "semesterSpecial": 400000,
-      "yearEB": 500000,
-      "yearSpecial": 900000
-    },
-    "l2nac": {
-      "monthly": 850000,
-      "semesterMonths": 6,
-      "yearMonths": 12,
-      "semesterEB": 200000,
-      "semesterSpecial": 500000,
-      "yearEB": 500000,
-      "yearSpecial": 900000
-    }
+    "l1ac": { "monthly": 1100000, "semesterMonths": 6, "yearMonths": 12, "semesterEB": 200000, "semesterSpecial": 400000, "yearEB": 500000, "yearSpecial": 900000 },
+    "l1nac": { "monthly": 800000, "semesterMonths": 6, "yearMonths": 12, "semesterEB": 200000, "semesterSpecial": 400000, "yearEB": 500000, "yearSpecial": 900000 },
+    "l2ac": { "monthly": 1150000, "semesterMonths": 6, "yearMonths": 12, "semesterEB": 200000, "semesterSpecial": 400000, "yearEB": 500000, "yearSpecial": 900000 },
+    "l2nac": { "monthly": 850000, "semesterMonths": 6, "yearMonths": 12, "semesterEB": 200000, "semesterSpecial": 500000, "yearEB": 500000, "yearSpecial": 900000 }
   },
   "earlyBirdRequirement": "Booking kamar sebelum 15 Juli 2026.",
   "specialRequirements": {
     "hafidhul": {
       "title": "📖 Mahasiswa Hafidhul Qur'an",
-      "items": [
-        "Mahasiswa dengan Hafalan Qur'an minimal 5 Juz dan komitmen menambah hafalan"
-      ]
+      "items": ["Mahasiswa dengan Hafalan Qur'an minimal 5 Juz dan komitmen menambah hafalan"]
     },
     "prestasi": {
       "title": "🏆 Mahasiswa Berprestasi",
@@ -153,49 +127,22 @@
     }
   },
   "jarak": [
-    {
-      "icon": "🛵",
-      "title": "Semua Fakultas UNNES",
-      "desc": "Jarak ke seluruh gedung fakultas",
-      "time": "5–10 menit"
-    },
-    {
-      "icon": "🚶",
-      "title": "FBS · FIP · FEB · FIS",
-      "desc": "Jalan kaki santai dari kos",
-      "time": "5–9 menit"
-    },
-    {
-      "icon": "🏪",
-      "title": "Minimarket & Warung Makan",
-      "desc": "Banyak pilihan di kawasan Sekaran",
-      "time": "Sangat dekat"
-    },
-    {
-      "icon": "🕌",
-      "title": "Masjid & Tempat Ibadah",
-      "desc": "Fasilitas ibadah mudah dijangkau",
-      "time": "Sangat dekat"
-    }
+    { "icon": "🛵", "title": "Semua Fakultas UNNES", "desc": "Jarak ke seluruh gedung fakultas", "time": "5–10 menit" },
+    { "icon": "🚶", "title": "FBS · FIP · FEB · FIS", "desc": "Jalan kaki santai dari kos", "time": "5–9 menit" },
+    { "icon": "🏪", "title": "Minimarket & Warung Makan", "desc": "Banyak pilihan di kawasan Sekaran", "time": "Sangat dekat" },
+    { "icon": "🕌", "title": "Masjid & Tempat Ibadah", "desc": "Fasilitas ibadah mudah dijangkau", "time": "Sangat dekat" }
   ],
-  "testimonials": [
-    {
-      "name": "Bu Rini",
-      "role": "Orang Tua Mahasiswi FIP UNNES",
-      "text": "Bangunan baru, bersih, dan pemiliknya ramah. Kamar mandinya di dalam, saya sebagai orang tua merasa tenang anak saya tinggal di sini.",
-      "stars": 5
-    },
-    {
-      "name": "Alya",
-      "role": "Mahasiswi Baru FBS UNNES 2026",
-      "text": "Lokasi dekat banget dari FBS, jalan kaki bisa. Fasilitas lengkap dan ada AC — ini yang paling penting buat saya. Langsung daftar setelah survei.",
-      "stars": 5
-    },
-    {
-      "name": "Dinda",
-      "role": "Calon Penghuni, Penerima SNBP",
-      "text": "Harga semesteran sangat terjangkau apalagi ada diskon prestasi. Tempatnya aman, ada CCTV dan gerbang. Recommended banget!",
-      "stars": 5
+  "schema": {
+    "type": "LodgingBusiness",
+    "description": "Kos putri dekat kampus UNNES Sekaran dengan fasilitas lengkap dan harga terjangkau.",
+    "telephone": "+628995677419",
+    "priceRange": "Rp800.000 – Rp1.150.000/bulan",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Sekaran",
+      "addressLocality": "Gunungpati",
+      "addressRegion": "Semarang",
+      "addressCountry": "ID"
     }
-  ]
+  }
 }
