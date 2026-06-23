@@ -1,15 +1,17 @@
 // ============================================================
 // app.js - Griya Aleena Sekaran
-// Versi: 3.1 (Fix Path Config)
+// Versi: 3.6 (Final - Cloudflare Ready)
 // ============================================================
 
 // ─── CONFIG GLOBAL ────────────────────────────────────────────
 let CONFIG = null;
 
+// ─── WORKER URL (HIT COUNTER GLOBAL) ────────────────────────
+const API = 'https://griya-counter.lintangglangitt.workers.dev';
+
 // ─── LOAD CONFIG ──────────────────────────────────────────────
 async function loadConfig() {
   try {
-    // Gunakan relative path (./) agar kompatibel dengan semua environment
     const timestamp = new Date().getTime();
     const response = await fetch(`./config.json?v=${timestamp}`);
     
@@ -19,18 +21,14 @@ async function loadConfig() {
     
     const config = await response.json();
     
-    // Validasi data
     if (!config || typeof config !== 'object') {
       throw new Error('Invalid config data');
     }
     
-    // Simpan ke global
     CONFIG = config;
-    
-    // Render semua konten
     renderAll(config);
     
-    console.log('✅ Config loaded successfully from: ./config.json');
+    console.log('✅ Config loaded successfully');
     
   } catch (error) {
     console.error('❌ Failed to load config:', error);
@@ -47,15 +45,17 @@ function renderAll(config) {
   renderLokasi(config);
   renderTestimoni(config);
   renderContacts(config);
+  renderFloatingWA(config);
   renderEarlyBird(config);
   renderSpecialRequirements(config);
   
-  // Init countdown
   if (config.countdown && config.countdown.target) {
     initCountdown(config.countdown.target);
   }
   
-  // Hapus loading state
+  // 🔥 Panggil hit counter
+  initCounter();
+  
   document.querySelectorAll('.loading-text').forEach(el => {
     el.style.display = 'none';
   });
@@ -109,7 +109,6 @@ function showErrorMessage(message) {
   `;
   document.body.prepend(div);
   
-  // Tambahkan animation
   if (!document.getElementById('error-animation')) {
     const style = document.createElement('style');
     style.id = 'error-animation';
@@ -164,29 +163,26 @@ function initCountdown(targetDate) {
 // ─── FORMAT RUPIAH ────────────────────────────────────────────
 function formatRupiah(num) {
   if (typeof num !== 'number' || isNaN(num)) return '0';
-  return new Intl.NumberFormat('id-ID').format(num);
+  return 'Rp' + new Intl.NumberFormat('id-ID').format(num);
 }
 
 // ─── RENDER HERO ──────────────────────────────────────────────
 function renderHero(config) {
-  if (config.site) {
-    // Hero Badge
-    const badge = document.querySelector('.hero-badge');
-    if (badge && config.site.heroBadge) {
-      badge.innerHTML = `<span class="badge-dot"></span> ${config.site.heroBadge}`;
-    }
-    
-    // Hero Badge
-    const badge = document.querySelector('.hero-badge2');
-    if (badge && config.site.heroBadge2) {
-      badge.innerHTML = `<span class="badge-dot"></span> ${config.site.heroBadge2}`;
-    }
-    
-    // Hero Sub
-    const sub = document.querySelector('.hero-sub');
-    if (sub && config.site.heroSub) {
-      sub.textContent = config.site.heroSub;
-    }
+  if (!config || !config.site) return;
+  
+  const badge1 = document.querySelector('.hero-badge1');
+  if (badge1 && config.site.heroBadge1) {
+    badge1.innerHTML = `<span class="badge-dot"></span> ${config.site.heroBadge1}`;
+  }
+  
+  const badge2 = document.querySelector('.hero-badge2');
+  if (badge2 && config.site.heroBadge2) {
+    badge2.innerHTML = `<span class="badge-dot"></span> ${config.site.heroBadge2}`;
+  }
+  
+  const h3 = document.querySelector('h3');
+  if (h3 && config.site.heroSub) {
+    h3.textContent = config.site.heroSub;
   }
 }
 
@@ -302,16 +298,16 @@ function buildPriceCard(item) {
       <div class="price-sep"></div>
       <div class="price-segment">
         <div class="harga-durasi">Semesteran (${semesterMonths} Bulan)</div>
-        <div class="price-calc-row">${semesterMonths} × ${formatRupiah(monthly)} = <span class="calc-base">Rp ${formatRupiah(semesterBase)}</span></div>
-        <div class="price-calc-row early">Diskon Early Bird: Potongan ${formatRupiah(semesterEB)} → <span class="calc-early">Rp ${formatRupiah(semesterBase - semesterEB)}</span></div>
-        <div class="price-calc-row spesial">Diskon Prestasi/Kurang Mampu: Potongan ${formatRupiah(semesterSpecial)} → <span class="calc-spesial">Rp ${formatRupiah(semesterBase - semesterSpecial)}</span></div>
+        <div class="price-calc-row">${semesterMonths} × ${formatRupiah(monthly)} = <span class="calc-base">${formatRupiah(semesterBase)}</span></div>
+        <div class="price-calc-row early">Diskon Early Bird: Potongan ${formatRupiah(semesterEB)} → <span class="calc-early">${formatRupiah(semesterBase - semesterEB)}</span></div>
+        <div class="price-calc-row spesial">Diskon Prestasi/Kurang Mampu: Potongan ${formatRupiah(semesterSpecial)} → <span class="calc-spesial">${formatRupiah(semesterBase - semesterSpecial)}</span></div>
       </div>
       <div class="price-sep"></div>
       <div class="price-segment">
         <div class="harga-durasi">Tahunan (${yearMonths} Bulan) <span class="hemat-tag">💡 Paling Hemat</span></div>
-        <div class="price-calc-row">${yearMonths} × ${formatRupiah(monthly)} = <span class="calc-base">Rp ${formatRupiah(yearBase)}</span></div>
-        <div class="price-calc-row early">Diskon Early Bird: Potongan ${formatRupiah(yearEB)} → <span class="calc-early">Rp ${formatRupiah(yearBase - yearEB)}</span></div>
-        <div class="price-calc-row spesial">Diskon Prestasi/Kurang Mampu: Potongan ${formatRupiah(yearSpecial)} → <span class="calc-spesial">Rp ${formatRupiah(yearBase - yearSpecial)}</span></div>
+        <div class="price-calc-row">${yearMonths} × ${formatRupiah(monthly)} = <span class="calc-base">${formatRupiah(yearBase)}</span></div>
+        <div class="price-calc-row early">Diskon Early Bird: Potongan ${formatRupiah(yearEB)} → <span class="calc-early">${formatRupiah(yearBase - yearEB)}</span></div>
+        <div class="price-calc-row spesial">Diskon Prestasi/Kurang Mampu: Potongan ${formatRupiah(yearSpecial)} → <span class="calc-spesial">${formatRupiah(yearBase - yearSpecial)}</span></div>
       </div>
     </div>
   `;
@@ -319,13 +315,11 @@ function buildPriceCard(item) {
 
 // ─── RENDER LOKASI ─────────────────────────────────────────────
 function renderLokasi(config) {
-  // Map
   const mapContainer = document.querySelector('.lokasi-map iframe');
   if (mapContainer && config.location && config.location.mapsUrl) {
     mapContainer.src = config.location.mapsUrl;
   }
 
-  // Jarak
   const jarakContainer = document.querySelector('.jarak-list');
   if (jarakContainer && config.jarak) {
     jarakContainer.innerHTML = config.jarak.map((item) => `
@@ -380,7 +374,6 @@ function getWhatsAppTemplate(contactName = '') {
     }
     return encodeURIComponent(template);
   }
-  // Fallback template (hardcode minimal)
   return encodeURIComponent('Hello Griya Aleena..\nSaya ingin bertanya lebih lanjut.');
 }
 
@@ -407,27 +400,44 @@ function renderContacts(config) {
 
   container.innerHTML = `
     <div style="display:flex; justify-content:center; margin-top:36px;">
-      <div class="kontak-card" style="min-width:340px; max-width:480px; width:100%; gap:20px;">
-        <div class="k-label" style="margin-bottom:0;">Hubungi Langsung</div>
-        <div style="width:100%; height:1px; background:rgba(255,255,255,0.1);"></div>
+      <div class="kontak-card">
+        <div class="k-label">Hubungi Langsung</div>
+        <div class="k-divider"></div>
         ${contacts.map((contact, index) => {
           const waUrl = buildWhatsAppUrl(contact.wa, contact.name);
           return `
-            <div style="width:100%;">
-              <div style="font-size:1.5rem; color:rgba(255,255,255,0.45); margin-bottom:6px;">${contact.name || 'Kontak'}</div>
-              <a class="wa-btn" href="${waUrl}" target="_blank" style="width:100%; justify-content:center; padding:13px 20px; font-size:0.95rem;">
+            <div class="k-item">
+              <div class="k-name">${contact.name || 'Kontak'}</div>
+              <a class="wa-btn" href="${waUrl}" target="_blank">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
                 </svg>
                 Chat WhatsApp
               </a>
             </div>
-            ${index < contacts.length - 1 ? '<div style="width:100%; height:1px; background:rgba(255,255,255,0.1);"></div>' : ''}
+            ${index < contacts.length - 1 ? '<div class="k-item-spacer"></div>' : ''}
           `;
         }).join('')}
       </div>
     </div>
   `;
+}
+
+// ─── RENDER FLOATING WA ──────────────────────────────────────
+function renderFloatingWA(config) {
+  const floatingBtn = document.getElementById('floating-wa');
+  if (!floatingBtn) return;
+
+  const contacts = config.contacts || [];
+  if (contacts.length === 0) return;
+
+  const primaryContact = contacts[0];
+  if (!primaryContact || !primaryContact.wa) return;
+
+  const waUrl = buildWhatsAppUrl(primaryContact.wa, primaryContact.name);
+  floatingBtn.href = waUrl;
+  
+  console.log('✅ Floating WA updated with template');
 }
 
 // ─── RENDER EARLY BIRD ────────────────────────────────────────
@@ -440,7 +450,7 @@ function renderEarlyBird(config) {
     <div class="diskon-syarat">
       <h4b>🐦 Syarat Diskon Early Bird</h4b>
       <div class="syarat-item">
-        <li>${req}</li>
+        <p>${req}</p>
       </div>
     </div>
   `;
@@ -483,6 +493,52 @@ function renderSpecialRequirements(config) {
   `;
 }
 
+// ─── HIT COUNTER GLOBAL ──────────────────────────────────────
+async function initCounter() {
+  const el = document.getElementById('hc-num');
+  if (!el) {
+    console.warn('⚠️ Element #hc-num tidak ditemukan');
+    return;
+  }
+  
+  const counterDiv = document.getElementById('hit-counter');
+  if (!counterDiv) {
+    console.warn('⚠️ Element #hit-counter tidak ditemukan');
+    return;
+  }
+  
+  const today = new Date().toDateString();
+  const lastVisit = localStorage.getItem('griya_last_visit');
+  const isNewDay = (lastVisit !== today);
+  const sessionVisited = sessionStorage.getItem('counter_visited');
+  
+  try {
+    let res, count;
+    
+    if (isNewDay || !sessionVisited) {
+      console.log('🔄 New day or new session, incrementing...');
+      res = await fetch(`${API}/increment`, { method: 'POST' });
+      localStorage.setItem('griya_last_visit', today);
+      sessionStorage.setItem('counter_visited', '1');
+    } else {
+      console.log('📊 Returning visitor, getting count...');
+      res = await fetch(`${API}/count`);
+    }
+    
+    const data = await res.json();
+    count = data.count || 121;
+    
+    el.textContent = Number(count).toLocaleString('id-ID');
+    counterDiv.style.display = 'block';
+    console.log('✅ Counter displayed:', count);
+    
+  } catch (error) {
+    console.error('❌ Counter error:', error);
+    el.textContent = '💔';
+    counterDiv.style.display = 'block';
+  }
+}
+
 // ─── INIT ──────────────────────────────────────────────────────
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', loadConfig);
@@ -497,5 +553,5 @@ window.__debug = {
   config: () => CONFIG,
 };
 
-console.log('✅ app.js v3.1 loaded');
+console.log('✅ app.js v3.6 loaded (Final - Cloudflare Ready)');
 console.log('🔧 Gunakan window.__debug untuk debugging');

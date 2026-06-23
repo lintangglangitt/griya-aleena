@@ -2,9 +2,12 @@
   "site": {
     "title": "Griya Aleena Sekaran",
     "tagline": "Kos Putri Kampus UNNES",
-    "heroBadge": "Kamar Masih Tersedia",
+
+
+    "heroBadge1": "Kamar Masih Tersedia",
     "heroBadge2": "Silakan Baca Syarat dan Ketentuan di Bawah",
-    "heroSub": "Fasilitas Lengkap. Harga Mahasiswa."
+    "heroSub": "Fasilitas Lengkap. Harga Terjangkau."
+
   },
   "whatsapp": {
     "template": "Assalamu'alaikum,\nSaya ingin bertanya tentang kos putri Griya Aleena Sekaran.\n\nDetail saya:\n- Nama: \n- Fakultas: \n- Kebutuhan: (AC/Non-AC)\n- Durasi: (Semester/Tahunan)\n\nMohon infonya. Terima kasih."
@@ -81,10 +84,10 @@
   ],
   "fasilitasPlus": [
     "Ada yang bersihkan area kos secara rutin — kos selalu terawat.",
-    "Nyaman dan tenang, akses mudah ke mana-mana.",
-    "Bisa bawa alat elektronik — meteran per kamar, fleksibel.",
-    "Sapu + alat pel sudah disediakan untuk penghuni.",
+    "Sangat dekat dengan pusat kampus - akses mudah ke mana-mana.",
+    "Bisa bawa alat elektronik — meteran listrik per kamar, fleksibel.",
     "Tempat jemuran tersedia — dapat mencuci pakaian sendiri.",
+    "Keamanan 24 jam dengan CCTV — hati lebih tenang.",
     "Hubungi pemilik langsung — tanpa perantara, lebih mudah."
   ],
   "pricing": {

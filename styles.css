@@ -51,7 +51,7 @@ nav a.nav-cta:hover { background: var(--amber-lt); }
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 100px 24px 60px;
+  padding: 60px 24px 40px;  /* 🔥 KURANGI: dari 100px 24px 60px → 60px 24px 40px */
   position: relative;
   overflow: hidden;
   text-align: center; /* 🔥 Center semua teks di hero */
@@ -81,7 +81,8 @@ nav a.nav-cta:hover { background: var(--amber-lt); }
   position: relative;
   z-index: 1;
 }
-.hero-badge {
+
+.hero-badge1 {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -111,6 +112,16 @@ nav a.nav-cta:hover { background: var(--amber-lt); }
   margin: 0 auto; /* 🔥 Center badge */
 }
 
+.hero-sub {
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  color: rgba(255,255,255,0.75);
+  max-width: 560px;
+  line-height: 1.65;
+  margin: 0 auto; /* 🔥 Center subtext */
+  text-align: center; /* 🔥 Center subtext */
+}
+
+
 .badge-dot {
   width: 6px;
   height: 6px;
@@ -136,32 +147,41 @@ h1 em {
   color: var(--amber);
   font-style: normal;
 }
-.hero-sub {
-  font-size: clamp(1rem, 2vw, 1.15rem);
-  color: rgba(255,255,255,0.75);
-  max-width: 560px;
-  line-height: 1.65;
-  margin: 0 auto; /* 🔥 Center subtext */
-  text-align: center; /* 🔥 Center subtext */
-}
 
-.section-title2 {
+h2 {
   font-family: 'Sora', sans-serif;
-  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-size: clamp(1rem, 2.5vw, 1.7rem);
   font-weight: 700;
   color: var(--white);
-  line-height: 1.2;
-  margin-bottom: 16px;
-  text-align: center; /* 🔥 Center title2 */
+  line-height: 1.15;
+  text-align: center; /* 🔥 Center judul */
   width: 100%; /* 🔥 Full width */
 }
+h2 em {
+  color: var(--amber);
+  font-style: normal;
+}
+
+h3 {
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(1rem, 1.25vw, 0.85rem);
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.15;
+  text-align: center; /* 🔥 Center judul */
+  width: 100%; /* 🔥 Full width */
+}
+h3 em {
+  color: var(--amber);
+  font-style: normal;
+}
+
 
 .container {
   max-width: 1000px;
   margin: 0 auto;
-  
-  /* text-align: center; /* 🔥 Center semua di container */
- width: 100%;  /* 🔥 Full width */
+  /* text-align: center;  /* 🔥 Center semua di container */
+  width: 100%; /* 🔥 Full width */
 }
 
 /* countdown */
@@ -268,11 +288,12 @@ h1 em {
 }
 
 /* ── SECTION BASE ── */
+
 section { padding: 80px 24px; }
 .section-eye { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em;
   text-transform: uppercase; color: var(--teal-lt); margin-bottom: 10px; }
-.section-title { font-family: 'Sora', sans-serif; font-size: clamp(1.6rem,3vw,2.2rem);
-  font-weight: 700; color: var(--text); line-height: 1.2; margin-bottom: 16px; }
+.section-title { font-family: 'Sora', sans-serif; font-size: clamp(1.6rem,3vw,2.2rem); 
+  font-weight: 700; color: var(--text); line-height: 1.2; margin-bottom: 16px;  text-align: left;}
 .section-desc { color: var(--muted); font-size: 1rem; line-height: 1.7; max-width: 560px; }
 
 /* ── STATS STRIP ── */
@@ -451,43 +472,106 @@ section { padding: 80px 24px; }
   white-space: nowrap;
 }
 
+
 /* ── CTA / KONTAK ── */
 #kontak {
   background: linear-gradient(135deg, var(--teal) 0%, #0d3d3d 100%);
   text-align: center;
+  padding: 60px 24px;
 }
-#kontak .section-title { color: var(--white); }
-#kontak .section-eye { color: var(--amber-lt); }
-.kontak-note { color: rgba(255,255,255,0.65); font-size: 0.92rem; margin-top: 8px; max-width: 500px; margin-inline: auto; }
-.kontak-cards {
-  display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 36px;
+
+#kontak .section-title {
+  color: var(--white);
+  text-align: center;
 }
+
+#kontak .section-eye {
+  color: var(--amber-lt);
+  text-align: center;
+}
+
+.kontak-note {
+  color: rgba(255,255,255,0.6);
+  font-size: 0.95rem;
+  max-width: 520px;
+  margin: 0 auto 32px auto;
+  line-height: 1.6;
+  text-align: center;
+}
+
+
+/* ── KONTAK CARDS ── */
+.kontak-cards-wrap {
+  display: flex;
+  justify-content: center;
+}
+
 .kontak-card {
-  background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.15);
-  border-radius: 20px; padding: 24px 28px; min-width: 220px; text-align: center;
-  display: flex; flex-direction: column; align-items: center; gap: 4px;
-  transition: transform 0.2s, background 0.2s;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 20px;
+  padding: 36px 32px;  /* 🔥 DIPERBESAR: dari 28px 24px → 36px 32px */
+  max-width: 520px;    /* 🔥 DIPERBESAR: dari 440px → 520px */
+  width: 100%;
+  transition: border-color 0.3s, background 0.3s;
 }
-.kontak-card:hover { transform: translateY(-3px); background: rgba(255,255,255,0.14); }
-.kontak-card .k-label { font-size: 0.75rem; color: rgba(255,255,255,0.5); letter-spacing: 0.1em;
-  text-transform: uppercase; margin-bottom: 6px; }
-.kontak-card .k-name { font-weight: 700; color: var(--white); font-size: 1rem; margin-bottom: 4px; }
-.kontak-card .k-num { color: var(--amber-lt); font-size: 0.88rem; margin-bottom: 12px; }
-.wa-btn-inline {
-  margin-top: 4px; padding: 10px 20px; font-size: 0.88rem;
-  box-shadow: 0 3px 12px rgba(37,211,102,0.3);
+
+.kontak-card:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(245,166,35,0.3);
 }
-.wa-btn-row {
-  display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 32px;
+
+.kontak-card .k-label {
+  color: rgba(255,255,255,0.3);
+  font-size: 0.75rem;  /* 🔥 DIPERBESAR: dari 0.7rem → 0.75rem */
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 16px; /* 🔥 DIPERBESAR: dari 12px → 16px */
 }
-.wa-btn {
-  display: inline-flex; align-items: center; gap: 10px;
-  background: #25D366; color: white; font-weight: 700; font-size: 1rem;
-  padding: 16px 36px; border-radius: 50px; text-decoration: none;
-  box-shadow: 0 4px 20px rgba(37,211,102,0.3);
-  transition: transform 0.15s, box-shadow 0.15s;
+
+.kontak-card .k-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.06);
+  margin-bottom: 20px; /* 🔥 DIPERBESAR: dari 16px → 20px */
 }
-.wa-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(37,211,102,0.4); }
+
+.kontak-card .k-item {
+  padding: 6px 0;      /* 🔥 DIPERBESAR: dari 4px 0 → 6px 0 */
+}
+
+.kontak-card .k-name {
+  color: #1c2e2e;
+  font-size: 1.1rem;   /* 🔥 DIPERBESAR: dari 0.9rem → 1.1rem */
+  font-weight: 600;
+  margin-bottom: 8px;  /* 🔥 DIPERBESAR: dari 6px → 8px */
+}
+
+.kontak-card .wa-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;           /* 🔥 DIPERBESAR: dari 8px → 10px */
+  background: #25D366;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;  /* 🔥 DIPERBESAR: dari 0.8rem → 0.95rem */
+  padding: 12px 24px;  /* 🔥 DIPERBESAR: dari 8px 16px → 12px 24px */
+  border-radius: 50px;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+  width: 100%;
+  max-width: 300px;    /* 🔥 DIPERBESAR: dari 240px → 300px */
+}
+
+.kontak-card .wa-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(37,211,102,0.35);
+}
+
+.kontak-card .k-item-spacer {
+  height: 14px;        /* 🔥 DIPERBESAR: dari 10px → 14px */
+}
 
 /* ── FOOTER ── */
 footer {
@@ -583,4 +667,63 @@ footer span { color: var(--amber-lt); }
   .galeri-grid { grid-template-columns: 1fr 1fr; }
   .galeri-item.main { grid-column: 1 / 3; grid-row: auto; }
   .floating-wa { bottom: 16px; right: 16px; width: 52px; height: 52px; }
+
+  /* 🔥 Countdown 1 baris dengan box */
+  .countdown {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 6px;
+    justify-content: center;
+  }
+
+  .cd-box {
+    min-width: 55px;
+    padding: 10px 8px;
+    flex-shrink: 0;
+    border-radius: 10px;
+  }
+
+  .cd-num {
+    font-size: 1.1rem;
+  }
+
+  .cd-unit {
+    font-size: 0.5rem;
+  }
+}
+
+
+/* ── HIT COUNTER ── */
+#hit-counter {
+  background: linear-gradient(135deg, var(--teal) 0%, #0d3d3d 100%);
+  padding: 24px 24px;
+  text-align: center;
+  border-top: 3px solid var(--amber);
+}
+
+#hit-counter .hc-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+#hit-counter .hc-label {
+  color: rgba(255,255,255,0.4);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 4px;
+}
+
+#hit-counter .hc-num {
+  color: var(--amber);
+  font-family: 'Sora', sans-serif;
+  font-size: 2.8rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+#hit-counter .hc-sub {
+  color: rgba(255,255,255,0.25);
+  font-size: 0.8rem;
+  margin-top: 4px;
 }
