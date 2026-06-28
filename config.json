@@ -91,11 +91,12 @@
     { "emoji": "💧", "text": "Free Iuran Air & Sampah", "desc": "Tidak ada biaya tambahan." }
   ],
   "fasilitasPlus": [
-    "Ada yang bersihkan area kos secara rutin — kos selalu terawat.",
+   
     "Sangat dekat dengan pusat kampus — akses mudah ke mana-mana.",
+    "Hunian terbatas — lebih tenang, lebih nyaman, tanpa kebisingan berlebih.",
+    "Ada yang bersihkan area kos secara rutin — kos selalu terawat.",
     "Bisa bawa alat elektronik — meteran listrik per kamar, fleksibel.",
     "Tempat jemuran tersedia — dapat mencuci pakaian sendiri.",
-    "Keamanan 24 jam dengan CCTV — hati lebih tenang.",
     "Hubungi pemilik langsung — tanpa perantara, lebih mudah."
   ],
   "pricing": {
