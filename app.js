@@ -7,6 +7,12 @@
 let CONFIG = null;
 const API = 'https://griya-counter.lintangglangitt.workers.dev';
 
+// ─── HELPER FUNCTIONS ──────────────────────────────────────────
+function formatRupiah(num) {
+  if (typeof num !== 'number' || isNaN(num)) return '0';
+  return 'Rp' + new Intl.NumberFormat('id-ID').format(num);
+}
+
 // ─── LOAD CONFIG ──────────────────────────────────────────────
 async function loadConfig() {
   try {
