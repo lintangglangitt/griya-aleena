@@ -327,14 +327,14 @@ function buildPriceCardSimple(data, type, emoji, badgeClass) {
         <div class="harga-durasi">Semesteran (${semesterMonths} Bulan)</div>
         <div class="price-calc-row">${semesterMonths} × ${formatRupiah(monthly)} = <span class="calc-base">${formatRupiah(semesterBase)}</span></div>
         <div class="price-calc-row early">Diskon Early Bird: Potongan ${formatRupiah(semesterEB)} → <span class="calc-early">${formatRupiah(semesterBase - semesterEB)}</span></div>
-        <div class="price-calc-row spesial">Diskon Prestasi/Kurang Mampu: <span class="calc-spesial">Hubungi Kami</span></div>
+        <div class="price-calc-row spesial">Diskon Prestasi/Kurang Mampu: <a href="#kontak" class="btn-hubungi-kami">Chat untuk Info →</a></div>
       </div>
       <div class="price-sep"></div>
       <div class="price-segment">
         <div class="harga-durasi">Tahunan (${yearMonths} Bulan) <span class="hemat-tag">💡 Paling Hemat</span></div>
         <div class="price-calc-row">${yearMonths} × ${formatRupiah(monthly)} = <span class="calc-base">${formatRupiah(yearBase)}</span></div>
         <div class="price-calc-row early">Diskon Early Bird: Potongan ${formatRupiah(yearEB)} → <span class="calc-early">${formatRupiah(yearBase - yearEB)}</span></div>
-        <div class="price-calc-row spesial">Diskon Prestasi/Kurang Mampu: <span class="calc-spesial">Hubungi Kami</span></div>
+        <div class="price-calc-row spesial">Diskon Prestasi/Kurang Mampu: <a href="#kontak" class="btn-hubungi-kami">Chat untuk Info →</a></div>
       </div>
     </div>
   `;

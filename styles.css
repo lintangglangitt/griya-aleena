@@ -464,6 +464,29 @@ section { padding: 80px 24px; }
 }
 .syarat-item ul li::before { content: '•'; position: absolute; left: 0; color: var(--amber-lt); }
 
+
+/* ─── BUTTON HUBUNGI KAMI DI HARGA ─── */
+.btn-hubungi-kami {
+  display: inline-block;
+  background: var(--amber);
+  color: var(--navy);
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 6px 16px;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+  box-shadow: 0 2px 12px rgba(245,166,35,0.3);
+  margin-left: 4px;
+}
+
+.btn-hubungi-kami:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(245,166,35,0.4);
+  background: var(--amber-lt);
+}
+
+
 /* ── LOKASI ── */
 #lokasi { background: var(--white); }
 .lokasi-row {
