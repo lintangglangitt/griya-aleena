@@ -260,6 +260,7 @@ function renderFasilitasPlus(c) {
   `).join('');
 }
 
+
 // ─── 10. PRICING ───────────────────────────────────────────────
 function renderPricing(c) {
   const eye = document.getElementById('harga-eye');
@@ -278,55 +279,36 @@ function renderPricing(c) {
     return;
   }
 
-  const floorKeys = ['l1ac', 'l1nac', 'l2ac', 'l2nac'];
-  const floorLabels = {
-    l1ac: { title: '🏠 Lantai 1', type: 'AC', badge: 'ac-badge', emoji: '❄️' },
-    l1nac: { title: '🏠 Lantai 1', type: 'Non-AC', badge: 'nonac-badge', emoji: '🌀' },
-    l2ac: { title: '🏢 Lantai 2', type: 'AC', badge: 'ac-badge', emoji: '❄️' },
-    l2nac: { title: '🏢 Lantai 2', type: 'Non-AC', badge: 'nonac-badge', emoji: '🌀' }
-  };
+  // Ambil data AC dan Non-AC
+  const acData = pricing.ac;
+  const nonacData = pricing.nonac;
+  
+  let cards = [];
+  if (acData) {
+    cards.push(buildPriceCardSimple(acData, 'AC', '❄️', 'ac-badge'));
+  }
+  if (nonacData) {
+    cards.push(buildPriceCardSimple(nonacData, 'Non-AC', '🌀', 'nonac-badge'));
+  }
 
-  const floorGroups = {
-    '🏠 Lantai 1': { ac: null, nac: null },
-    '🏢 Lantai 2': { ac: null, nac: null }
-  };
+  if (cards.length === 0) {
+    container.innerHTML = '<p style="color:rgba(255,255,255,0.5);text-align:center;">Data harga belum tersedia</p>';
+    return;
+  }
 
-  floorKeys.forEach((key) => {
-    const label = floorLabels[key];
-    const data = pricing[key];
-    if (!data) return;
-    const group = floorGroups[label.title];
-    if (label.type === 'AC') group.ac = { key, data, label };
-    else group.nac = { key, data, label };
-  });
-
-  let html = '';
-  Object.keys(floorGroups).forEach((floorTitle) => {
-    const group = floorGroups[floorTitle];
-    const cards = [];
-    if (group.ac) cards.push(buildPriceCard(group.ac));
-    if (group.nac) cards.push(buildPriceCard(group.nac));
-    if (cards.length === 0) return;
-    html += `
-      <div class="lantai-block">
-        <div class="lantai-title">${floorTitle}</div>
-        <div class="harga-cards">${cards.join('')}</div>
-      </div>
-    `;
-  });
-
-  container.innerHTML = html || '<p style="color:rgba(255,255,255,0.5);text-align:center;">Data harga belum tersedia</p>';
+  container.innerHTML = `
+    <div class="harga-cards">${cards.join('')}</div>
+  `;
 }
 
-function buildPriceCard(item) {
-  const { data, label } = item;
-  const { monthly, semesterMonths, yearMonths, semesterEB, semesterSpecial, yearEB, yearSpecial } = data;
+function buildPriceCardSimple(data, type, emoji, badgeClass) {
+  const { monthly, semesterMonths, yearMonths, semesterEB, yearEB } = data;
   const semesterBase = monthly * semesterMonths;
   const yearBase = monthly * yearMonths;
 
   return `
-    <div class="harga-card">
-      <div class="room-type-badge ${label.badge}">${label.emoji} Kamar ${label.type}</div>
+    <div class="harga-card featured">
+      <div class="room-type-badge ${badgeClass}">${emoji} Kamar ${type}</div>
       <div class="price-segment bulanan-strike">
         <div class="harga-durasi">Bulanan</div>
         <div class="harga-price-row">
@@ -339,23 +321,19 @@ function buildPriceCard(item) {
         <div class="harga-durasi">Semesteran (${semesterMonths} Bulan)</div>
         <div class="price-calc-row">${semesterMonths} × ${formatRupiah(monthly)} = <span class="calc-base">${formatRupiah(semesterBase)}</span></div>
         <div class="price-calc-row early">Diskon Early Bird: Potongan ${formatRupiah(semesterEB)} → <span class="calc-early">${formatRupiah(semesterBase - semesterEB)}</span></div>
-        <div class="price-calc-row spesial">Diskon Prestasi/Kurang Mampu: Potongan ${formatRupiah(semesterSpecial)} → <span class="calc-spesial">${formatRupiah(semesterBase - semesterSpecial)}</span></div>
+        <div class="price-calc-row spesial">Diskon Prestasi/Kurang Mampu: <span class="calc-spesial">Hubungi Kami</span></div>
       </div>
       <div class="price-sep"></div>
       <div class="price-segment">
         <div class="harga-durasi">Tahunan (${yearMonths} Bulan) <span class="hemat-tag">💡 Paling Hemat</span></div>
         <div class="price-calc-row">${yearMonths} × ${formatRupiah(monthly)} = <span class="calc-base">${formatRupiah(yearBase)}</span></div>
         <div class="price-calc-row early">Diskon Early Bird: Potongan ${formatRupiah(yearEB)} → <span class="calc-early">${formatRupiah(yearBase - yearEB)}</span></div>
-        <div class="price-calc-row spesial">Diskon Prestasi/Kurang Mampu: Potongan ${formatRupiah(yearSpecial)} → <span class="calc-spesial">${formatRupiah(yearBase - yearSpecial)}</span></div>
+        <div class="price-calc-row spesial">Diskon Prestasi/Kurang Mampu: <span class="calc-spesial">Hubungi Kami</span></div>
       </div>
     </div>
   `;
 }
 
-function formatRupiah(num) {
-  if (typeof num !== 'number' || isNaN(num)) return '0';
-  return 'Rp' + new Intl.NumberFormat('id-ID').format(num);
-}
 
 // ─── 11. EARLY BIRD ────────────────────────────────────────────
 function renderEarlyBird(c) {

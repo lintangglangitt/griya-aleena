@@ -1,9 +1,6 @@
 {
-
-"site": {
-    
+  "site": {
     "version": "20260623",
-
     "titleBrowser": "Griya Aleena Sekaran",
     "title": "Griya Aleena Sekaran",
     "titleSuffix": " – Kos Putri Kampus UNNES",
@@ -102,10 +99,8 @@
     "Hubungi pemilik langsung — tanpa perantara, lebih mudah."
   ],
   "pricing": {
-    "l1ac": { "monthly": 1100000, "semesterMonths": 6, "yearMonths": 12, "semesterEB": 200000, "semesterSpecial": 400000, "yearEB": 500000, "yearSpecial": 900000 },
-    "l1nac": { "monthly": 800000, "semesterMonths": 6, "yearMonths": 12, "semesterEB": 200000, "semesterSpecial": 400000, "yearEB": 500000, "yearSpecial": 900000 },
-    "l2ac": { "monthly": 1150000, "semesterMonths": 6, "yearMonths": 12, "semesterEB": 200000, "semesterSpecial": 400000, "yearEB": 500000, "yearSpecial": 900000 },
-    "l2nac": { "monthly": 850000, "semesterMonths": 6, "yearMonths": 12, "semesterEB": 200000, "semesterSpecial": 500000, "yearEB": 500000, "yearSpecial": 900000 }
+    "ac": { "monthly": 1100000, "semesterMonths": 6, "yearMonths": 12, "semesterEB": 200000, "yearEB": 500000 },
+    "nonac": { "monthly": 800000, "semesterMonths": 6, "yearMonths": 12, "semesterEB": 200000, "yearEB": 500000 }
   },
   "earlyBirdRequirement": "Booking kamar sebelum 15 Juli 2026.",
   "specialRequirements": {
