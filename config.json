@@ -14,7 +14,7 @@
     "heroTitle": "GRIYA ALEENA SEKARAN",
     "heroSubtitle": "Kos Putri<br>UNIVERSITAS NEGERI SEMARANG",
     "heroSub": "Fasilitas Lengkap. Harga Terjangkau.",
-    "heroBadge2": "Silakan Baca Syarat dan Ketentuan di Bawah",
+    "heroBadge2": "Silakan baca syarat dan ketentuan di bawah.",
     "footerYear": 2026
   },
   "heroChips": [
@@ -103,7 +103,7 @@
     "ac": { "monthly": 1100000, "semesterMonths": 6, "yearMonths": 12, "semesterEB": 200000, "yearEB": 500000 },
     "nonac": { "monthly": 800000, "semesterMonths": 6, "yearMonths": 12, "semesterEB": 200000, "yearEB": 500000 }
   },
-  "earlyBirdRequirement": "Booking kamar sebelum 15 Juli 2026.",
+  "earlyBirdRequirement": "Booking kamar sebelum 25 Juli 2026.",
   "specialRequirements": {
     "hafidhul": {
       "title": "📖 Mahasiswa Hafidhul Qur'an",
