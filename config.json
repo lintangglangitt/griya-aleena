@@ -1,6 +1,6 @@
 {
   "site": {
-    "version": "20260704",
+    "version": "20260705",
     "titleBrowser": "Griya Aleena Sekaran",
     "title": "Griya Aleena Sekaran",
     "titleSuffix": " – Kos Putri Kampus UNNES",
@@ -12,7 +12,7 @@
     "navLogo": "🏠",
     "navCta": "Hubungi Kami",
     "heroTitle": "GRIYA ALEENA SEKARAN",
-    "heroSubtitle": "Kos Putri<br>UNIVERSITAS NEGERI SEMARANG",
+    "heroSubtitle": "Kos Putri Nyaman <br>UNIVERSITAS NEGERI SEMARANG",
     "heroSub": "Fasilitas Lengkap. Harga Terjangkau.",
     "heroBadge2": "Silakan baca syarat dan ketentuan di bawah.",
     "footerYear": 2026
@@ -23,6 +23,7 @@
     "🚿 Kamar Mandi Dalam",
     "🍜 Dapur Bersama",
     "☃️ Kulkas Bersama",
+    "👕 Mesin Cuci",
     "❄️ AC/NON AC",
     "🛜 Free WiFi",
     "🛵 Garasi Motor & Gerbang",
@@ -55,7 +56,7 @@
   "plusTitle": "Kenyamanan Adalah Prioritas",
   "hargaEye": "Harga Terjangkau",
   "hargaTitle": "Dapatkan Diskon Early Bird & Diskon Prestasi/Kurang Mampu",
-  "hargaDesc": "Pilih durasi yang sesuai kantong kamu. 1 Kamar untuk 1 Orang.",
+  "hargaDesc": "Pilih durasi yang sesuai kantong kamu. 1 kamar untuk 1 orang.",
   "lokasiEye": "Lokasi Strategis",
   "lokasiTitle": "Di Jantung Sekaran,<br>Mana-mana Dekat",
   "kontakEye": "Hubungi Kami",
@@ -82,12 +83,13 @@
     { "emoji": "❄️", "text": "AC/Kipas Tiap Kamar", "desc": "Nyaman sepanjang hari, tidur berkualitas tanpa kepanasan." },
     { "emoji": "🚿", "text": "Kamar Mandi Dalam + Shower", "desc": "Privasi terjaga, lengkap dengan shower dan keran." },
     { "emoji": "🪞", "text": "Lemari Besi Anti Karat + Locker", "desc": "Baju rapi tersimpan aman, dilengkapi cermin besar." },
-    { "emoji": "🛏️", "text": "Kasur Busa Empuk + Bantal Guling", "desc": "Tidur berkualitas setelah hari yang panjang di kampus." },
-    { "emoji": "🛜", "text": "Free WiFi", "desc": "Internet lancar untuk kuliah online, tugas, dan hiburan." },
+    { "emoji": "🛏️", "text": "Kasur Busa/Springbed + Bantal Guling", "desc": "Tidur berkualitas setelah hari yang panjang di kampus." }, 
     { "emoji": "⚡", "text": "Meteran Listrik per Kamar", "desc": "Token prabayar sendiri — bayar sesuai pemakaianmu." },
     { "emoji": "🍳", "text": "Dapur Bersama + Kulkas", "desc": "Lengkap dengan kompor gas, alat masak, dan wastafel." },
+    { "emoji": "👕", "text": "Mesin Cuci + Jemuran", "desc": "Hemat uang, tidak perlu bayar laundry." },
     { "emoji": "🛵", "text": "Garasi Motor + Gerbang", "desc": "Motor aman terlindungi, tidak perlu khawatir saat belajar." },
     { "emoji": "📹", "text": "CCTV Area Kos", "desc": "Keamanan 24 jam." },
+    { "emoji": "🛜", "text": "Free WiFi", "desc": "Internet lancar untuk kuliah online, tugas, dan hiburan." },
     { "emoji": "💧", "text": "Free Iuran Air & Sampah", "desc": "Tidak ada biaya tambahan." }
   ],
   "fasilitasPlus": [
@@ -96,7 +98,7 @@
     "Hunian terbatas — lebih tenang, lebih nyaman, tanpa kebisingan berlebih.",
     "Ada yang bersihkan area kos secara rutin — kos selalu terawat.",
     "Bisa bawa alat elektronik — meteran listrik per kamar, fleksibel.",
-    "Tempat jemuran tersedia — dapat mencuci pakaian sendiri.",
+    "Mesin cuci dan tempat jemuran tersedia — dapat mencuci pakaian sendiri.",
     "Hubungi pemilik langsung — tanpa perantara, lebih mudah."
   ],
   "pricing": {
