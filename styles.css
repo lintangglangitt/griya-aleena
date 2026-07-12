@@ -36,22 +36,27 @@ nav {
   display: flex; align-items: center; justify-content: center; font-size: 18px; }
 
 /* 🔥 PERBAIKAN: Judul utama PUTIH, Subtitle KUNING */
+
 .nav-name {
   font-family: 'Sora', sans-serif;
   font-weight: 700;
   font-size: 1rem;
-  line-height: 1.1;
+  line-height: 1.2;
 }
+
 #nav-brand-name {
-  color: var(--white);      /* PUTIH */
+  color: var(--white);
   display: block;
 }
+
 #nav-brand-sub {
   display: block;
   font-weight: 400;
   font-size: 0.7rem;
-  color: var(--amber-lt);   /* KUNING */
+  color: var(--amber-lt);
   letter-spacing: 0.1em;
+  line-height: 1.3;
+  white-space: normal; /* Allow line breaks */
 }
 
 nav a.nav-cta {
