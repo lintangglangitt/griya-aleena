@@ -115,6 +115,7 @@ function renderMeta(c) {
 
 
 // ─── 2. NAV ─────────────────────────────────────────────────────
+
 function renderNav(c) {
   const s = c.site || {};
   const brand = document.getElementById('nav-brand-name');
@@ -122,9 +123,11 @@ function renderNav(c) {
   const logo = document.getElementById('nav-logo');
   const cta = document.getElementById('nav-cta');
   
-  // Gunakan navbarTitle dan navbarSubtitle
   if (brand) brand.textContent = s.navbarTitle || s.titleBrowser || s.title || 'Griya Aleena Sekaran';
-  if (sub) sub.textContent = s.navbarSubtitle || s.tagline || 'Kos Putri Kampus UNNES';
+  
+  // 🔥 Gunakan innerHTML agar <br> berfungsi
+  if (sub) sub.innerHTML = s.navbarSubtitle || s.tagline || 'Kos Putri Kampus UNNES';
+  
   if (logo) logo.textContent = s.navLogo || '🏠';
   if (cta) cta.textContent = s.navCta || 'Hubungi Kami';
 }
