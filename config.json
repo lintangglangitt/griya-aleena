@@ -59,10 +59,19 @@
   "hargaDesc": "Pilih durasi yang sesuai kantong kamu. 1 kamar untuk 1 orang.",
   "lokasiEye": "Lokasi Strategis",
   "lokasiTitle": "Di Jantung Sekaran,<br>Mana-mana Dekat",
+
+  "kontakEye": "Hubungi Kami",
+  "kontakTitle": "Amankan Kamarmu Sekarang",
+  "kontakNote": "Informasi selengkapnya, kunjungi: <br> https://griya-aleena.pages.dev",
+  "kontakLabel": "Hubungi Langsung",
+  
+  /*
   "kontakEye": "Hubungi Kami",
   "kontakTitle": "Amankan Kamarmu Sekarang",
   "kontakNote": "Langsung hubungi pemilik tanpa perantara<br>cepat, mudah, dan bisa tanya apa saja.",
   "kontakLabel": "Hubungi Langsung",
+  */
+  
   "whatsapp": {
     "template": "Assalamu'alaikum,\nSaya ingin bertanya tentang kos putri Griya Aleena Sekaran.\n\nDetail saya:\n- Nama: \n- Fakultas: \n- Kebutuhan: (AC/Non-AC)\n- Durasi: (Semester/Tahunan)\n\nMohon infonya. Terima kasih."
   },
