@@ -72,11 +72,12 @@
     "visible": true,
     "label": "Diskon Early Bird Berakhir Dalam",
     "label2": "Diskon Prestasi/Kurang Mampu *)",
-    "target": "2026-07-25T00:00:00"
+    "target": "2026-07-31T00:00:00"
   },
   "contacts": [
-    { "name": "Nawang (0899-5677-419)", "wa": "628995677419" },
+    
     { "name": "Hakim (0898-5446-121)", "wa": "628985446121" }
+    
   ],
   "location": {
     "mapsUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3959.7034771020703!2d110.3956973!3d-7.044090399999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e708bf0a28ca121%3A0x7d91be49e7134aef!2sGriya%20Aleena%20Sekaran!5e0!3m2!1sen!2sid!4v1781354903283!5m2!1sen!2sid"
@@ -140,7 +141,7 @@
   "schema": {
     "type": "LodgingBusiness",
     "description": "Kos putri dekat kampus UNNES Sekaran dengan fasilitas lengkap dan harga terjangkau.",
-    "telephone": "+628995677419",
+    "telephone": "+628985446121",
     "priceRange": "Rp800.000 – Rp1.150.000/bulan",
     "address": {
       "@type": "PostalAddress",
