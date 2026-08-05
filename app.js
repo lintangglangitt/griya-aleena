@@ -318,7 +318,7 @@ function buildPriceCardSimple(data, type, emoji, badgeClass) {
   return `
     <div class="harga-card featured">
       <div class="room-type-badge ${badgeClass}">${emoji} Kamar ${type}</div>
-      <div class="price-segment bulanan-strike">
+      <div class="price-segment">
         <div class="harga-durasi">Bulanan</div>
         <div class="harga-price-row">
           <span class="harga-normal">${formatRupiah(monthly)}</span>
