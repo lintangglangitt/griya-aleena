@@ -110,7 +110,7 @@
     "ac": { "monthly": 1100000, "semesterMonths": 6, "yearMonths": 12, "semesterEB": 200000, "yearEB": 500000 },
     "nonac": { "monthly": 800000, "semesterMonths": 6, "yearMonths": 12, "semesterEB": 200000, "yearEB": 500000 }
   },
-  "earlyBirdRequirement": "Booking kamar sebelum 25 Juli 2026.",
+  "earlyBirdRequirement": "Booking kamar sebelum 15 Agustus 2026.",
   "specialRequirements": {
     "hafidhul": {
       "title": "📖 Mahasiswa Hafidhul Qur'an",
@@ -142,7 +142,7 @@
     "type": "LodgingBusiness",
     "description": "Kos putri dekat kampus UNNES Sekaran dengan fasilitas lengkap dan harga terjangkau.",
     "telephone": "+628985446121",
-    "priceRange": "Rp800.000 – Rp1.150.000/bulan",
+    "priceRange": "Rp800.000 – Rp1.100.000/bulan",
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "Sekaran",
