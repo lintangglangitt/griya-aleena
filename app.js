@@ -104,6 +104,7 @@ function renderMeta(c) {
   console.log('✅ Meta & Schema updated');
 }
 
+
 // ─── 2. NAV ─────────────────────────────────────────────────────
 function renderNav(c) {
   const s = c.site || {};
@@ -114,7 +115,11 @@ function renderNav(c) {
   
   if (brand) brand.textContent = s.navbarTitle || s.titleBrowser || s.title || 'Griya Aleena Sekaran';
   if (sub) sub.innerHTML = s.navbarSubtitle || s.tagline || 'Kos Putri Kampus UNNES';
-  if (logo) logo.textContent = s.navLogo || '🏠';
+  
+  // Logo sudah di-hardcode di HTML dengan <img>, tidak perlu diubah
+  // Tapi jika ingin fallback ke emoji jika logo tidak ada:
+  // if (logo) logo.textContent = s.navLogo || '🏠';
+  
   if (cta) cta.textContent = s.navCta || 'Hubungi Kami';
 }
 
