@@ -1,6 +1,6 @@
 // ============================================================
 // app.js - Griya Aleena Sekaran
-// Versi: 5.0 (100% Dinamis - Full dari config.json)
+// Versi: 6.0 (Dual Pricing Version)
 // ============================================================
 
 // ─── GLOBAL ──────────────────────────────────────────────────────
@@ -59,8 +59,6 @@ function renderAll(c) {
   console.log('✅ All sections rendered');
 }
 
-
-
 // ─── 1. META & OG ──────────────────────────────────────────────
 function renderMeta(c) {
   const s = c.site || {};
@@ -68,11 +66,9 @@ function renderMeta(c) {
   const desc = s.metaDescription || s.heroSub || 'Kos Putri Kampus UNNES';
   const url = s.url || window.location.href;
 
-  // 1️⃣ Title untuk browser
   document.title = title + (s.titleSuffix || ' – Kos Putri Kampus UNNES');
   document.querySelector('meta[name="description"]')?.setAttribute('content', desc);
 
-  // 2️⃣ Update OG tags yang sudah ada (hardcode di HTML)
   const ogTitle = document.querySelector('meta[property="og:title"]');
   const ogDesc = document.querySelector('meta[property="og:description"]');
   const ogUrl = document.querySelector('meta[property="og:url"]');
@@ -81,7 +77,6 @@ function renderMeta(c) {
   if (ogDesc) ogDesc.setAttribute('content', desc);
   if (ogUrl) ogUrl.setAttribute('content', url);
 
-  // 3️⃣ Schema.org JSON-LD (TETAP ADA)
   const schema = c.schema || {};
   const schemaData = {
     "@context": "https://schema.org",
@@ -97,7 +92,7 @@ function renderMeta(c) {
     },
     "telephone": schema.telephone || "+628995677419",
     "url": url,
-    "priceRange": schema.priceRange || "Rp800.000 – Rp1.150.000/bulan"
+    "priceRange": schema.priceRange || "Rp800.000 – Rp1.100.000/bulan"
   };
 
   document.querySelectorAll('script[type="application/ld+json"]').forEach(el => el.remove());
@@ -106,16 +101,10 @@ function renderMeta(c) {
   script.textContent = JSON.stringify(schemaData);
   document.head.appendChild(script);
   
-  console.log('✅ Meta & Schema updated:', {
-    title: document.title,
-    url: url
-  });
+  console.log('✅ Meta & Schema updated');
 }
 
-
-
 // ─── 2. NAV ─────────────────────────────────────────────────────
-
 function renderNav(c) {
   const s = c.site || {};
   const brand = document.getElementById('nav-brand-name');
@@ -124,14 +113,10 @@ function renderNav(c) {
   const cta = document.getElementById('nav-cta');
   
   if (brand) brand.textContent = s.navbarTitle || s.titleBrowser || s.title || 'Griya Aleena Sekaran';
-  
-  // 🔥 Gunakan innerHTML agar <br> berfungsi
   if (sub) sub.innerHTML = s.navbarSubtitle || s.tagline || 'Kos Putri Kampus UNNES';
-  
   if (logo) logo.textContent = s.navLogo || '🏠';
   if (cta) cta.textContent = s.navCta || 'Hubungi Kami';
 }
-
 
 // ─── 3. HERO ────────────────────────────────────────────────────
 function renderHero(c) {
@@ -269,7 +254,6 @@ function renderFasilitasPlus(c) {
   `).join('');
 }
 
-
 // ─── 10. PRICING ───────────────────────────────────────────────
 function renderPricing(c) {
   const eye = document.getElementById('harga-eye');
@@ -288,16 +272,19 @@ function renderPricing(c) {
     return;
   }
 
+  // Ambil versi harga (default: 1)
+  const version = pricing.version || 1;
+  
   // Ambil data AC dan Non-AC
   const acData = pricing.ac;
   const nonacData = pricing.nonac;
   
   let cards = [];
   if (acData) {
-    cards.push(buildPriceCardSimple(acData, 'AC', '❄️', 'ac-badge'));
+    cards.push(buildPriceCard(acData, 'AC', '❄️', 'ac-badge', version));
   }
   if (nonacData) {
-    cards.push(buildPriceCardSimple(nonacData, 'Non-AC', '🌀', 'nonac-badge'));
+    cards.push(buildPriceCard(nonacData, 'Non-AC', '🌀', 'nonac-badge', version));
   }
 
   if (cards.length === 0) {
@@ -310,39 +297,71 @@ function renderPricing(c) {
   `;
 }
 
-function buildPriceCardSimple(data, type, emoji, badgeClass) {
-  const { monthly, semesterMonths, yearMonths, semesterEB, yearEB } = data;
+function buildPriceCard(data, type, emoji, badgeClass, version = 1) {
+  const { monthly, semesterMonths, yearMonths, semesterEB, yearEB, semesterSpecial, yearSpecial } = data;
   const semesterBase = monthly * semesterMonths;
   const yearBase = monthly * yearMonths;
 
-  return `
-    <div class="harga-card featured">
-      <div class="room-type-badge ${badgeClass}">${emoji} Kamar ${type}</div>
-      <div class="price-segment">
-        <div class="harga-durasi">Bulanan</div>
-        <div class="harga-price-row">
-          <span class="harga-normal">${formatRupiah(monthly)}</span>
-          <span class="harga-period">/ bulan</span>
+  // Versi 1: "Chat untuk Info →" (tanpa nominal diskon spesial)
+  if (version === 1) {
+    return `
+      <div class="harga-card featured">
+        <div class="room-type-badge ${badgeClass}">${emoji} Kamar ${type}</div>
+        <div class="price-segment">
+          <div class="harga-durasi">Bulanan</div>
+          <div class="harga-price-row">
+            <span class="harga-normal">${formatRupiah(monthly)}</span>
+            <span class="harga-period">/ bulan</span>
+          </div>
+        </div>
+        <div class="price-sep"></div>
+        <div class="price-segment">
+          <div class="harga-durasi">Semesteran (${semesterMonths} Bulan)</div>
+          <div class="price-calc-row">${semesterMonths} × ${formatRupiah(monthly)} = <span class="calc-base">${formatRupiah(semesterBase)}</span></div>
+          <div class="price-calc-row early">Diskon Early Bird: Potongan ${formatRupiah(semesterEB)} → <span class="calc-early">${formatRupiah(semesterBase - semesterEB)}</span></div>
+          <div class="price-calc-row spesial">Diskon Prestasi/Kurang Mampu: <a href="#kontak" class="btn-hubungi-kami">Chat untuk Info →</a></div>
+        </div>
+        <div class="price-sep"></div>
+        <div class="price-segment">
+          <div class="harga-durasi">Tahunan (${yearMonths} Bulan) <span class="hemat-tag">💡 Paling Hemat</span></div>
+          <div class="price-calc-row">${yearMonths} × ${formatRupiah(monthly)} = <span class="calc-base">${formatRupiah(yearBase)}</span></div>
+          <div class="price-calc-row early">Diskon Early Bird: Potongan ${formatRupiah(yearEB)} → <span class="calc-early">${formatRupiah(yearBase - yearEB)}</span></div>
+          <div class="price-calc-row spesial">Diskon Prestasi/Kurang Mampu: <a href="#kontak" class="btn-hubungi-kami">Chat untuk Info →</a></div>
         </div>
       </div>
-      <div class="price-sep"></div>
-      <div class="price-segment">
-        <div class="harga-durasi">Semesteran (${semesterMonths} Bulan)</div>
-        <div class="price-calc-row">${semesterMonths} × ${formatRupiah(monthly)} = <span class="calc-base">${formatRupiah(semesterBase)}</span></div>
-        <div class="price-calc-row early">Diskon Early Bird: Potongan ${formatRupiah(semesterEB)} → <span class="calc-early">${formatRupiah(semesterBase - semesterEB)}</span></div>
-        <div class="price-calc-row spesial">Diskon Prestasi/Kurang Mampu: <a href="#kontak" class="btn-hubungi-kami">Chat untuk Info →</a></div>
+    `;
+  }
+  
+  // Versi 2: Menampilkan nominal diskon spesial
+  if (version === 2) {
+    return `
+      <div class="harga-card featured">
+        <div class="room-type-badge ${badgeClass}">${emoji} Kamar ${type}</div>
+        <div class="price-segment">
+          <div class="harga-durasi">Bulanan</div>
+          <div class="harga-price-row">
+            <span class="harga-normal">${formatRupiah(monthly)}</span>
+            <span class="harga-period">/ bulan</span>
+          </div>
+        </div>
+        <div class="price-sep"></div>
+        <div class="price-segment">
+          <div class="harga-durasi">Semesteran (${semesterMonths} Bulan)</div>
+          <div class="price-calc-row">${semesterMonths} × ${formatRupiah(monthly)} = <span class="calc-base">${formatRupiah(semesterBase)}</span></div>
+          <div class="price-calc-row early">Diskon Early Bird: Potongan ${formatRupiah(semesterEB)} → <span class="calc-early">${formatRupiah(semesterBase - semesterEB)}</span></div>
+          <div class="price-calc-row spesial">Diskon Prestasi/Kurang Mampu: Potongan ${formatRupiah(semesterSpecial)} → <span class="calc-spesial">${formatRupiah(semesterBase - semesterSpecial)}</span></div>
+        </div>
+        <div class="price-sep"></div>
+        <div class="price-segment">
+          <div class="harga-durasi">Tahunan (${yearMonths} Bulan) <span class="hemat-tag">💡 Paling Hemat</span></div>
+          <div class="price-calc-row">${yearMonths} × ${formatRupiah(monthly)} = <span class="calc-base">${formatRupiah(yearBase)}</span></div>
+          <div class="price-calc-row early">Diskon Early Bird: Potongan ${formatRupiah(yearEB)} → <span class="calc-early">${formatRupiah(yearBase - yearEB)}</span></div>
+          <div class="price-calc-row spesial">Diskon Prestasi/Kurang Mampu: Potongan ${formatRupiah(yearSpecial)} → <span class="calc-spesial">${formatRupiah(yearBase - yearSpecial)}</span></div>
+        </div>
       </div>
-      <div class="price-sep"></div>
-      <div class="price-segment">
-        <div class="harga-durasi">Tahunan (${yearMonths} Bulan) <span class="hemat-tag">💡 Paling Hemat</span></div>
-        <div class="price-calc-row">${yearMonths} × ${formatRupiah(monthly)} = <span class="calc-base">${formatRupiah(yearBase)}</span></div>
-        <div class="price-calc-row early">Diskon Early Bird: Potongan ${formatRupiah(yearEB)} → <span class="calc-early">${formatRupiah(yearBase - yearEB)}</span></div>
-        <div class="price-calc-row spesial">Diskon Prestasi/Kurang Mampu: <a href="#kontak" class="btn-hubungi-kami">Chat untuk Info →</a></div>
-      </div>
-    </div>
-  `;
+    `;
+  }
 }
-
 
 // ─── 11. EARLY BIRD ────────────────────────────────────────────
 function renderEarlyBird(c) {
@@ -439,10 +458,10 @@ function renderContacts(c) {
             <div class="k-item">
               <div class="k-name">${contact.name || 'Kontak'}</div>
               <a class="wa-btn" href="${waUrl}" target="_blank">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
                 </svg>
-                Chat WhatsApp
+                <span>WhatsApp</span>
               </a>
             </div>
             ${i < contacts.length - 1 ? '<div class="k-item-spacer"></div>' : ''}
@@ -472,7 +491,6 @@ function renderFloatingWA(c) {
   btn.href = buildWhatsAppUrl(contacts[0].wa, contacts[0].name);
 }
 
-
 // ─── 15. FOOTER ─────────────────────────────────────────────────
 function renderFooter(c) {
   const brand = document.getElementById('footer-brand');
@@ -480,7 +498,6 @@ function renderFooter(c) {
   if (brand) brand.textContent = c.site?.titleBrowser || c.site?.title || 'Griya Aleena Sekaran';
   if (year) year.textContent = c.site?.footerYear || new Date().getFullYear();
 }
-
 
 // ─── COUNTDOWN ─────────────────────────────────────────────────
 function initCountdown(targetDate) {
@@ -548,5 +565,5 @@ if (document.readyState === 'loading') {
   loadConfig();
 }
 
-console.log('✅ app.js v5.0 - 100% Dinamis');
+console.log('✅ app.js v6.0 - Dual Pricing Version');
 console.log('🔧 Gunakan window.__debug untuk debugging');
