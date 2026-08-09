@@ -400,8 +400,17 @@ section { padding: 80px 24px; }
   font-size: 0.85rem; font-weight: 700; padding: 5px 14px;
   border-radius: 50px; display: inline-block; margin-bottom: 14px;
 }
-.ac-badge { background: var(--amber); color: var(--navy); }
-.nonac-badge { background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.9); }
+
+/* 🔥 SEMUA BADGE JADI BIRU */
+.ac-badge { 
+  background: var(--blue); 
+  color: var(--navy); 
+}
+.nonac-badge { 
+  background: var(--blue); 
+  color: var(--navy); 
+}
+
 .price-segment { padding: 4px 0; }
 .price-segment .harga-durasi { font-size: 0.95rem; margin-bottom: 10px; }
 .price-sep { border: none; height: 1px; background: rgba(255,255,255,0.1); margin: 16px 0; }
@@ -793,32 +802,4 @@ footer span { color: var(--amber-lt); }
   .stats-row { grid-template-columns: repeat(2, 1fr); }
   .harga-cards { grid-template-columns: 1fr; }
   .syarat-grid { grid-template-columns: 1fr; }
-  .lokasi-row { grid-template-columns: 1fr; }
-  .lokasi-map { aspect-ratio: 4/3; }
-  .galeri-grid { grid-template-columns: 1fr 1fr; }
-  .galeri-item.main { grid-column: 1 / 3; grid-row: auto; }
-  
-  .floating-wa { 
-    bottom: 16px; 
-    right: 16px; 
-    padding: 10px 16px;
-    gap: 8px;
-  }
-  .floating-wa svg { width: 20px; height: 20px; }
-  .floating-wa span { font-size: 0.8rem; }
-
-  .countdown {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 6px;
-    justify-content: center;
-  }
-  .cd-box {
-    min-width: 55px;
-    padding: 10px 8px;
-    flex-shrink: 0;
-    border-radius: 10px;
-  }
-  .cd-num { font-size: 1.1rem; }
-  .cd-unit { font-size: 0.5rem; }
-}
+  .lokasi-row { grid-template-column
