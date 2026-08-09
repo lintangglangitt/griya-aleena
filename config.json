@@ -106,10 +106,13 @@
     "Mesin cuci dan tempat jemuran tersedia — dapat mencuci pakaian sendiri.",
     "Hubungi pemilik langsung — tanpa perantara, lebih mudah."
   ],
+  
   "pricing": {
-    "ac": { "monthly": 1100000, "semesterMonths": 6, "yearMonths": 12, "semesterEB": 200000, "yearEB": 500000 },
-    "nonac": { "monthly": 800000, "semesterMonths": 6, "yearMonths": 12, "semesterEB": 200000, "yearEB": 500000 }
+    "version": 2,  // <-- Pilih versi: 1 atau 2
+    "ac": { "monthly": 1100000, "semesterMonths": 6, "yearMonths": 12, "semesterEB": 200000, "yearEB": 500000, "semesterSpecial": 400000, "yearSpecial": 900000 },
+    "nonac": { "monthly": 800000, "semesterMonths": 6, "yearMonths": 12, "semesterEB": 200000, "yearEB": 500000, "semesterSpecial": 400000, "yearSpecial": 900000 }
   },
+
   "earlyBirdRequirement": "Booking kamar sebelum 15 Agustus 2026.",
   "specialRequirements": {
     "hafidhul": {
