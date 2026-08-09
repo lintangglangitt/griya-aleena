@@ -59,12 +59,10 @@
   "hargaDesc": "Pilih durasi yang sesuai kantong kamu. 1 kamar untuk 1 orang.",
   "lokasiEye": "Lokasi Strategis",
   "lokasiTitle": "Di Jantung Sekaran,<br>Mana-mana Dekat",
-
   "kontakEye": "Hubungi Kami",
   "kontakTitle": "Amankan Kamarmu Sekarang",
   "kontakNote": "Langsung hubungi pemilik tanpa perantara<br>cepat, mudah, dan bisa tanya apa saja.",
   "kontakLabel": "Hubungi Langsung",
-  
   "whatsapp": {
     "template": "Hai Kak!\nBisa minta info lebih lanjut tentang Griya Aleena?\nTerima kasih."
   },
@@ -75,9 +73,7 @@
     "target": "2026-08-15T00:00:00"
   },
   "contacts": [
-    
     { "name": "Hakim (0898-5446-121)", "wa": "628985446121" }
-    
   ],
   "location": {
     "mapsUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3959.7034771020703!2d110.3956973!3d-7.044090399999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e708bf0a28ca121%3A0x7d91be49e7134aef!2sGriya%20Aleena%20Sekaran!5e0!3m2!1sen!2sid!4v1781354903283!5m2!1sen!2sid"
@@ -86,7 +82,7 @@
     { "emoji": "❄️", "text": "AC/Kipas Tiap Kamar", "desc": "Nyaman sepanjang hari, tidur berkualitas tanpa kepanasan." },
     { "emoji": "🚿", "text": "Kamar Mandi Dalam + Shower", "desc": "Privasi terjaga, lengkap dengan shower dan keran." },
     { "emoji": "🪞", "text": "Lemari Besi Anti Karat + Locker", "desc": "Baju rapi tersimpan aman, dilengkapi cermin besar." },
-    { "emoji": "🛏️", "text": "Kasur Busa + Bantal Guling", "desc": "Tidur berkualitas setelah hari yang panjang di kampus." }, 
+    { "emoji": "🛏️", "text": "Kasur Busa + Bantal Guling", "desc": "Tidur berkualitas setelah hari yang panjang di kampus." },
     { "emoji": "⚡", "text": "Meteran Listrik per Kamar", "desc": "Token prabayar sendiri — bayar sesuai pemakaianmu." },
     { "emoji": "🍳", "text": "Dapur Bersama + Kulkas", "desc": "Lengkap dengan kompor gas, alat masak, dan wastafel." },
     { "emoji": "👕", "text": "Mesin Cuci + Jemuran", "desc": "Hemat uang, tidak perlu bayar laundry." },
@@ -94,11 +90,9 @@
     { "emoji": "📹", "text": "CCTV Area Kos", "desc": "Keamanan 24 jam." },
     { "emoji": "🛜", "text": "Free WiFi", "desc": "Internet lancar untuk kuliah online, tugas, dan hiburan." },
     { "emoji": "💧", "text": "Free Iuran Air", "desc": "Tidak dibebankan ke penghuni kos." },
-    { "emoji": "🗑", "text": "Free Iuran Sampah", "desc": "Tidak ada biaya tambahan." }
- 
+    { "emoji": "🗑️", "text": "Free Iuran Sampah", "desc": "Tidak ada biaya tambahan." }
   ],
   "fasilitasPlus": [
-   
     "Sangat dekat dengan pusat kampus — akses mudah ke mana-mana.",
     "Hunian terbatas — lebih tenang, lebih nyaman, tanpa kebisingan berlebih.",
     "Ada yang bersihkan area kos secara rutin — kos selalu terawat.",
@@ -106,13 +100,27 @@
     "Mesin cuci dan tempat jemuran tersedia — dapat mencuci pakaian sendiri.",
     "Hubungi pemilik langsung — tanpa perantara, lebih mudah."
   ],
-  
   "pricing": {
-    "version": 2,  // <-- Pilih versi: 1 atau 2
-    "ac": { "monthly": 1100000, "semesterMonths": 6, "yearMonths": 12, "semesterEB": 200000, "yearEB": 500000, "semesterSpecial": 400000, "yearSpecial": 900000 },
-    "nonac": { "monthly": 800000, "semesterMonths": 6, "yearMonths": 12, "semesterEB": 200000, "yearEB": 500000, "semesterSpecial": 400000, "yearSpecial": 900000 }
+    "version": 2,
+    "ac": {
+      "monthly": 1100000,
+      "semesterMonths": 6,
+      "yearMonths": 12,
+      "semesterEB": 200000,
+      "yearEB": 500000,
+      "semesterSpecial": 400000,
+      "yearSpecial": 900000
+    },
+    "nonac": {
+      "monthly": 800000,
+      "semesterMonths": 6,
+      "yearMonths": 12,
+      "semesterEB": 200000,
+      "yearEB": 500000,
+      "semesterSpecial": 400000,
+      "yearSpecial": 900000
+    }
   },
-
   "earlyBirdRequirement": "Booking kamar sebelum 15 Agustus 2026.",
   "specialRequirements": {
     "hafidhul": {
