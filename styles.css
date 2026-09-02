@@ -691,25 +691,62 @@ footer span { color: var(--amber-lt); }
   display: grid;
   grid-template-columns: 2fr 1fr 1fr;
   grid-template-rows: auto auto;
-  gap: 12px; margin-top: 36px; border-radius: 20px; overflow: hidden;
+  gap: 12px;
+  margin-top: 36px;
+  border-radius: 20px;
+  overflow: hidden;
 }
+
 .galeri-item {
-  background: var(--gray); border-radius: 12px; overflow: hidden;
-  aspect-ratio: 4/3; position: relative;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--muted); font-size: 0.85rem; text-align: center;
+  background: var(--gray);
+  border-radius: 12px;
+  overflow: hidden;
+  aspect-ratio: 4/3;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-align: center;
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  min-height: 120px;
 }
+
 .galeri-item:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 24px rgba(0,0,0,0.12);
 }
-.galeri-item.main { grid-row: 1 / 3; aspect-ratio: auto; min-height: 280px; }
-.galeri-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease; }
-.galeri-item:hover img { transform: scale(1.05); }
-.galeri-placeholder { display: flex; flex-direction: column; gap: 6px; align-items: center; }
-.galeri-placeholder span { font-size: 2rem; }
+
+.galeri-item.main {
+  grid-row: 1 / 3;
+  aspect-ratio: auto;
+  min-height: 280px;
+}
+
+.galeri-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.galeri-item:hover img {
+  transform: scale(1.05);
+}
+
+.galeri-placeholder {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+}
+
+.galeri-placeholder span {
+  font-size: 2rem;
+}
 
 .no-image {
   position: absolute;
@@ -723,10 +760,95 @@ footer span { color: var(--amber-lt); }
   font-size: 0.85rem;
   padding: 20px;
   text-align: center;
+  width: 100%;
+  height: 100%;
 }
-.no-image span { font-size: 2.5rem; margin-bottom: 8px; }
-.no-image p { margin: 0; line-height: 1.4; }
-.no-image small { font-size: 0.7rem; opacity: 0.6; }
+
+.no-image span {
+  font-size: 3rem;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.no-image p {
+  margin: 0;
+  line-height: 1.4;
+  font-size: 0.8rem;
+}
+
+.no-image small {
+  font-size: 0.7rem;
+  opacity: 0.6;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 640px) {
+  nav { padding: 12px 16px; }
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .harga-cards { grid-template-columns: 1fr; }
+  .syarat-grid { grid-template-columns: 1fr; }
+  .lokasi-row { grid-template-columns: 1fr; }
+  .lokasi-map { aspect-ratio: 4/3; }
+  
+  /* 🔥 PERBAIKAN GALERI MOBILE */
+  .galeri-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    gap: 8px;
+  }
+  
+  .galeri-item.main {
+    grid-column: 1 / 3;
+    grid-row: auto;
+    min-height: 180px;
+  }
+  
+  .galeri-item {
+    aspect-ratio: 4/3;
+    min-height: 100px;
+  }
+  
+  .galeri-item img {
+    object-fit: cover;
+  }
+  
+  /* 🔥 PERBAIKAN PLACEHOLDER MOBILE */
+  .no-image span {
+    font-size: 2rem;
+  }
+  
+  .no-image p {
+    font-size: 0.7rem;
+  }
+  
+  .no-image small {
+    font-size: 0.6rem;
+  }
+  
+  .floating-wa { 
+    bottom: 16px; 
+    right: 16px; 
+    padding: 10px 16px;
+    gap: 8px;
+  }
+  .floating-wa svg { width: 20px; height: 20px; }
+  .floating-wa span { font-size: 0.8rem; }
+
+  .countdown {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 6px;
+    justify-content: center;
+  }
+  .cd-box {
+    min-width: 55px;
+    padding: 10px 8px;
+    flex-shrink: 0;
+    border-radius: 10px;
+  }
+  .cd-num { font-size: 1.1rem; }
+  .cd-unit { font-size: 0.5rem; }
+}
 
 /* ── KETERSEDIAAN ── */
 .avail-strip {
