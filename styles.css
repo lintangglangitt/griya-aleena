@@ -113,12 +113,12 @@ nav a.nav-cta:hover { background: var(--amber-lt); }
 
 /* ── HERO ── */
 #hero {
-  min-height: calc(100vh - var(--nav-height));
+  min-height: auto;
   background: linear-gradient(135deg, var(--teal) 0%, #0d3d3d 60%, var(--navy) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px 24px 40px;
+  padding: 80px 24px 60px;
   position: relative;
   overflow: hidden;
   text-align: center;
@@ -893,11 +893,11 @@ footer span { color: var(--amber-lt); }
 @media (max-width: 640px) {
   nav { 
     padding: 10px 16px; 
-    height: 64px; /* Kurangi tinggi navbar di mobile */
+    height: 64px;
   }
   
   :root {
-    --nav-height: 64px; /* Sesuaikan variable */
+    --nav-height: 64px;
   }
   
   body {
@@ -923,6 +923,33 @@ footer span { color: var(--amber-lt); }
   nav a.nav-cta {
     font-size: 0.7rem;
     padding: 6px 14px;
+  }
+  
+  /* Hero fullscreen di mobile */
+  #hero {
+    min-height: calc(100vh - var(--nav-height));
+    padding: 20px 16px 30px;
+  }
+  
+  .hero-inner {
+    gap: 16px;
+  }
+  
+  h1 {
+    font-size: clamp(1.5rem, 4vw, 2.2rem);
+  }
+  
+  h2 {
+    font-size: clamp(0.9rem, 2vw, 1.2rem);
+  }
+  
+  h3 {
+    font-size: clamp(0.8rem, 1.5vw, 1rem);
+  }
+  
+  section {
+    padding: 50px 16px;
+    scroll-margin-top: var(--nav-height);
   }
   
   .stats-row { grid-template-columns: repeat(2, 1fr); }
@@ -987,31 +1014,4 @@ footer span { color: var(--amber-lt); }
   }
   .cd-num { font-size: 1.1rem; }
   .cd-unit { font-size: 0.5rem; }
-  
-  /* Perbaikan hero di mobile */
-  #hero {
-    min-height: calc(100vh - var(--nav-height));
-    padding: 20px 16px 30px;
-  }
-  
-  .hero-inner {
-    gap: 16px;
-  }
-  
-  h1 {
-    font-size: clamp(1.5rem, 4vw, 2.2rem);
-  }
-  
-  h2 {
-    font-size: clamp(0.9rem, 2vw, 1.2rem);
-  }
-  
-  h3 {
-    font-size: clamp(0.8rem, 1.5vw, 1rem);
-  }
-  
-  section {
-    padding: 50px 16px;
-    scroll-margin-top: var(--nav-height);
-  }
 }
