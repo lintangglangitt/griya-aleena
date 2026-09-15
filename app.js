@@ -5,7 +5,7 @@
 
 // ─── GLOBAL ──────────────────────────────────────────────────────
 let CONFIG = null;
-const API = 'https://griya-counter.lintangglangitt.workers.dev';
+const API = 'https://griya-api.lintangglangitt.workers.dev';
 
 // ─── HELPER FUNCTIONS ──────────────────────────────────────────
 function formatRupiah(num) {
