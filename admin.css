@@ -492,3 +492,30 @@ tbody tr.akan-habis:hover { background: #ffd6d1 !important; }
     min-height: 80px;
   }
 }
+
+/* ============================================ */
+/* FIX: Section center (bukan mepet kiri) */
+/* ============================================ */
+
+.admin-body .stats-grid,
+.admin-body .section-block {
+  margin: 20px auto;
+  padding-left: 0;
+  padding-right: 0;
+  max-width: 1400px;
+  width: calc(100% - 48px);  /* 24px kiri + 24px kanan */
+}
+
+/* Khusus stats-grid pertama, biar tidak terlalu jauh dari header */
+.admin-body .stats-grid:first-of-type {
+  margin-top: 24px;
+}
+
+/* Responsive: mobile */
+@media (max-width: 640px) {
+  .admin-body .stats-grid,
+  .admin-body .section-block {
+    width: calc(100% - 24px);  /* padding mobile lebih kecil */
+    margin: 14px auto;
+  }
+}
