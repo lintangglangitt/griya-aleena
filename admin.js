@@ -9,6 +9,7 @@ let ROOMS = [];
 let OCCS = [];
 let EDITING_ID = null;
 let ACTIVE_ROOM_FILTER = 'all';
+let ACTIVE_INCOME_FILTER = null; // null | 'all' | 'year' | 'month'
 
 // ─── Auth guard ────────────────────────────────────────────
 if (!TOKEN) window.location.href = 'login.html';
@@ -70,6 +71,7 @@ async function init() {
   fillYearFilter();
   renderRooms();
   renderTable();
+  setupIncomeCardListeners();
 
   if (USER.role !== 'owner') {
     document.getElementById('btn-users').style.display = 'none';
@@ -95,6 +97,55 @@ async function loadStats() {
   document.getElementById('st-income-month').textContent = rupiah(s.penghasilan_bulan_ini);
 }
 
+// ─── Kartu Pembayaran jadi Filter ──────────────────────────
+function setupIncomeCardListeners() {
+  document.querySelectorAll('.stat-card.clickable').forEach(card => {
+    card.addEventListener('click', () => {
+      const filter = card.dataset.filter;
+      toggleIncomeFilter(filter);
+    });
+    // Enter/Space untuk accessibility
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleIncomeFilter(card.dataset.filter);
+      }
+    });
+  });
+}
+
+function toggleIncomeFilter(filter) {
+  if (ACTIVE_INCOME_FILTER === filter) {
+    // Toggle off
+    ACTIVE_INCOME_FILTER = null;
+  } else {
+    ACTIVE_INCOME_FILTER = filter;
+    // Override: reset filter lain
+    if (filter === 'all') {
+      // Reset semua filter
+      document.getElementById('filter-tahun').value = '';
+      document.getElementById('filter-status').value = '';
+      document.getElementById('search').value = '';
+      ACTIVE_ROOM_FILTER = 'all';
+    } else {
+      // Override tahun & status, tapi kamar tetap
+      document.getElementById('filter-tahun').value = '';
+      document.getElementById('filter-status').value = '';
+      document.getElementById('search').value = '';
+      // ACTIVE_ROOM_FILTER tetap
+    }
+  }
+  updateIncomeCardUI();
+  renderRooms();
+  renderTable();
+}
+
+function updateIncomeCardUI() {
+  document.querySelectorAll('.stat-card.clickable').forEach(card => {
+    card.classList.toggle('active', card.dataset.filter === ACTIVE_INCOME_FILTER);
+  });
+}
+
 // ─── Filter Tahun (auto-populate dari data) ────────────────
 function fillYearFilter() {
   const sel = document.getElementById('filter-tahun');
@@ -112,7 +163,6 @@ function fillYearFilter() {
   sel.innerHTML = '<option value="">Semua Tahun</option>' +
     sorted.map(y => `<option value="${y}">${y}</option>`).join('');
 
-  // Pertahankan pilihan sebelumnya kalau masih ada
   if (currentVal && sorted.includes(Number(currentVal))) {
     sel.value = currentVal;
   }
@@ -173,10 +223,30 @@ function renderRooms() {
   grid.querySelectorAll('.room-card').forEach(el => {
     el.addEventListener('click', () => {
       ACTIVE_ROOM_FILTER = el.dataset.room;
+      // Klik kartu kamar → matikan income filter (biar tidak bingung)
+      ACTIVE_INCOME_FILTER = null;
+      updateIncomeCardUI();
       renderRooms();
       renderTable();
     });
   });
+}
+
+// ─── Helper filter income ──────────────────────────────────
+function passesIncomeFilter(o) {
+  if (!ACTIVE_INCOME_FILTER) return true;
+  if (o.status_bayar !== 'lunas') return false;
+
+  const now = new Date();
+  const curYear = now.getFullYear();
+  const curMonth = String(now.getMonth() + 1).padStart(2, '0');
+  const startY = o.tanggal_mulai.slice(0, 4);
+  const startM = o.tanggal_mulai.slice(5, 7);
+
+  if (ACTIVE_INCOME_FILTER === 'all') return true;
+  if (ACTIVE_INCOME_FILTER === 'year') return startY === String(curYear);
+  if (ACTIVE_INCOME_FILTER === 'month') return startY === String(curYear) && startM === curMonth;
+  return true;
 }
 
 // ─── Render Table ──────────────────────────────────────────
@@ -187,19 +257,27 @@ function renderTable() {
   const today = todayISO();
 
   const filtered = OCCS.filter(o => {
-    // Filter tahun (range)
-    if (fTahun) {
-      const y1 = Number(o.tanggal_mulai.slice(0, 4));
-      const y2 = Number(o.tanggal_selesai.slice(0, 4));
-      const targetY = Number(fTahun);
-      if (!(y1 <= targetY && y2 >= targetY)) return false;
+    // Filter income (override)
+    if (!passesIncomeFilter(o)) return false;
+
+    // Kalau income filter aktif, abaikan filter tahun/status (karena override)
+    if (!ACTIVE_INCOME_FILTER) {
+      // Filter tahun (range)
+      if (fTahun) {
+        const y1 = Number(o.tanggal_mulai.slice(0, 4));
+        const y2 = Number(o.tanggal_selesai.slice(0, 4));
+        const targetY = Number(fTahun);
+        if (!(y1 <= targetY && y2 >= targetY)) return false;
+      }
+      // Filter status
+      if (fs && o.status_bayar !== fs) return false;
+      // Filter pencarian
+      if (q && !(o.nama_penyewa.toLowerCase().includes(q) || (o.no_hp || '').includes(q))) return false;
     }
-    // Filter status
-    if (fs && o.status_bayar !== fs) return false;
-    // Filter kamar (dari kartu ALL/kamar)
+
+    // Filter kamar (selalu aktif)
     if (ACTIVE_ROOM_FILTER !== 'all' && String(o.room_id) !== String(ACTIVE_ROOM_FILTER)) return false;
-    // Filter pencarian
-    if (q && !(o.nama_penyewa.toLowerCase().includes(q) || (o.no_hp || '').includes(q))) return false;
+
     return true;
   });
 
