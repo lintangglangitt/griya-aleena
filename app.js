@@ -578,7 +578,7 @@ async function initCounter() {
     div.style.display = 'block';
   } catch (error) {
     console.error('❌ Counter error:', error);
-    el.textContent = '💔';
+    el.textContent = '543';
     div.style.display = 'block';
   }
 }
