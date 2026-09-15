@@ -634,3 +634,75 @@ tbody tr.kontrak-selesai td strong {
 tbody tr.kontrak-selesai .badge {
   filter: grayscale(0.6);
 }
+
+
+/* ============================================ */
+/* UPDATE v2: Padding lebih besar + kontras aktif/selesai */
+/* ============================================ */
+
+/* Padding section lebih besar */
+.section-block {
+  padding: 28px 32px !important;
+}
+
+/* Grid kamar diberi jarak dari tepi */
+.rooms-grid {
+  padding: 8px 0 !important;
+}
+
+/* ─── Baris tabel: kontras kuat ─── */
+
+/* Baris AKTIF (belum selesai) — dominan hijau */
+tbody tr:not(.kontrak-selesai):not(.akan-habis) {
+  background: #f0faf4;
+}
+tbody tr:not(.kontrak-selesai):not(.akan-habis) td {
+  font-weight: 600;
+  color: var(--text);
+}
+tbody tr:not(.kontrak-selesai):not(.akan-habis) td strong {
+  font-weight: 800;
+  color: var(--teal);
+}
+tbody tr:not(.kontrak-selesai):not(.akan-habis):hover {
+  background: #e2f5ea;
+}
+
+/* Baris SELESAI — grey pudar, font normal */
+tbody tr.kontrak-selesai {
+  background: #ebebeb !important;
+  opacity: 1;
+}
+tbody tr.kontrak-selesai:hover {
+  background: #e0e0e0 !important;
+}
+tbody tr.kontrak-selesai td,
+tbody tr.kontrak-selesai td strong {
+  color: #8b9494 !important;
+  font-weight: 400 !important;
+}
+tbody tr.kontrak-selesai .badge {
+  filter: grayscale(0.8);
+  opacity: 0.7;
+}
+tbody tr.kontrak-selesai .btn-icon {
+  opacity: 0.5;
+}
+tbody tr.kontrak-selesai:hover .btn-icon {
+  opacity: 1;
+}
+
+/* Baris AKAN HABIS — merah, tetap bold */
+tbody tr.akan-habis {
+  background: #ffebee !important;
+}
+tbody tr.akan-habis td {
+  font-weight: 600;
+}
+tbody tr.akan-habis td strong {
+  font-weight: 800;
+  color: #c0392b;
+}
+tbody tr.akan-habis td:first-child {
+  border-left: 4px solid var(--red);
+}
