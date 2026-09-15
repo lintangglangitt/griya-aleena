@@ -519,3 +519,81 @@ tbody tr.akan-habis:hover { background: #ffd6d1 !important; }
     margin: 14px auto;
   }
 }
+
+
+/* ============================================ */
+/* UPDATE: Kartu pembayaran jadi filter interaktif */
+/* ============================================ */
+
+.stat-card.clickable {
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.15s, box-shadow 0.2s, border-left-width 0.15s;
+}
+.stat-card.clickable:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+/* Badge "Filter Aktif" — tersembunyi default */
+.stat-card.clickable .active-badge {
+  display: none;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--amber);
+  color: var(--navy);
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 50px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Kartu aktif */
+.stat-card.clickable.active {
+  border-left-width: 6px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+  background: linear-gradient(135deg, #fff9e6 0%, #fff4d1 100%);
+}
+.stat-card.clickable.active .active-badge {
+  display: inline-block;
+}
+.stat-card.clickable.active .stat-num {
+  font-weight: 800;
+}
+
+/* Override warna border-left untuk kartu aktif */
+.stat-card.clickable.active#card-income-all { border-left-color: var(--teal); }
+.stat-card.clickable.active#card-income-year { border-left-color: var(--green); }
+.stat-card.clickable.active#card-income-month { border-left-color: var(--amber); }
+
+/* Pesan "Filter Aktif" kecil di atas tabel */
+.filter-indicator {
+  display: none;
+  background: #fff7e6;
+  border: 1.5px solid var(--amber);
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-size: 0.82rem;
+  color: #a06800;
+  margin-bottom: 12px;
+  font-weight: 600;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.filter-indicator.show { display: flex; }
+.filter-indicator button {
+  background: transparent;
+  border: 1px solid var(--amber);
+  color: #a06800;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+.filter-indicator button:hover { background: var(--amber); color: var(--navy); }
