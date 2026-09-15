@@ -1,6 +1,6 @@
 // ============================================================
 // app.js - Griya Aleena Sekaran
-// Versi: 6.0 (Dual Pricing Version)
+// Versi: 6.1 (Auto Early Bird Date Version)
 // ============================================================
 
 // ─── GLOBAL ──────────────────────────────────────────────────────
@@ -11,6 +11,23 @@ const API = 'https://griya-api.lintangglangitt.workers.dev';
 function formatRupiah(num) {
   if (typeof num !== 'number' || isNaN(num)) return '0';
   return 'Rp' + new Intl.NumberFormat('id-ID').format(num);
+}
+
+// Format tanggal ke Bahasa Indonesia
+function formatTanggalIndonesia(isoString) {
+  const bulanID = [
+    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+  ];
+  const d = new Date(isoString);
+  if (isNaN(d.getTime())) return "-";
+  return `${d.getDate()} ${bulanID[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+// Generate syarat early bird dari countdown.target
+function getEarlyBirdRequirement(countdownTarget) {
+  if (!countdownTarget) return "Booking kamar sebelum batas waktu yang ditentukan.";
+  return `Booking kamar sebelum ${formatTanggalIndonesia(countdownTarget)}.`;
 }
 
 // ─── LOAD CONFIG ──────────────────────────────────────────────
@@ -372,10 +389,13 @@ function buildPriceCard(data, type, emoji, badgeClass, version = 1) {
 function renderEarlyBird(c) {
   const container = document.getElementById('early-bird-container');
   if (!container) return;
-  const req = c.earlyBirdRequirement || 'Booking kamar sebelum 15 Juli 2026.';
+
+  // ✅ AUTO-GENERATE dari countdown.target
+  const req = getEarlyBirdRequirement(c.countdown?.target);
+
   container.innerHTML = `
     <div class="diskon-syarat">
-      <h4b>🐦 Syarat Diskon Early Bird</h4b>
+      <h4>🐦 Syarat Diskon Early Bird</h4>
       <div class="syarat-item"><p>${req}</p></div>
     </div>
   `;
@@ -570,5 +590,5 @@ if (document.readyState === 'loading') {
   loadConfig();
 }
 
-console.log('✅ app.js v6.0 - Dual Pricing Version');
+console.log('✅ app.js v6.1 - Auto Early Bird Date Version');
 console.log('🔧 Gunakan window.__debug untuk debugging');
