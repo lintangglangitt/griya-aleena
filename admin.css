@@ -3,30 +3,36 @@
 
 :root {
   --teal: #1a5c5c;
+  --teal-mid: #2a8080;
   --teal-lt: #3aadad;
   --amber: #F5A623;
   --amber-lt: #ffc654;
   --navy: #0f1e2e;
-  --green: #25D366;
-  --red: #e74c3c;
+  --white: #ffffff;
   --gray: #f4f7f7;
-  --border: #e3ebeb;
   --text: #1c2e2e;
   --muted: #5a7373;
+  --blue: #4FC3F7;
+  --green: #25D366;
+  --red: #e74c3c;
+  --border: #e3ebeb;
+  --nav-height: 72px;
 }
 
+html { scroll-behavior: smooth; }
+
 body {
-  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   color: var(--text);
-  background: var(--gray);
-  min-height: 100vh;
+  background: var(--white);
+  overflow-x: hidden;
 }
 
 /* ── LOGIN ── */
 .login-body {
   display: flex; align-items: center; justify-content: center;
   background: linear-gradient(135deg, var(--teal) 0%, #0d3d3d 60%, var(--navy) 100%);
-  padding: 24px;
+  min-height: 100vh; padding: 24px;
 }
 .login-wrap { width: 100%; max-width: 420px; }
 .login-card {
@@ -34,12 +40,12 @@ body {
   box-shadow: 0 20px 60px rgba(0,0,0,0.3);
 }
 .login-logo { text-align: center; margin-bottom: 32px; }
-.login-logo img { max-height: 60px; margin-bottom: 12px; }
-.login-logo h1 { font-family: 'Sora', sans-serif; font-size: 1.6rem; color: var(--teal); }
-.login-logo p { font-size: 0.85rem; color: var(--muted); margin-top: 4px; }
+.login-logo img { max-height: 80px; margin-bottom: 12px; }
+.login-logo h1 { font-family: 'Sora', sans-serif; font-size: 1.8rem; color: var(--teal); }
+.login-logo p { font-size: 0.9rem; color: var(--muted); margin-top: 6px; }
 
 .login-card label {
-  display: block; font-size: 0.85rem; font-weight: 600;
+  display: block; font-size: 0.9rem; font-weight: 600;
   color: var(--text); margin-bottom: 14px;
 }
 .login-card input {
@@ -55,6 +61,7 @@ body {
   color: white; border: none; border-radius: 10px;
   font-weight: 700; font-size: 1rem; cursor: pointer;
   font-family: inherit; transition: background 0.2s;
+  margin-top: 6px;
 }
 .login-card button:hover { background: var(--teal-lt); }
 .login-card button:disabled { opacity: 0.6; cursor: not-allowed; }
@@ -63,16 +70,15 @@ body {
   color: var(--red); font-size: 0.85rem;
   margin-bottom: 12px; min-height: 18px;
 }
-.login-hint {
-  text-align: center; font-size: 0.78rem;
-  color: var(--muted); margin-top: 24px;
-}
-.login-hint code {
-  background: var(--gray); padding: 2px 6px;
-  border-radius: 4px; color: var(--teal); font-weight: 600;
-}
 
 /* ── ADMIN LAYOUT ── */
+.admin-body {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  color: var(--text);
+  background: var(--gray);
+  min-height: 100vh;
+}
+
 .admin-header {
   background: var(--teal); color: white;
   padding: 14px 28px; display: flex;
@@ -88,27 +94,50 @@ body {
 }
 .admin-brand small {
   font-size: 0.72rem; color: var(--amber-lt);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.08em; display: block;
 }
-.admin-user { display: flex; align-items: center; gap: 14px; font-size: 0.9rem; }
+.admin-user { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; }
 
-.admin-body { padding: 24px; max-width: 1400px; margin: 0 auto; }
+/* Navbar buttons */
+.admin-user .btn-nav {
+  background: rgba(255,255,255,0.12);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.admin-user .btn-nav:hover { background: rgba(255,255,255,0.22); }
+
+.admin-body > section,
+.admin-body > header { }
+.admin-body { padding: 0; }
+.admin-body .stats-grid,
+.admin-body .section-block {
+  margin: 20px 24px;
+  max-width: 1400px;
+}
+.admin-body .stats-grid:first-of-type { margin-top: 24px; }
 
 /* ── STATS ── */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 14px; margin-bottom: 24px;
+  gap: 14px;
 }
 .stat-card {
   background: white; border-radius: 14px;
   padding: 18px 20px; border: 1px solid var(--border);
   box-shadow: 0 2px 8px rgba(0,0,0,0.03);
 }
-.stat-card.wide { grid-column: span 2; }
 .stat-label {
   font-size: 0.72rem; text-transform: uppercase;
   letter-spacing: 0.1em; color: var(--muted); margin-bottom: 6px;
+  font-weight: 600;
 }
 .stat-num {
   font-family: 'Sora', sans-serif;
@@ -117,13 +146,34 @@ body {
 .stat-num.green { color: var(--green); }
 .stat-num.red { color: var(--red); }
 .stat-num.amber { color: var(--amber); }
+.stat-num.teal { color: var(--teal); }
+
+/* Income stats row */
+.income-grid {
+  margin-top: -6px !important;
+}
+.stat-card.income {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fcfc 100%);
+  border-left: 4px solid var(--teal);
+}
+.stat-card.income:nth-child(2) { border-left-color: var(--green); }
+.stat-card.income:nth-child(3) { border-left-color: var(--amber); }
+.stat-card.income .stat-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+}
+.stat-card.income .stat-num {
+  font-size: 1.4rem;
+  margin-top: 4px;
+}
 
 /* ── SECTION ── */
 .section-block {
   background: white; border-radius: 16px;
-  padding: 24px; margin-bottom: 24px;
+  padding: 24px;
   border: 1px solid var(--border);
   box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  margin-bottom: 24px;
 }
 .section-h {
   font-family: 'Sora', sans-serif;
@@ -135,44 +185,98 @@ body {
   font-size: 0.8rem; margin-left: 8px;
 }
 
-/* ── ROOM CARDS ── */
+/* ── ROOM CARDS (1 baris 7 kolom) ── */
 .rooms-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 14px;
+  grid-template-columns: 0.7fr repeat(6, 1fr);
+  gap: 12px;
 }
+
 .room-card {
-  border-radius: 14px; padding: 18px;
+  border-radius: 14px; padding: 14px 12px;
   border: 2px solid var(--border);
   background: var(--gray);
   transition: transform 0.2s, box-shadow 0.2s;
   cursor: pointer;
 }
 .room-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
-.room-card.status-terisi { background: #e8f7ee; border-color: var(--green); }
-.room-card.status-dp { background: #fff7e6; border-color: var(--amber); }
-.room-card.status-kosong { background: #fdecec; border-color: var(--red); }
-.room-card.status-habis { background: #fff7e6; border-color: var(--amber); animation: pulse-border 2s infinite; }
-@keyframes pulse-border {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(245,166,35,0.4); }
-  50% { box-shadow: 0 0 0 8px rgba(245,166,35,0); }
+
+/* 🟢 Terisi */
+.room-card.status-terisi {
+  background: #e8f7ee;
+  border-color: var(--green);
+}
+
+/* 🟡 Kosong (BARU - tukar ke kuning) */
+.room-card.status-kosong {
+  background: #fff8e1;
+  border-color: var(--amber);
+}
+.status-kosong .room-status {
+  background: var(--amber);
+  color: var(--navy);
+}
+.room-card.status-kosong:hover {
+  box-shadow: 0 8px 24px rgba(245, 166, 35, 0.25);
+}
+
+/* 🟡 DP / Belum Bayar (tetap kuning) */
+.room-card.status-dp {
+  background: #fff7e6;
+  border-color: var(--amber);
+}
+.status-dp .room-status {
+  background: var(--amber);
+  color: var(--navy);
+}
+
+/* 🔴 Mau Habis (BARU - tukar ke merah + pulsing) */
+.room-card.status-habis {
+  background: #ffebee;
+  border-color: var(--red);
+  animation: pulse-danger 1.5s infinite;
+}
+
+@keyframes pulse-danger {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7);
+    border-color: var(--red);
+    background: #ffebee;
+  }
+  50% {
+    box-shadow: 0 0 0 12px rgba(231, 76, 60, 0);
+    border-color: #ff6b5c;
+    background: #ffd6d1;
+  }
+}
+
+.status-habis .room-status {
+  background: var(--red);
+  color: white;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  padding: 5px 12px;
+  border-radius: 50px;
+  font-size: 0.72rem;
+  box-shadow: 0 2px 8px rgba(231, 76, 60, 0.4);
 }
 
 .room-card h3 {
-  font-family: 'Sora', sans-serif; font-size: 1rem;
+  font-family: 'Sora', sans-serif;
+  font-size: 0.92rem;
   color: var(--text); margin-bottom: 4px;
 }
 .room-card .room-tipe {
-  font-size: 0.72rem; color: var(--muted);
+  font-size: 0.68rem; color: var(--muted);
   text-transform: uppercase; letter-spacing: 0.08em;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 .room-card .room-penyewa {
-  font-weight: 600; font-size: 0.92rem;
+  font-weight: 600; font-size: 0.85rem;
   color: var(--text); margin-bottom: 2px;
 }
 .room-card .room-tanggal {
-  font-size: 0.78rem; color: var(--muted); line-height: 1.4;
+  font-size: 0.7rem; color: var(--muted); line-height: 1.4;
 }
 .room-card .room-status {
   display: inline-block; margin-top: 10px;
@@ -181,8 +285,42 @@ body {
   text-transform: uppercase; letter-spacing: 0.06em;
 }
 .status-terisi .room-status { background: var(--green); color: white; }
-.status-dp .room-status { background: var(--amber); color: var(--navy); }
-.status-kosong .room-status { background: var(--red); color: white; }
+
+/* ── ALL card ── */
+.room-card.all-card {
+  background: linear-gradient(135deg, var(--teal) 0%, #0d3d3d 100%);
+  color: white;
+  border-color: var(--teal);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 130px;
+  padding: 14px 10px;
+}
+.room-card.all-card:hover {
+  background: linear-gradient(135deg, var(--teal-lt) 0%, var(--teal) 100%);
+}
+.room-card.all-card.active {
+  box-shadow: 0 0 0 3px var(--amber);
+}
+.room-card.all-card h3 {
+  color: white;
+  font-size: 1.1rem;
+  margin-bottom: 4px;
+  font-family: 'Sora', sans-serif;
+}
+.room-card.all-card .room-tipe {
+  color: rgba(255,255,255,0.7);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  margin-bottom: 0;
+}
+.room-card.active {
+  box-shadow: 0 0 0 3px var(--amber);
+  transform: translateY(-2px);
+}
 
 /* ── TABLE ── */
 .table-head {
@@ -207,9 +345,7 @@ table {
   width: 100%; border-collapse: collapse;
   font-size: 0.85rem;
 }
-thead {
-  background: var(--teal); color: white;
-}
+thead { background: var(--teal); color: white; }
 th, td {
   padding: 11px 12px; text-align: left;
   border-bottom: 1px solid var(--border);
@@ -217,7 +353,15 @@ th, td {
 }
 th { font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
 tbody tr:hover { background: #f9fcfc; }
-tbody tr.akan-habis { background: #fff9e6; }
+
+/* Baris tabel "akan habis" — merah */
+tbody tr.akan-habis {
+  background: #ffebee !important;
+}
+tbody tr.akan-habis td:first-child {
+  border-left: 4px solid var(--red);
+}
+tbody tr.akan-habis:hover { background: #ffd6d1 !important; }
 
 .badge {
   display: inline-block; padding: 3px 10px;
@@ -319,158 +463,6 @@ tbody tr.akan-habis { background: #fff9e6; }
 .user-item .u-info small { color: var(--muted); margin-left: 8px; }
 
 /* ── RESPONSIVE ── */
-@media (max-width: 640px) {
-  .admin-body { padding: 14px; }
-  .admin-header { padding: 12px 16px; }
-  .admin-user span { display: none; }
-  .grid-2 { grid-template-columns: 1fr; }
-  .stat-card.wide { grid-column: span 1; }
-  .table-head { flex-direction: column; align-items: stretch; }
-  .table-actions { flex-wrap: wrap; }
-  .table-actions > * { flex: 1 1 auto; }
-}
-
-
-/* ============================================ */
-/* UPDATE: Navbar buttons, income stats, ALL card */
-/* ============================================ */
-
-/* Navbar buttons */
-.admin-user .btn-nav {
-  background: rgba(255,255,255,0.12);
-  color: white;
-  border: 1px solid rgba(255,255,255,0.2);
-  padding: 7px 14px;
-  border-radius: 8px;
-  font-family: inherit;
-  font-size: 0.82rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-.admin-user .btn-nav:hover { background: rgba(255,255,255,0.22); }
-
-/* Income stats row */
-.income-grid {
-  margin-top: -10px;
-}
-.stat-card.income {
-  background: linear-gradient(135deg, #ffffff 0%, #f8fcfc 100%);
-  border-left: 4px solid var(--teal);
-}
-.stat-card.income:nth-child(2) { border-left-color: var(--green); }
-.stat-card.income:nth-child(3) { border-left-color: var(--amber); }
-.stat-num.teal { color: var(--teal); }
-.stat-card.income .stat-label {
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
-}
-.stat-card.income .stat-num {
-  font-size: 1.4rem;
-  margin-top: 4px;
-}
-
-/* ALL card di rooms grid */
-.room-card.all-card {
-  background: linear-gradient(135deg, var(--teal) 0%, #0d3d3d 100%);
-  color: white;
-  border-color: var(--teal);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  min-height: 130px;
-}
-.room-card.all-card:hover {
-  background: linear-gradient(135deg, var(--teal-lt) 0%, var(--teal) 100%);
-}
-.room-card.all-card.active {
-  box-shadow: 0 0 0 3px var(--amber);
-}
-.room-card.all-card h3 {
-  color: white;
-  font-size: 1.4rem;
-  margin-bottom: 4px;
-  font-family: 'Sora', sans-serif;
-}
-.room-card.all-card .room-tipe {
-  color: rgba(255,255,255,0.7);
-  font-size: 0.7rem;
-  letter-spacing: 0.1em;
-  margin-bottom: 0;
-}
-.room-card.active {
-  box-shadow: 0 0 0 3px var(--amber);
-  transform: translateY(-2px);
-}
-
-
-/* ============================================ */
-/* UPDATE: Grid kamar 1 baris + animasi habis */
-/* ============================================ */
-
-/* Grid kamar jadi 7 kolom 1 baris */
-.rooms-grid {
-  display: grid;
-  grid-template-columns: 0.7fr repeat(6, 1fr);
-  gap: 12px;
-}
-
-/* Kartu ALL lebih kecil */
-.room-card.all-card {
-  min-height: 130px;
-  padding: 14px 10px;
-}
-.room-card.all-card h3 {
-  font-size: 1.1rem;
-}
-.room-card.all-card .room-tipe {
-  font-size: 0.6rem;
-}
-
-/* Kartu kamar sedikit dirapikan */
-.room-card {
-  padding: 14px 12px;
-}
-.room-card h3 {
-  font-size: 0.92rem;
-}
-.room-card .room-penyewa {
-  font-size: 0.85rem;
-}
-.room-card .room-tanggal {
-  font-size: 0.7rem;
-}
-
-/* Animasi kedip untuk kamar akan habis (≤14 hari) */
-@keyframes pulse-warning {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(245, 166, 35, 0.7);
-    border-color: var(--amber);
-    background: #fff7e6;
-  }
-  50% {
-    box-shadow: 0 0 0 10px rgba(245, 166, 35, 0);
-    border-color: #ffd166;
-    background: #ffefc4;
-  }
-}
-
-.room-card.status-habis {
-  animation: pulse-warning 1.5s infinite;
-}
-
-/* Baris tabel yang akan habis — lebih terlihat */
-tbody tr.akan-habis {
-  background: #fff4d6 !important;
-  border-left: 4px solid var(--amber);
-}
-tbody tr.akan-habis td:first-child {
-  border-left: 4px solid var(--amber);
-}
-
-/* Responsive: kalau layar kecil, kembali ke grid auto */
 @media (max-width: 1100px) {
   .rooms-grid {
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -481,6 +473,16 @@ tbody tr.akan-habis td:first-child {
 }
 
 @media (max-width: 640px) {
+  .admin-body .stats-grid,
+  .admin-body .section-block {
+    margin: 14px 12px;
+  }
+  .admin-header { padding: 12px 16px; }
+  .admin-user span { display: none; }
+  .grid-2 { grid-template-columns: 1fr; }
+  .table-head { flex-direction: column; align-items: stretch; }
+  .table-actions { flex-wrap: wrap; }
+  .table-actions > * { flex: 1 1 auto; }
   .rooms-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 8px;
