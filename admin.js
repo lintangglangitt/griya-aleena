@@ -8,6 +8,7 @@ let USER = JSON.parse(localStorage.getItem('ga_user') || '{}');
 let ROOMS = [];
 let OCCS = [];
 let EDITING_ID = null;
+let ACTIVE_ROOM_FILTER = 'all';
 
 // ─── Auth guard ────────────────────────────────────────────
 if (!TOKEN) window.location.href = 'login.html';
@@ -68,8 +69,10 @@ async function init() {
   await Promise.all([loadRooms(), loadOccs(), loadStats()]);
   renderRooms();
   renderTable();
-  fillRoomSelects();
-  renderUsersButton();
+
+  if (USER.role !== 'owner') {
+    document.getElementById('btn-users').style.display = 'none';
+  }
 }
 
 async function loadRooms() {
@@ -86,7 +89,9 @@ async function loadStats() {
   document.getElementById('st-terisi').textContent = s.terisi;
   document.getElementById('st-kosong').textContent = s.kosong;
   document.getElementById('st-okupansi').textContent = s.okupansi_persen + '%';
-  document.getElementById('st-pemasukan').textContent = rupiah(s.pemasukan_bulan_ini);
+  document.getElementById('st-income-all').textContent = rupiah(s.penghasilan_keseluruhan);
+  document.getElementById('st-income-year').textContent = rupiah(s.penghasilan_tahun_ini);
+  document.getElementById('st-income-month').textContent = rupiah(s.penghasilan_bulan_ini);
 }
 
 // ─── Render Room Cards ─────────────────────────────────────
@@ -94,8 +99,14 @@ function renderRooms() {
   const grid = document.getElementById('rooms-grid');
   const today = todayISO();
 
-  grid.innerHTML = ROOMS.map(room => {
-    // Cari okupansi aktif (tanggal_mulai <= today <= tanggal_selesai)
+  const allCard = `
+    <div class="room-card all-card ${ACTIVE_ROOM_FILTER === 'all' ? 'active' : ''}" data-room="all">
+      <h3>ALL</h3>
+      <div class="room-tipe">Semua Kamar</div>
+    </div>
+  `;
+
+  const roomCards = ROOMS.map(room => {
     const active = OCCS.find(o =>
       o.room_id === room.id &&
       o.tanggal_mulai <= today &&
@@ -120,8 +131,10 @@ function renderRooms() {
       }
     }
 
+    const isActive = String(ACTIVE_ROOM_FILTER) === String(room.id);
+
     return `
-      <div class="room-card ${statusClass}" data-room="${room.id}">
+      <div class="room-card ${statusClass} ${isActive ? 'active' : ''}" data-room="${room.id}">
         <h3>${escapeHtml(room.nama_kamar)}</h3>
         <div class="room-tipe">${escapeHtml(room.tipe)}</div>
         <div class="room-penyewa">${escapeHtml(penyewa)}</div>
@@ -131,10 +144,12 @@ function renderRooms() {
     `;
   }).join('');
 
-  // Klik room card → filter tabel
+  grid.innerHTML = allCard + roomCards;
+
   grid.querySelectorAll('.room-card').forEach(el => {
     el.addEventListener('click', () => {
-      document.getElementById('filter-kamar').value = el.dataset.room;
+      ACTIVE_ROOM_FILTER = el.dataset.room;
+      renderRooms();
       renderTable();
     });
   });
@@ -144,12 +159,11 @@ function renderRooms() {
 function renderTable() {
   const q = document.getElementById('search').value.toLowerCase().trim();
   const fs = document.getElementById('filter-status').value;
-  const fk = document.getElementById('filter-kamar').value;
   const today = todayISO();
 
   const filtered = OCCS.filter(o => {
     if (fs && o.status_bayar !== fs) return false;
-    if (fk && String(o.room_id) !== fk) return false;
+    if (ACTIVE_ROOM_FILTER !== 'all' && String(o.room_id) !== String(ACTIVE_ROOM_FILTER)) return false;
     if (q && !(o.nama_penyewa.toLowerCase().includes(q) || (o.no_hp || '').includes(q))) return false;
     return true;
   });
@@ -189,7 +203,6 @@ function renderTable() {
     `;
   }).join('');
 
-  // Attach events
   tbody.querySelectorAll('[data-edit]').forEach(b =>
     b.addEventListener('click', () => openModal(Number(b.dataset.edit))));
   tbody.querySelectorAll('[data-del]').forEach(b =>
@@ -199,15 +212,6 @@ function renderTable() {
 // ─── Filters ───────────────────────────────────────────────
 document.getElementById('search').addEventListener('input', renderTable);
 document.getElementById('filter-status').addEventListener('change', renderTable);
-document.getElementById('filter-kamar').addEventListener('change', renderTable);
-
-function fillRoomSelects() {
-  const fk = document.getElementById('filter-kamar');
-  const fr = document.getElementById('f-room');
-  const opts = ROOMS.map(r => `<option value="${r.id}">${escapeHtml(r.nama_kamar)} (${escapeHtml(r.tipe)})</option>`).join('');
-  fk.innerHTML = '<option value="">Semua Kamar</option>' + opts;
-  fr.innerHTML = opts;
-}
 
 // ─── Modal Okupansi ────────────────────────────────────────
 const modalOcc = document.getElementById('modal-occ');
@@ -220,11 +224,18 @@ modalOcc.addEventListener('click', e => {
   if (e.target === modalOcc) modalOcc.classList.remove('open');
 });
 
+function fillRoomSelect() {
+  const fr = document.getElementById('f-room');
+  fr.innerHTML = ROOMS.map(r => 
+    `<option value="${r.id}">${escapeHtml(r.nama_kamar)} (${escapeHtml(r.tipe)})</option>`
+  ).join('');
+}
+
 function openModal(id) {
   EDITING_ID = id;
   const f = formOcc;
   f.reset();
-  document.getElementById('upload-status').textContent = '';
+  fillRoomSelect();
 
   if (id) {
     const o = OCCS.find(x => x.id === id);
@@ -248,33 +259,6 @@ function openModal(id) {
   }
   modalOcc.classList.add('open');
 }
-
-// ─── Upload file (opsional, fallback ke link manual) ───────
-document.getElementById('f-file').addEventListener('change', async (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const status = document.getElementById('upload-status');
-  status.textContent = `⏳ Mengunggah ${file.name}…`;
-  status.style.color = '#5a7373';
-
-  try {
-    const fd = new FormData();
-    fd.append('file', file);
-    const res = await fetch(`${API}/upload`, {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${TOKEN}` },
-      body: fd,
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Upload gagal');
-    document.getElementById('f-link').value = data.url;
-    status.textContent = '✅ Berhasil diunggah — link otomatis terisi';
-    status.style.color = '#25D366';
-  } catch (err) {
-    status.textContent = `⚠️ ${err.message}. Silakan paste link Google Drive manual.`;
-    status.style.color = '#e74c3c';
-  }
-});
 
 // ─── Submit form okupansi ──────────────────────────────────
 formOcc.addEventListener('submit', async (e) => {
@@ -401,13 +385,6 @@ document.getElementById('form-user').addEventListener('submit', async (e) => {
     renderUsersList();
   } catch (err) { alert(err.message); }
 });
-
-function renderUsersButton() {
-  // Sembunyikan tombol Users kalau bukan owner
-  if (USER.role !== 'owner') {
-    document.getElementById('btn-users').style.display = 'none';
-  }
-}
 
 // ─── Start ─────────────────────────────────────────────────
 init().catch(err => {
