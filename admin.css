@@ -597,3 +597,40 @@ tbody tr.akan-habis:hover { background: #ffd6d1 !important; }
   font-family: inherit;
 }
 .filter-indicator button:hover { background: var(--amber); color: var(--navy); }
+
+
+
+/* ============================================ */
+/* UPDATE: Padding kotak kamar + baris selesai */
+/* ============================================ */
+
+/* Padding dalam section biar tidak mepet */
+.section-block {
+  padding: 24px 28px;
+}
+
+/* Padding di grid kamar */
+.rooms-grid {
+  padding: 4px 4px 0 4px;
+}
+
+/* Baris tabel kontrak selesai — abu-abu pudar */
+tbody tr.kontrak-selesai {
+  background: #f5f5f5 !important;
+  opacity: 0.65;
+}
+tbody tr.kontrak-selesai:hover {
+  opacity: 1;
+  background: #eeeeee !important;
+}
+tbody tr.kontrak-selesai td {
+  color: #6b7777;
+}
+tbody tr.kontrak-selesai td strong {
+  color: #6b7777;
+}
+
+/* Badge lunas/dp/belum di baris selesai tetap pudar */
+tbody tr.kontrak-selesai .badge {
+  filter: grayscale(0.6);
+}
