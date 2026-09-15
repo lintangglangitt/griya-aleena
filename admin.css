@@ -404,3 +404,89 @@ tbody tr.akan-habis { background: #fff9e6; }
   box-shadow: 0 0 0 3px var(--amber);
   transform: translateY(-2px);
 }
+
+
+/* ============================================ */
+/* UPDATE: Grid kamar 1 baris + animasi habis */
+/* ============================================ */
+
+/* Grid kamar jadi 7 kolom 1 baris */
+.rooms-grid {
+  display: grid;
+  grid-template-columns: 0.7fr repeat(6, 1fr);
+  gap: 12px;
+}
+
+/* Kartu ALL lebih kecil */
+.room-card.all-card {
+  min-height: 130px;
+  padding: 14px 10px;
+}
+.room-card.all-card h3 {
+  font-size: 1.1rem;
+}
+.room-card.all-card .room-tipe {
+  font-size: 0.6rem;
+}
+
+/* Kartu kamar sedikit dirapikan */
+.room-card {
+  padding: 14px 12px;
+}
+.room-card h3 {
+  font-size: 0.92rem;
+}
+.room-card .room-penyewa {
+  font-size: 0.85rem;
+}
+.room-card .room-tanggal {
+  font-size: 0.7rem;
+}
+
+/* Animasi kedip untuk kamar akan habis (≤14 hari) */
+@keyframes pulse-warning {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(245, 166, 35, 0.7);
+    border-color: var(--amber);
+    background: #fff7e6;
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(245, 166, 35, 0);
+    border-color: #ffd166;
+    background: #ffefc4;
+  }
+}
+
+.room-card.status-habis {
+  animation: pulse-warning 1.5s infinite;
+}
+
+/* Baris tabel yang akan habis — lebih terlihat */
+tbody tr.akan-habis {
+  background: #fff4d6 !important;
+  border-left: 4px solid var(--amber);
+}
+tbody tr.akan-habis td:first-child {
+  border-left: 4px solid var(--amber);
+}
+
+/* Responsive: kalau layar kecil, kembali ke grid auto */
+@media (max-width: 1100px) {
+  .rooms-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
+  .room-card.all-card {
+    min-height: 120px;
+  }
+}
+
+@media (max-width: 640px) {
+  .rooms-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .room-card.all-card {
+    grid-column: 1 / 3;
+    min-height: 80px;
+  }
+}
