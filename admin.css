@@ -329,3 +329,78 @@ tbody tr.akan-habis { background: #fff9e6; }
   .table-actions { flex-wrap: wrap; }
   .table-actions > * { flex: 1 1 auto; }
 }
+
+
+/* ============================================ */
+/* UPDATE: Navbar buttons, income stats, ALL card */
+/* ============================================ */
+
+/* Navbar buttons */
+.admin-user .btn-nav {
+  background: rgba(255,255,255,0.12);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.admin-user .btn-nav:hover { background: rgba(255,255,255,0.22); }
+
+/* Income stats row */
+.income-grid {
+  margin-top: -10px;
+}
+.stat-card.income {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fcfc 100%);
+  border-left: 4px solid var(--teal);
+}
+.stat-card.income:nth-child(2) { border-left-color: var(--green); }
+.stat-card.income:nth-child(3) { border-left-color: var(--amber); }
+.stat-num.teal { color: var(--teal); }
+.stat-card.income .stat-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+}
+.stat-card.income .stat-num {
+  font-size: 1.4rem;
+  margin-top: 4px;
+}
+
+/* ALL card di rooms grid */
+.room-card.all-card {
+  background: linear-gradient(135deg, var(--teal) 0%, #0d3d3d 100%);
+  color: white;
+  border-color: var(--teal);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 130px;
+}
+.room-card.all-card:hover {
+  background: linear-gradient(135deg, var(--teal-lt) 0%, var(--teal) 100%);
+}
+.room-card.all-card.active {
+  box-shadow: 0 0 0 3px var(--amber);
+}
+.room-card.all-card h3 {
+  color: white;
+  font-size: 1.4rem;
+  margin-bottom: 4px;
+  font-family: 'Sora', sans-serif;
+}
+.room-card.all-card .room-tipe {
+  color: rgba(255,255,255,0.7);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  margin-bottom: 0;
+}
+.room-card.active {
+  box-shadow: 0 0 0 3px var(--amber);
+  transform: translateY(-2px);
+}
