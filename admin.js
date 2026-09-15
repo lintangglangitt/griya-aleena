@@ -9,9 +9,8 @@ let ROOMS = [];
 let OCCS = [];
 let EDITING_ID = null;
 let ACTIVE_ROOM_FILTER = 'all';
-let ACTIVE_INCOME_FILTER = null; // null | 'all' | 'year' | 'month'
+let ACTIVE_INCOME_FILTER = null;
 
-// ─── Auth guard ────────────────────────────────────────────
 if (!TOKEN) window.location.href = 'login.html';
 
 // ─── API helper ────────────────────────────────────────────
@@ -100,9 +99,7 @@ async function loadStats() {
 // ─── Kartu Pembayaran jadi Filter ──────────────────────────
 function setupIncomeCardListeners() {
   document.querySelectorAll('.stat-card.clickable').forEach(card => {
-    card.addEventListener('click', () => {
-      toggleIncomeFilter(card.dataset.filter);
-    });
+    card.addEventListener('click', () => toggleIncomeFilter(card.dataset.filter));
     card.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
@@ -117,15 +114,11 @@ function toggleIncomeFilter(filter) {
     ACTIVE_INCOME_FILTER = null;
   } else {
     ACTIVE_INCOME_FILTER = filter;
+    document.getElementById('filter-tahun').value = '';
+    document.getElementById('filter-status').value = '';
+    document.getElementById('search').value = '';
     if (filter === 'all') {
-      document.getElementById('filter-tahun').value = '';
-      document.getElementById('filter-status').value = '';
-      document.getElementById('search').value = '';
       ACTIVE_ROOM_FILTER = 'all';
-    } else {
-      document.getElementById('filter-tahun').value = '';
-      document.getElementById('filter-status').value = '';
-      document.getElementById('search').value = '';
     }
   }
   updateIncomeCardUI();
@@ -139,7 +132,7 @@ function updateIncomeCardUI() {
   });
 }
 
-// ─── Filter Tahun (auto-populate dari data) ────────────────
+// ─── Filter Tahun ──────────────────────────────────────────
 function fillYearFilter() {
   const sel = document.getElementById('filter-tahun');
   const currentVal = sel.value;
@@ -249,10 +242,8 @@ function renderTable() {
   const today = todayISO();
 
   const filtered = OCCS.filter(o => {
-    // Filter income (override)
     if (!passesIncomeFilter(o)) return false;
 
-    // Kalau income filter aktif, abaikan filter tahun/status/search
     if (!ACTIVE_INCOME_FILTER) {
       if (fTahun) {
         const y1 = Number(o.tanggal_mulai.slice(0, 4));
@@ -264,7 +255,6 @@ function renderTable() {
       if (q && !(o.nama_penyewa.toLowerCase().includes(q) || (o.no_hp || '').includes(q))) return false;
     }
 
-    // Filter kamar (selalu aktif)
     if (ACTIVE_ROOM_FILTER !== 'all' && String(o.room_id) !== String(ACTIVE_ROOM_FILTER)) return false;
 
     return true;
@@ -288,7 +278,7 @@ function renderTable() {
       ? `<a href="${escapeHtml(o.link_kontrak)}" target="_blank" class="btn-icon" title="Buka kontrak">📄</a>`
       : '—';
 
-    const rowClass = sudahSelesai ? 'kontrak-selesai' : (akanHabis ? 'akan-habis' : '');
+    const rowClass = sudahSelesai ? 'kontrak-selesai' : (akanHabis ? 'akan-habis' : 'baris-aktif');
 
     return `
       <tr class="${rowClass}">
@@ -369,7 +359,6 @@ function openModal(id) {
   modalOcc.classList.add('open');
 }
 
-// ─── Submit form okupansi ──────────────────────────────────
 formOcc.addEventListener('submit', async (e) => {
   e.preventDefault();
   const payload = {
