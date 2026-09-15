@@ -67,6 +67,7 @@ async function init() {
   document.getElementById('today-label').textContent = `(${fmtDate(todayISO())})`;
 
   await Promise.all([loadRooms(), loadOccs(), loadStats()]);
+  fillYearFilter();
   renderRooms();
   renderTable();
 
@@ -94,6 +95,29 @@ async function loadStats() {
   document.getElementById('st-income-month').textContent = rupiah(s.penghasilan_bulan_ini);
 }
 
+// ─── Filter Tahun (auto-populate dari data) ────────────────
+function fillYearFilter() {
+  const sel = document.getElementById('filter-tahun');
+  const currentVal = sel.value;
+  const years = new Set();
+
+  OCCS.forEach(o => {
+    if (!o.tanggal_mulai || !o.tanggal_selesai) return;
+    const y1 = Number(o.tanggal_mulai.slice(0, 4));
+    const y2 = Number(o.tanggal_selesai.slice(0, 4));
+    for (let y = y1; y <= y2; y++) years.add(y);
+  });
+
+  const sorted = [...years].sort((a, b) => a - b);
+  sel.innerHTML = '<option value="">Semua Tahun</option>' +
+    sorted.map(y => `<option value="${y}">${y}</option>`).join('');
+
+  // Pertahankan pilihan sebelumnya kalau masih ada
+  if (currentVal && sorted.includes(Number(currentVal))) {
+    sel.value = currentVal;
+  }
+}
+
 // ─── Render Room Cards ─────────────────────────────────────
 function renderRooms() {
   const grid = document.getElementById('rooms-grid');
@@ -102,7 +126,7 @@ function renderRooms() {
   const allCard = `
     <div class="room-card all-card ${ACTIVE_ROOM_FILTER === 'all' ? 'active' : ''}" data-room="all">
       <h3>ALL</h3>
-      <div class="room-tipe">Semua Kamar</div>
+      <div class="room-tipe">SEMUA KAMAR</div>
     </div>
   `;
 
@@ -124,7 +148,7 @@ function renderRooms() {
       const sisa = daysBetween(today, active.tanggal_selesai);
       if (active.status_bayar === 'lunas') {
         statusClass = sisa <= 14 ? 'status-habis' : 'status-terisi';
-        statusLabel = sisa <= 14 ? `Habis ${sisa} hari` : 'Terisi';
+        statusLabel = sisa <= 14 ? `⚠️ Habis ${sisa} hari` : 'Terisi';
       } else {
         statusClass = 'status-dp';
         statusLabel = active.status_bayar === 'dp' ? 'DP' : 'Belum Bayar';
@@ -158,12 +182,23 @@ function renderRooms() {
 // ─── Render Table ──────────────────────────────────────────
 function renderTable() {
   const q = document.getElementById('search').value.toLowerCase().trim();
+  const fTahun = document.getElementById('filter-tahun').value;
   const fs = document.getElementById('filter-status').value;
   const today = todayISO();
 
   const filtered = OCCS.filter(o => {
+    // Filter tahun (range)
+    if (fTahun) {
+      const y1 = Number(o.tanggal_mulai.slice(0, 4));
+      const y2 = Number(o.tanggal_selesai.slice(0, 4));
+      const targetY = Number(fTahun);
+      if (!(y1 <= targetY && y2 >= targetY)) return false;
+    }
+    // Filter status
     if (fs && o.status_bayar !== fs) return false;
+    // Filter kamar (dari kartu ALL/kamar)
     if (ACTIVE_ROOM_FILTER !== 'all' && String(o.room_id) !== String(ACTIVE_ROOM_FILTER)) return false;
+    // Filter pencarian
     if (q && !(o.nama_penyewa.toLowerCase().includes(q) || (o.no_hp || '').includes(q))) return false;
     return true;
   });
@@ -211,6 +246,7 @@ function renderTable() {
 
 // ─── Filters ───────────────────────────────────────────────
 document.getElementById('search').addEventListener('input', renderTable);
+document.getElementById('filter-tahun').addEventListener('change', renderTable);
 document.getElementById('filter-status').addEventListener('change', renderTable);
 
 // ─── Modal Okupansi ────────────────────────────────────────
@@ -285,6 +321,7 @@ formOcc.addEventListener('submit', async (e) => {
     }
     modalOcc.classList.remove('open');
     await Promise.all([loadOccs(), loadStats()]);
+    fillYearFilter();
     renderRooms();
     renderTable();
   } catch (err) {
@@ -297,6 +334,7 @@ async function deleteOcc(id) {
   try {
     await api(`/occupancies/${id}`, { method: 'DELETE' });
     await Promise.all([loadOccs(), loadStats()]);
+    fillYearFilter();
     renderRooms();
     renderTable();
   } catch (err) {
