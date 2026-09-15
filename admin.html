@@ -33,19 +33,22 @@
   <div class="stat-card"><div class="stat-label">Okupansi</div><div class="stat-num amber" id="st-okupansi">–</div></div>
 </section>
 
-<!-- STATS ROW 2 -->
+<!-- STATS ROW 2 (Pembayaran) -->
 <section class="stats-grid income-grid">
-  <div class="stat-card income">
-    <div class="stat-label">Penghasilan Keseluruhan</div>
+  <div class="stat-card income clickable" id="card-income-all" data-filter="all" role="button" tabindex="0">
+    <div class="stat-label">Pembayaran Keseluruhan</div>
     <div class="stat-num teal" id="st-income-all">–</div>
+    <div class="active-badge">🔍 Filter Aktif</div>
   </div>
-  <div class="stat-card income">
-    <div class="stat-label">Penghasilan Tahun Ini</div>
+  <div class="stat-card income clickable" id="card-income-year" data-filter="year" role="button" tabindex="0">
+    <div class="stat-label">Pembayaran Tahun Ini</div>
     <div class="stat-num green" id="st-income-year">–</div>
+    <div class="active-badge">🔍 Filter Aktif</div>
   </div>
-  <div class="stat-card income">
-    <div class="stat-label">Penghasilan Bulan Ini</div>
+  <div class="stat-card income clickable" id="card-income-month" data-filter="month" role="button" tabindex="0">
+    <div class="stat-label">Pembayaran Bulan Ini</div>
     <div class="stat-num amber" id="st-income-month">–</div>
+    <div class="active-badge">🔍 Filter Aktif</div>
   </div>
 </section>
 
