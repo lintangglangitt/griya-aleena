@@ -101,10 +101,8 @@ async function loadStats() {
 function setupIncomeCardListeners() {
   document.querySelectorAll('.stat-card.clickable').forEach(card => {
     card.addEventListener('click', () => {
-      const filter = card.dataset.filter;
-      toggleIncomeFilter(filter);
+      toggleIncomeFilter(card.dataset.filter);
     });
-    // Enter/Space untuk accessibility
     card.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
@@ -116,23 +114,18 @@ function setupIncomeCardListeners() {
 
 function toggleIncomeFilter(filter) {
   if (ACTIVE_INCOME_FILTER === filter) {
-    // Toggle off
     ACTIVE_INCOME_FILTER = null;
   } else {
     ACTIVE_INCOME_FILTER = filter;
-    // Override: reset filter lain
     if (filter === 'all') {
-      // Reset semua filter
       document.getElementById('filter-tahun').value = '';
       document.getElementById('filter-status').value = '';
       document.getElementById('search').value = '';
       ACTIVE_ROOM_FILTER = 'all';
     } else {
-      // Override tahun & status, tapi kamar tetap
       document.getElementById('filter-tahun').value = '';
       document.getElementById('filter-status').value = '';
       document.getElementById('search').value = '';
-      // ACTIVE_ROOM_FILTER tetap
     }
   }
   updateIncomeCardUI();
@@ -223,7 +216,6 @@ function renderRooms() {
   grid.querySelectorAll('.room-card').forEach(el => {
     el.addEventListener('click', () => {
       ACTIVE_ROOM_FILTER = el.dataset.room;
-      // Klik kartu kamar → matikan income filter (biar tidak bingung)
       ACTIVE_INCOME_FILTER = null;
       updateIncomeCardUI();
       renderRooms();
@@ -260,18 +252,15 @@ function renderTable() {
     // Filter income (override)
     if (!passesIncomeFilter(o)) return false;
 
-    // Kalau income filter aktif, abaikan filter tahun/status (karena override)
+    // Kalau income filter aktif, abaikan filter tahun/status/search
     if (!ACTIVE_INCOME_FILTER) {
-      // Filter tahun (range)
       if (fTahun) {
         const y1 = Number(o.tanggal_mulai.slice(0, 4));
         const y2 = Number(o.tanggal_selesai.slice(0, 4));
         const targetY = Number(fTahun);
         if (!(y1 <= targetY && y2 >= targetY)) return false;
       }
-      // Filter status
       if (fs && o.status_bayar !== fs) return false;
-      // Filter pencarian
       if (q && !(o.nama_penyewa.toLowerCase().includes(q) || (o.no_hp || '').includes(q))) return false;
     }
 
@@ -288,15 +277,21 @@ function renderTable() {
   }
 
   tbody.innerHTML = filtered.map(o => {
-    const akanHabis = o.tanggal_selesai >= today &&
+    const sudahSelesai = o.tanggal_selesai < today;
+    const akanHabis = !sudahSelesai &&
+      o.tanggal_selesai >= today &&
       daysBetween(today, o.tanggal_selesai) <= 14 &&
       o.tanggal_mulai <= today;
+
     const badgeClass = { lunas: 'lunas', dp: 'dp', belum: 'belum' }[o.status_bayar] || 'belum';
     const link = o.link_kontrak
       ? `<a href="${escapeHtml(o.link_kontrak)}" target="_blank" class="btn-icon" title="Buka kontrak">📄</a>`
       : '—';
+
+    const rowClass = sudahSelesai ? 'kontrak-selesai' : (akanHabis ? 'akan-habis' : '');
+
     return `
-      <tr class="${akanHabis ? 'akan-habis' : ''}">
+      <tr class="${rowClass}">
         <td><strong>${escapeHtml(o.nama_kamar)}</strong></td>
         <td>${escapeHtml(o.nama_penyewa)}</td>
         <td>${escapeHtml(o.no_hp || '—')}</td>
