@@ -386,6 +386,20 @@ function buildPriceCard(data, type, emoji, badgeClass, version = 1) {
   }
 }
 
+
+// ─── 10b. INFO HARIAN & MINGGUAN ─────────────────────────────
+function renderInfoHarianMingguan(c) {
+  const container = document.getElementById('info-harian-mingguan-container');
+  if (!container) return;
+
+  container.innerHTML = `
+    <div class="info-harian-mingguan">
+      <h4>🏠 Tersedia Kamar Harian & Mingguan</h4>
+      <p>Untuk keluarga yang sedang menghadiri wisuda.</p>
+      <p class="info-harga-note">Harga sewa silakan <a href="#kontak">hubungi pemilik</a>.</p>
+    </div>
+  `;
+}
 // ─── 11. EARLY BIRD ────────────────────────────────────────────
 function renderEarlyBird(c) {
   const container = document.getElementById('early-bird-container');
