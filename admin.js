@@ -117,9 +117,7 @@ function toggleIncomeFilter(filter) {
     document.getElementById('filter-tahun').value = '';
     document.getElementById('filter-status').value = '';
     document.getElementById('search').value = '';
-    if (filter === 'all') {
-      ACTIVE_ROOM_FILTER = 'all';
-    }
+    ACTIVE_ROOM_FILTER = 'all';  // ← BARU: reset filter kamar
   }
   updateIncomeCardUI();
   renderRooms();
