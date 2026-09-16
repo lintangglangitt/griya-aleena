@@ -62,6 +62,7 @@ function renderAll(c) {
   renderFasilitas(c);
   renderFasilitasPlus(c);
   renderPricing(c);
+  renderInfoHarianMingguan(c);
   renderEarlyBird(c);
   renderSpecialRequirements(c);
   renderLokasi(c);
