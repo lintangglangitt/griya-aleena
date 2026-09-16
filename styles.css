@@ -889,6 +889,52 @@ footer span { color: var(--amber-lt); }
   margin-top: 4px;
 }
 
+
+/* ── INFO HARIAN & MINGGUAN ── */
+.info-harian-mingguan {
+  margin-top: 32px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  transition: border-color 0.3s;
+}
+
+.info-harian-mingguan:hover {
+  border-color: rgba(79, 195, 247, 0.4); /* Warna biru (--blue) */
+}
+
+.info-harian-mingguan h4 {
+  color: var(--blue);
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin-bottom: 10px;
+}
+
+.info-harian-mingguan p {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 4px;
+}
+
+.info-harian-mingguan .info-harga-note {
+  color: var(--amber-lt);
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+.info-harian-mingguan .info-harga-note a {
+  color: var(--amber);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.info-harian-mingguan .info-harga-note a:hover {
+  color: var(--amber-lt);
+}
+
 /* ── RESPONSIVE ── */
 @media (max-width: 640px) {
   nav { 
