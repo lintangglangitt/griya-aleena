@@ -43,6 +43,11 @@ function fmtDate(s) {
   const d = new Date(s);
   return d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
 }
+function fmtDateLong(s) {
+  if (!s) return '—';
+  const d = new Date(s);
+  return d.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
+}
 function todayISO() { return new Date().toISOString().slice(0, 10); }
 function daysBetween(a, b) {
   return Math.ceil((new Date(b) - new Date(a)) / 86400000);
@@ -51,6 +56,27 @@ function escapeHtml(s) {
   return String(s ?? '').replace(/[&<>"']/g, c => ({
     '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
   }[c]));
+}
+function hitungDurasi(mulai, selesai, tipe) {
+  const d1 = new Date(mulai);
+  const d2 = new Date(selesai);
+  const hari = Math.ceil((d2 - d1) / 86400000);
+  const bulan = Math.round(hari / 30);
+  const label = { harian: 'hari', mingguan: 'minggu', bulanan: 'bulan', semesteran: 'semester', tahunan: 'tahun' };
+  const satuan = label[tipe] || 'hari';
+  let jumlah;
+  if (tipe === 'harian') jumlah = hari;
+  else if (tipe === 'mingguan') jumlah = Math.round(hari / 7);
+  else if (tipe === 'bulanan') jumlah = bulan;
+  else if (tipe === 'semesteran') jumlah = Math.round(bulan / 6);
+  else if (tipe === 'tahunan') jumlah = Math.round(bulan / 12);
+  else jumlah = hari;
+  return `${jumlah} ${satuan}`;
+}
+function generateInvoiceNo(id, tgl) {
+  const d = new Date(tgl || todayISO());
+  const yyyymm = d.getFullYear() + String(d.getMonth() + 1).padStart(2, '0');
+  return `INV-${yyyymm}-${String(id).padStart(4, '0')}`;
 }
 
 // ─── Logout ────────────────────────────────────────────────
@@ -291,6 +317,7 @@ function renderTable() {
         <td>${link}</td>
         <td>
           <div class="btn-row">
+            <button class="btn-icon" data-invoice="${o.id}" title="Print Invoice">🖨️</button>
             <button class="btn-icon" data-edit="${o.id}" title="Edit">✏️</button>
             <button class="btn-icon danger" data-del="${o.id}" title="Hapus">🗑️</button>
           </div>
@@ -299,11 +326,118 @@ function renderTable() {
     `;
   }).join('');
 
+  tbody.querySelectorAll('[data-invoice]').forEach(b =>
+    b.addEventListener('click', () => openInvoice(Number(b.dataset.invoice))));
   tbody.querySelectorAll('[data-edit]').forEach(b =>
     b.addEventListener('click', () => openModal(Number(b.dataset.edit))));
   tbody.querySelectorAll('[data-del]').forEach(b =>
     b.addEventListener('click', () => deleteOcc(Number(b.dataset.del))));
 }
+
+// ═══════════════════════════════════════════════════════════
+// INVOICE
+// ═══════════════════════════════════════════════════════════
+
+function openInvoice(id) {
+  const o = OCCS.find(x => x.id === id);
+  if (!o) return;
+
+  const invoiceNo = generateInvoiceNo(o.id, o.tanggal_mulai);
+  const today = fmtDateLong(todayISO());
+  const durasi = hitungDurasi(o.tanggal_mulai, o.tanggal_selesai, o.tipe_sewa);
+
+  const statusLabel = { lunas: 'LUNAS', dp: 'DP', belum: 'BELUM BAYAR' }[o.status_bayar] || o.status_bayar;
+
+  const html = `
+    <div class="inv-header">
+      <div class="inv-brand">
+        <img src="foto/logo.png" alt="" onerror="this.style.display='none'">
+        <div>
+          <h1>GRIYA ALEENA</h1>
+          <p>Kos Putri Kampus UNNES Sekaran<br>
+          Jl. Sekaran, Gunungpati, Semarang<br>
+          Telp/WA: 0898-5446-121</p>
+        </div>
+      </div>
+      <div class="inv-title-block">
+        <h2>INVOICE</h2>
+        <div class="inv-no">No. ${escapeHtml(invoiceNo)}</div>
+        <div class="inv-date">Tanggal: ${escapeHtml(today)}</div>
+      </div>
+    </div>
+
+    <div class="inv-section">
+      <div class="inv-section-title">Ditagihkan kepada:</div>
+      <dl class="inv-info-grid">
+        <dt>Nama</dt><dd>${escapeHtml(o.nama_penyewa)}</dd>
+        ${o.no_hp ? `<dt>No. HP</dt><dd>${escapeHtml(o.no_hp)}</dd>` : ''}
+        ${o.asal_kampus ? `<dt>Kampus</dt><dd>${escapeHtml(o.asal_kampus)}</dd>` : ''}
+        <dt>Kamar</dt><dd>${escapeHtml(o.nama_kamar)} (${escapeHtml(o.tipe)})</dd>
+      </dl>
+    </div>
+
+    <table class="inv-table">
+      <thead>
+        <tr>
+          <th>Tipe Sewa</th>
+          <th>Periode Sewa</th>
+          <th style="text-align:right">Jumlah</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>${escapeHtml(o.tipe_sewa.charAt(0).toUpperCase() + o.tipe_sewa.slice(1))}</td>
+          <td>
+            ${escapeHtml(fmtDateLong(o.tanggal_mulai))} — ${escapeHtml(fmtDateLong(o.tanggal_selesai))}
+            <div class="inv-period">Durasi: ${escapeHtml(durasi)}</div>
+          </td>
+          <td class="inv-amount">${escapeHtml(rupiah(o.harga_total))}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="inv-total">
+      <div>
+        <div class="inv-total-label">Total Pembayaran</div>
+        <span class="inv-status ${escapeHtml(o.status_bayar)}">${escapeHtml(statusLabel)}</span>
+      </div>
+      <div class="inv-total-value">${escapeHtml(rupiah(o.harga_total))}</div>
+    </div>
+
+    ${o.catatan ? `
+      <div class="inv-notes">
+        <strong>Catatan:</strong> ${escapeHtml(o.catatan)}
+      </div>
+    ` : ''}
+
+    <div class="inv-signature">
+      <div>Hormat kami,</div>
+      <div class="inv-sign-line">Hakim</div>
+      <div class="inv-sign-role">Pemilik Griya Aleena</div>
+    </div>
+
+    <div class="inv-footer">
+      Invoice ini dibuat otomatis oleh sistem Griya Aleena. Simpan sebagai bukti pembayaran yang sah.
+    </div>
+
+    <div class="invoice-actions">
+      <button class="inv-btn-close" onclick="closeInvoice()">Tutup</button>
+      <button class="inv-btn-print" onclick="window.print()">🖨️ Print / Simpan PDF</button>
+    </div>
+  `;
+
+  document.getElementById('invoice-content').innerHTML = html;
+  document.getElementById('invoice-modal').classList.add('open');
+}
+
+function closeInvoice() {
+  document.getElementById('invoice-modal').classList.remove('open');
+}
+
+// Close invoice kalau klik backdrop (bukan wrapper)
+document.getElementById('invoice-modal').addEventListener('click', (e) => {
+  if (e.target.id === 'invoice-modal') closeInvoice();
+});
 
 // ─── Filters ───────────────────────────────────────────────
 document.getElementById('search').addEventListener('input', renderTable);
@@ -446,7 +580,6 @@ document.getElementById('import-file').addEventListener('change', async (e) => {
       return;
     }
 
-    // Konversi ke format API
     const payload = rows.map(r => ({
       nama_kamar: r['Kamar'] || r['kamar'] || '',
       nama_penyewa: r['Penyewa'] || r['penyewa'] || '',
@@ -466,7 +599,6 @@ document.getElementById('import-file').addEventListener('change', async (e) => {
       body: JSON.stringify({ rows: payload }),
     });
 
-    // Tampilkan hasil
     const wrap = document.getElementById('import-result');
     let html = `
       <p style="margin-bottom:12px;">
@@ -483,7 +615,6 @@ document.getElementById('import-file').addEventListener('change', async (e) => {
     wrap.innerHTML = html;
     document.getElementById('modal-import-result').classList.add('open');
 
-    // Refresh data
     await Promise.all([loadOccs(), loadStats()]);
     fillYearFilter();
     renderRooms();
@@ -540,11 +671,8 @@ function parseCSVLine(line) {
 function normalizeDate(s) {
   if (!s) return '';
   s = String(s).trim();
-
-  // Format: 2026-09-15 (YYYY-MM-DD) — sudah OK
   if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
 
-  // Format: 15 Sep 2026 atau 15 September 2026
   const months = {
     jan: '01', feb: '02', mar: '03', apr: '04', mei: '05', may: '05',
     jun: '06', jul: '07', agu: '08', aug: '08', sep: '09', okt: '10', oct: '10',
@@ -558,11 +686,9 @@ function normalizeDate(s) {
   if (m) {
     const day = m[1].padStart(2, '0');
     const mon = months[m[2].toLowerCase()] || '01';
-    const year = m[3];
-    return `${year}-${mon}-${day}`;
+    return `${m[3]}-${mon}-${day}`;
   }
 
-  // Format: 15/09/2026 atau 15-09-2026
   const m2 = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
   if (m2) {
     return `${m2[3]}-${m2[2].padStart(2, '0')}-${m2[1].padStart(2, '0')}`;
@@ -571,7 +697,6 @@ function normalizeDate(s) {
   return s;
 }
 
-// Close modal import result
 document.getElementById('modal-import-result').querySelectorAll('[data-close]').forEach(b =>
   b.addEventListener('click', () => document.getElementById('modal-import-result').classList.remove('open')));
 document.getElementById('modal-import-result').addEventListener('click', e => {
