@@ -74,7 +74,9 @@
         <option value="belum">❌ Belum</option>
       </select>
       <button class="btn-primary" id="btn-add">+ Tambah</button>
-      <button class="btn-ghost" id="btn-export">⬇ CSV</button>
+      <button class="btn-ghost" id="btn-export">⬇ Export CSV</button>
+      <button class="btn-ghost" id="btn-import">⬆ Import CSV</button>
+      <input type="file" id="import-file" accept=".csv" style="display:none">
     </div>
   </div>
 
@@ -150,6 +152,17 @@
         <button type="submit" class="btn-primary">Simpan</button>
       </div>
     </form>
+  </div>
+</div>
+
+<!-- MODAL: Import Result -->
+<div class="modal" id="modal-import-result">
+  <div class="modal-card">
+    <h3>Hasil Import CSV</h3>
+    <div id="import-result"></div>
+    <div class="modal-actions">
+      <button type="button" class="btn-primary" data-close>Tutup</button>
+    </div>
   </div>
 </div>
 
