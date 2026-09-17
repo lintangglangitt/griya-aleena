@@ -117,7 +117,7 @@ function toggleIncomeFilter(filter) {
     document.getElementById('filter-tahun').value = '';
     document.getElementById('filter-status').value = '';
     document.getElementById('search').value = '';
-    ACTIVE_ROOM_FILTER = 'all';  // ← BARU: reset filter kamar
+    ACTIVE_ROOM_FILTER = 'all';
   }
   updateIncomeCardUI();
   renderRooms();
@@ -420,6 +420,164 @@ document.getElementById('btn-export').addEventListener('click', () => {
   a.download = `okupansi-griya-aleena-${todayISO()}.csv`;
   a.click();
   URL.revokeObjectURL(url);
+});
+
+// ─── Import CSV ────────────────────────────────────────────
+document.getElementById('btn-import').addEventListener('click', () => {
+  document.getElementById('import-file').click();
+});
+
+document.getElementById('import-file').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  if (!confirm(`Import ${file.name}?\n\nPastikan format CSV:\nKamar, Penyewa, No HP, Asal Kampus, Tipe Sewa, Mulai, Selesai, Total, Status, Link Kontrak, Catatan`)) {
+    e.target.value = '';
+    return;
+  }
+
+  try {
+    const text = await file.text();
+    const rows = parseCSV(text);
+
+    if (rows.length === 0) {
+      alert('CSV kosong atau format tidak valid');
+      e.target.value = '';
+      return;
+    }
+
+    // Konversi ke format API
+    const payload = rows.map(r => ({
+      nama_kamar: r['Kamar'] || r['kamar'] || '',
+      nama_penyewa: r['Penyewa'] || r['penyewa'] || '',
+      no_hp: r['No HP'] || r['no_hp'] || '',
+      asal_kampus: r['Asal Kampus'] || r['asal_kampus'] || '',
+      tipe_sewa: (r['Tipe Sewa'] || r['tipe_sewa'] || 'bulanan').toLowerCase(),
+      tanggal_mulai: normalizeDate(r['Mulai'] || r['mulai'] || ''),
+      tanggal_selesai: normalizeDate(r['Selesai'] || r['selesai'] || ''),
+      harga_total: Number(String(r['Total'] || r['total'] || '0').replace(/[^0-9]/g, '')),
+      status_bayar: (r['Status'] || r['status'] || 'belum').toLowerCase(),
+      link_kontrak: r['Link Kontrak'] || r['link_kontrak'] || null,
+      catatan: r['Catatan'] || r['catatan'] || null,
+    }));
+
+    const result = await api('/occupancies/bulk', {
+      method: 'POST',
+      body: JSON.stringify({ rows: payload }),
+    });
+
+    // Tampilkan hasil
+    const wrap = document.getElementById('import-result');
+    let html = `
+      <p style="margin-bottom:12px;">
+        <strong>✅ Sukses:</strong> ${result.sukses} baris<br>
+        <strong>❌ Gagal:</strong> ${result.gagal} baris
+      </p>
+    `;
+    if (result.errors && result.errors.length) {
+      html += `<div style="background:#fdecec;padding:12px;border-radius:8px;font-size:0.85rem;">
+        <strong>Detail error:</strong><br>
+        ${result.errors.map(e => escapeHtml(e)).join('<br>')}
+      </div>`;
+    }
+    wrap.innerHTML = html;
+    document.getElementById('modal-import-result').classList.add('open');
+
+    // Refresh data
+    await Promise.all([loadOccs(), loadStats()]);
+    fillYearFilter();
+    renderRooms();
+    renderTable();
+  } catch (err) {
+    alert('Gagal import: ' + err.message);
+  } finally {
+    e.target.value = '';
+  }
+});
+
+function parseCSV(text) {
+  const lines = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').trim().split('\n');
+  if (lines.length < 2) return [];
+
+  const headers = parseCSVLine(lines[0]);
+  const rows = [];
+  for (let i = 1; i < lines.length; i++) {
+    if (!lines[i].trim()) continue;
+    const values = parseCSVLine(lines[i]);
+    const obj = {};
+    headers.forEach((h, idx) => {
+      obj[h.trim()] = (values[idx] || '').trim();
+    });
+    rows.push(obj);
+  }
+  return rows;
+}
+
+function parseCSVLine(line) {
+  const result = [];
+  let cur = '';
+  let inQuote = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (c === '"') {
+      if (inQuote && line[i + 1] === '"') {
+        cur += '"';
+        i++;
+      } else {
+        inQuote = !inQuote;
+      }
+    } else if (c === ',' && !inQuote) {
+      result.push(cur);
+      cur = '';
+    } else {
+      cur += c;
+    }
+  }
+  result.push(cur);
+  return result;
+}
+
+function normalizeDate(s) {
+  if (!s) return '';
+  s = String(s).trim();
+
+  // Format: 2026-09-15 (YYYY-MM-DD) — sudah OK
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+
+  // Format: 15 Sep 2026 atau 15 September 2026
+  const months = {
+    jan: '01', feb: '02', mar: '03', apr: '04', mei: '05', may: '05',
+    jun: '06', jul: '07', agu: '08', aug: '08', sep: '09', okt: '10', oct: '10',
+    nov: '11', des: '12', dec: '12',
+    januari: '01', februari: '02', maret: '03', april: '04',
+    juni: '06', juli: '07', agustus: '08', september: '09',
+    oktober: '10', november: '11', desember: '12'
+  };
+
+  const m = s.match(/^(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})$/);
+  if (m) {
+    const day = m[1].padStart(2, '0');
+    const mon = months[m[2].toLowerCase()] || '01';
+    const year = m[3];
+    return `${year}-${mon}-${day}`;
+  }
+
+  // Format: 15/09/2026 atau 15-09-2026
+  const m2 = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+  if (m2) {
+    return `${m2[3]}-${m2[2].padStart(2, '0')}-${m2[1].padStart(2, '0')}`;
+  }
+
+  return s;
+}
+
+// Close modal import result
+document.getElementById('modal-import-result').querySelectorAll('[data-close]').forEach(b =>
+  b.addEventListener('click', () => document.getElementById('modal-import-result').classList.remove('open')));
+document.getElementById('modal-import-result').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-import-result')) {
+    document.getElementById('modal-import-result').classList.remove('open');
+  }
 });
 
 // ─── Users Modal ───────────────────────────────────────────
