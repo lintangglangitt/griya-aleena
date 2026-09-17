@@ -56,7 +56,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
 
     localStorage.setItem('ga_token', data.token);
     localStorage.setItem('ga_user', JSON.stringify(data.user));
-    window.location.href = 'admin.html';
+    window.location.href = 'ngadmin.html';
   } catch (e) {
     err.textContent = e.message;
     btn.disabled = false;
@@ -66,7 +66,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
 
 // Redirect kalau sudah login
 if (localStorage.getItem('ga_token')) {
-  window.location.href = 'admin.html';
+  window.location.href = 'ngadmin.html';
 }
 </script>
 </body>
