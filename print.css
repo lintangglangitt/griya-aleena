@@ -1,0 +1,246 @@
+/* print.css — styling khusus untuk cetak invoice */
+
+/* ─── INVOICE MODAL (tampil di layar) ─── */
+.invoice-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 30, 46, 0.75);
+  z-index: 200;
+  padding: 20px;
+  overflow-y: auto;
+}
+.invoice-modal.open { display: flex; align-items: flex-start; justify-content: center; }
+
+.invoice-wrapper {
+  background: white;
+  max-width: 720px;
+  width: 100%;
+  padding: 40px 44px;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  margin: auto;
+  color: #1c2e2e;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* Header invoice */
+.inv-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 3px solid #1a5c5c;
+  padding-bottom: 20px;
+  margin-bottom: 24px;
+}
+.inv-brand { display: flex; align-items: center; gap: 14px; }
+.inv-brand img { max-height: 60px; }
+.inv-brand h1 {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.5rem;
+  color: #1a5c5c;
+  margin-bottom: 4px;
+}
+.inv-brand p { font-size: 0.8rem; color: #5a7373; line-height: 1.4; }
+
+.inv-title-block { text-align: right; }
+.inv-title-block h2 {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.3rem;
+  color: #1a5c5c;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+.inv-title-block .inv-no {
+  font-size: 0.8rem;
+  color: #5a7373;
+  font-family: monospace;
+}
+.inv-title-block .inv-date {
+  font-size: 0.78rem;
+  color: #5a7373;
+  margin-top: 4px;
+}
+
+/* Info bagian */
+.inv-section { margin-bottom: 20px; }
+.inv-section-title {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #5a7373;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.inv-info-grid {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 6px 16px;
+  font-size: 0.88rem;
+}
+.inv-info-grid dt { color: #5a7373; }
+.inv-info-grid dd { color: #1c2e2e; font-weight: 600; }
+
+/* Tabel item */
+.inv-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+.inv-table th {
+  background: #1a5c5c;
+  color: white;
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.inv-table td {
+  padding: 14px;
+  border-bottom: 1px solid #e3ebeb;
+  font-size: 0.9rem;
+  vertical-align: top;
+}
+.inv-table .inv-period { color: #5a7373; font-size: 0.8rem; }
+.inv-table .inv-amount { text-align: right; font-weight: 700; }
+
+/* Total */
+.inv-total {
+  background: #f4f7f7;
+  border-radius: 10px;
+  padding: 18px 22px;
+  margin: 20px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.inv-total-label {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #5a7373;
+  font-weight: 700;
+}
+.inv-total-value {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.6rem;
+  color: #1a5c5c;
+  font-weight: 800;
+}
+.inv-status {
+  display: inline-block;
+  padding: 5px 14px;
+  border-radius: 50px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 8px;
+}
+.inv-status.lunas { background: #d4f4e2; color: #0e7a3c; }
+.inv-status.dp { background: #fff0cc; color: #a06800; }
+.inv-status.belum { background: #fcdcdc; color: #a81f1f; }
+
+/* Catatan */
+.inv-notes {
+  background: #fff9e6;
+  border-left: 4px solid #F5A623;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: #6b5500;
+  margin-bottom: 24px;
+}
+.inv-notes strong { color: #a06800; }
+
+/* Tanda tangan */
+.inv-signature {
+  text-align: right;
+  margin-top: 40px;
+  font-size: 0.9rem;
+}
+.inv-signature .inv-sign-line {
+  margin-top: 60px;
+  display: inline-block;
+  padding-top: 6px;
+  border-top: 1.5px solid #1c2e2e;
+  min-width: 180px;
+  font-weight: 700;
+}
+.inv-signature .inv-sign-role {
+  font-size: 0.78rem;
+  color: #5a7373;
+  margin-top: 2px;
+}
+
+/* Footer invoice */
+.inv-footer {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #5a7373;
+  margin-top: 30px;
+  padding-top: 16px;
+  border-top: 1px solid #e3ebeb;
+}
+
+/* ─── TOMBOL DI MODAL ─── */
+.invoice-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+.invoice-actions button {
+  padding: 11px 22px;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.invoice-actions .inv-btn-print {
+  background: #1a5c5c;
+  color: white;
+}
+.invoice-actions .inv-btn-print:hover {
+  background: #2a8080;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(26, 92, 92, 0.3);
+}
+.invoice-actions .inv-btn-close {
+  background: white;
+  color: #1c2e2e;
+  border: 1.5px solid #e3ebeb;
+}
+.invoice-actions .inv-btn-close:hover { background: #f4f7f7; }
+
+/* ─── SAAT PRINT / SIMPAN PDF ─── */
+@media print {
+  /* Sembunyikan SEMUA elemen kecuali invoice */
+  body * { visibility: hidden; }
+  .invoice-modal, .invoice-modal * { visibility: visible; }
+  .invoice-modal {
+    position: absolute;
+    inset: 0;
+    padding: 0;
+    background: white;
+    display: block !important;
+    overflow: visible;
+  }
+  .invoice-wrapper {
+    box-shadow: none;
+    border-radius: 0;
+    padding: 24px 32px;
+    max-width: 100%;
+  }
+  .invoice-actions { display: none !important; }
+  .admin-header { display: none !important; }
+  
+  @page {
+    margin: 1cm;
+    size: A4;
+  }
+}
