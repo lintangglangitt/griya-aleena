@@ -11,7 +11,7 @@ let EDITING_ID = null;
 let ACTIVE_ROOM_FILTER = 'all';
 let ACTIVE_INCOME_FILTER = null;
 
-if (!TOKEN) window.location.href = 'mlebu.html';
+if (!TOKEN) window.location.href = 'ibun.html';
 
 // ─── API helper ────────────────────────────────────────────
 async function api(path, options = {}) {
@@ -26,7 +26,7 @@ async function api(path, options = {}) {
   if (res.status === 401) {
     localStorage.removeItem('ga_token');
     localStorage.removeItem('ga_user');
-    window.location.href = 'mlebu.html';
+    window.location.href = 'ibun.html';
     throw new Error('Sesi berakhir');
   }
   const data = await res.json().catch(() => ({}));
@@ -58,7 +58,7 @@ document.getElementById('btn-logout').addEventListener('click', async () => {
   try { await api('/auth/logout', { method: 'POST' }); } catch {}
   localStorage.removeItem('ga_token');
   localStorage.removeItem('ga_user');
-  window.location.href = 'mlebu.html';
+  window.location.href = 'ibun.html';
 });
 
 // ─── Init ──────────────────────────────────────────────────
