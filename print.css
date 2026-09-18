@@ -485,3 +485,76 @@
     padding: 0;
   }
 }
+
+
+/* ============================================ */
+/* UPDATE: Perjanjian — cegah judul terpotong */
+/* ============================================ */
+
+/* Cegah judul H2 terpisah dari kontennya */
+.perjanjian-wrapper h2 {
+  page-break-after: avoid !important;
+  break-after: avoid !important;
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+}
+
+.perjanjian-wrapper h1 {
+  page-break-after: avoid !important;
+  break-after: avoid !important;
+}
+
+.perjanjian-wrapper h3 {
+  page-break-after: avoid !important;
+  break-after: avoid !important;
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+}
+
+/* Info block jangan terpotong tengah */
+.perjanjian-wrapper .pj-info-block {
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+}
+
+/* Judul + info block berikutnya tetap satu grup */
+.perjanjian-wrapper h2 + .pj-info-block,
+.perjanjian-wrapper h2 + p {
+  page-break-before: avoid !important;
+  break-before: avoid !important;
+}
+
+/* Field individual jangan terpotong */
+.perjanjian-wrapper .pj-field {
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+}
+
+/* Tanda tangan jangan terpisah */
+.perjanjian-wrapper .pj-sign-row {
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+  page-break-before: avoid !important;
+}
+
+/* Tanggal perjanjian (Semarang, ___) */
+.perjanjian-wrapper .pj-tanggal {
+  text-align: right;
+  margin-top: 16px;
+  margin-bottom: 8px;
+}
+.perjanjian-wrapper .pj-tanggal .pj-tanggal-fill {
+  display: inline-block;
+  min-width: 200px;
+  border-bottom: 1px solid #1c2e2e;
+  padding: 0 8px;
+  font-weight: 600;
+  color: #1a5c5c;
+}
+
+/* List item jangan terpotong */
+.perjanjian-wrapper ol li,
+.perjanjian-wrapper ul li {
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+}
