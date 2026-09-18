@@ -806,18 +806,45 @@ modalOcc.addEventListener('click', e => {
   if (e.target === modalOcc) modalOcc.classList.remove('open');
 });
 
-function fillRoomSelect() {
+
+function fillRoomSelect(currentEditingId = null) {
   const fr = document.getElementById('f-room');
-  fr.innerHTML = ROOMS.map(r => 
-    `<option value="${r.id}">${escapeHtml(r.nama_kamar)} (${escapeHtml(r.tipe)})</option>`
-  ).join('');
+  const today = todayISO();
+
+  // Cari room_id yang sedang di-edit (kalau mode Edit)
+  let editingRoomId = null;
+  if (currentEditingId) {
+    const editingOcc = OCCS.find(x => x.id === currentEditingId);
+    if (editingOcc) editingRoomId = editingOcc.room_id;
+  }
+
+  fr.innerHTML = ROOMS.map(r => {
+    // Cek apakah kamar ini sedang terisi (ada okupansi aktif hari ini)
+    const activeOcc = OCCS.find(o =>
+      o.room_id === r.id &&
+      o.tanggal_mulai <= today &&
+      o.tanggal_selesai >= today
+    );
+
+    // Kalau terisi DAN bukan kamar yang sedang di-edit → disabled
+    const isDisabled = activeOcc && activeOcc.room_id !== editingRoomId;
+    const disabledAttr = isDisabled ? 'disabled' : '';
+
+    // Kalau disabled, tambahkan keterangan
+    const label = isDisabled
+      ? `${r.nama_kamar} (${r.tipe}) — TERISI`
+      : `${r.nama_kamar} (${r.tipe})`;
+
+    return `<option value="${r.id}" ${disabledAttr}>${escapeHtml(label)}</option>`;
+  }).join('');
 }
+
 
 function openModal(id) {
   EDITING_ID = id;
   const f = formOcc;
   f.reset();
-  fillRoomSelect();
+  fillRoomSelect(id);   // ← kirim ID yang di-edit (null kalau tambah baru)
 
   if (id) {
     const o = OCCS.find(x => x.id === id);
