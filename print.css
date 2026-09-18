@@ -307,6 +307,21 @@
   min-width: 200px;
 }
 
+/* Tanggal Semarang dengan spasi panjang */
+.perjanjian-wrapper .pj-tanggal {
+  text-align: right;
+  margin-top: 16px;
+  margin-bottom: 8px;
+}
+.perjanjian-wrapper .pj-tanggal .pj-tanggal-fill {
+  display: inline-block;
+  min-width: 200px;
+  border-bottom: 1px solid #1c2e2e;
+  padding: 0 8px;
+  font-weight: 600;
+  color: #1a5c5c;
+}
+
 /* Tanda tangan perjanjian */
 .perjanjian-wrapper .pj-sign-row {
   display: flex;
@@ -368,29 +383,61 @@
 
 /* ─── SAAT PRINT ─── */
 @media print {
+  /* Sembunyikan semua, tampilkan hanya modal yang terbuka */
   body * { visibility: hidden; }
-  .invoice-modal, .invoice-modal * { visibility: visible; }
+  .invoice-modal.open, 
+  .invoice-modal.open * { visibility: visible; }
+  
   .invoice-modal {
     position: absolute;
     inset: 0;
     padding: 0;
+    margin: 0;
     background: white;
     display: block !important;
     overflow: visible;
+    height: auto;
   }
   .invoice-modal:not(.open) { display: none !important; }
+  
   .invoice-wrapper {
     box-shadow: none;
     border-radius: 0;
     padding: 0;
+    margin: 0;
     max-width: 100%;
   }
+  
   .invoice-actions { display: none !important; }
   .admin-header { display: none !important; }
   
-  /* Margin lebih lebar + default A4 */
+  /* Paksa background & warna tetap tercetak */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+  
+  /* Hapus page-break setelah elemen */
+  .inv-footer { 
+    page-break-after: avoid; 
+    break-after: avoid;
+  }
+  .invoice-wrapper > *:last-child { 
+    page-break-after: avoid; 
+    break-after: avoid;
+  }
+  
+  /* A4 dengan margin 2cm */
   @page { 
-    margin: 2cm 2cm 2cm 2cm; 
+    margin: 2cm; 
     size: A4; 
+  }
+  
+  html, body {
+    width: 100%;
+    height: auto;
+    margin: 0;
+    padding: 0;
   }
 }
