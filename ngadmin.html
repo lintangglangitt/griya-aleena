@@ -7,9 +7,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="admin.css">
 <link rel="stylesheet" href="print.css">
-<link rel="icon" type="image/png" sizes="32x32" href="foto/favicon.png">
-<link rel="icon" type="image/png" sizes="16x16" href="foto/favicon.png">
-<link rel="apple-touch-icon" href="foto/favicon.png">
 </head>
 <body class="admin-body">
 
@@ -67,6 +64,7 @@
   <div class="table-head">
     <h2 class="section-h">Riwayat Okupansi</h2>
     <div class="table-actions">
+      <button class="btn-primary" id="btn-add">+ Tambah</button>
       <input type="search" id="search" placeholder="🔍 Cari nama…" />
       <select id="filter-tahun">
         <option value="">Semua Tahun</option>
@@ -77,7 +75,6 @@
         <option value="dp">⏳ DP</option>
         <option value="belum">❌ Belum</option>
       </select>
-      <button class="btn-primary" id="btn-add">+ Tambah</button>
       <button class="btn-ghost" id="btn-export">⬇ Export CSV</button>
       <button class="btn-ghost" id="btn-import">⬆ Import CSV</button>
       <input type="file" id="import-file" accept=".csv" style="display:none">
@@ -147,6 +144,25 @@
         </label>
       </div>
 
+      <h4 style="margin-top:20px;margin-bottom:12px;color:var(--teal);font-size:0.9rem;">Data untuk Perjanjian (opsional)</h4>
+      <div class="grid-2">
+        <label>No. KTP/SIM Penyewa
+          <input type="text" id="f-ktp" placeholder="16 digit NIK / No SIM">
+        </label>
+        <label>No. HP Orang Tua
+          <input type="text" id="f-hp-ortu" placeholder="08xx…">
+        </label>
+        <label>Nama Orang Tua
+          <input type="text" id="f-nama-ortu" placeholder="Nama lengkap">
+        </label>
+        <label>No. KTP/SIM Orang Tua
+          <input type="text" id="f-ktp-ortu" placeholder="16 digit NIK / No SIM">
+        </label>
+      </div>
+      <label>Alamat Penyewa
+        <textarea id="f-alamat" rows="2" placeholder="Alamat lengkap sesuai KTP"></textarea>
+      </label>
+
       <label>Catatan
         <textarea id="f-catatan" rows="2" placeholder="Mis. dapat diskon prestasi"></textarea>
       </label>
@@ -157,6 +173,21 @@
       </div>
     </form>
   </div>
+</div>
+
+<!-- MODAL: Invoice -->
+<div class="invoice-modal" id="invoice-modal">
+  <div class="invoice-wrapper" id="invoice-content"></div>
+</div>
+
+<!-- MODAL: Kuitansi -->
+<div class="invoice-modal" id="kuitansi-modal">
+  <div class="invoice-wrapper" id="kuitansi-content"></div>
+</div>
+
+<!-- MODAL: Perjanjian -->
+<div class="invoice-modal" id="perjanjian-modal">
+  <div class="invoice-wrapper perjanjian-wrapper" id="perjanjian-content"></div>
 </div>
 
 <!-- MODAL: Import Result -->
@@ -194,13 +225,6 @@
         <button type="submit" class="btn-primary">Tambah User</button>
       </div>
     </form>
-  </div>
-</div>
-
-  <!-- MODAL: Invoice -->
-<div class="invoice-modal" id="invoice-modal">
-  <div class="invoice-wrapper" id="invoice-content">
-    <!-- Akan di-inject oleh JS -->
   </div>
 </div>
 
