@@ -624,16 +624,16 @@ function openPerjanjian(id) {
       ${field('Alamat', o.alamat_penyewa)}
       ${field('Nomor HP/WA', o.no_hp)}
     </div>
-    <p>Selanjutnya disebut <strong>Penyewa</strong>.</p>
 
-    <h2>3. Data Orang Tua/Wali</h2>
-    <div class="pj-info-block">
+    <div class="pj-info-block" style="margin-top:14px;">
+      <p style="font-weight:700;color:#1a5c5c;margin-bottom:10px;">Data Orang Tua/Wali:</p>
       ${field('Nama', o.nama_ortu || '')}
       ${field('Nomor KTP/SIM', o.no_ktp_ortu || '')}
       ${field('Alamat', o.alamat_ortu || '')}
       ${field('Nomor HP/WA', o.no_hp_ortu || '')}
     </div>
-    <p>Data orang tua/wali di atas dicatat sebagai penanggung jawab.</p>
+
+    <p>Selanjutnya disebut <strong>Penyewa</strong>.</p>
 
     <p style="margin-top:16px;">
       Pemilik dan Penyewa sepakat mengikat diri dalam Perjanjian dan Tata Tertib Bersama dengan ketentuan sebagai berikut:
