@@ -11,6 +11,14 @@ let EDITING_ID = null;
 let ACTIVE_ROOM_FILTER = 'all';
 let ACTIVE_INCOME_FILTER = null;
 
+// ─── Konfigurasi Pemilik (untuk perjanjian) ────────────────
+const PEMILIK = {
+  nama: 'Hakim',
+  no_ktp: '',
+  alamat: 'Jl. Margasatwa, Gg. Sadewa No. 14, Sekaran 005/005, Kec. Gunungpati, Kota Semarang, Jawa Tengah, 50229',
+  no_hp: '0898-5446-121',
+};
+
 if (!TOKEN) window.location.href = 'ibun.html';
 
 // ─── API helper ────────────────────────────────────────────
@@ -77,6 +85,28 @@ function generateInvoiceNo(id, tgl) {
   const d = new Date(tgl || todayISO());
   const yyyymm = d.getFullYear() + String(d.getMonth() + 1).padStart(2, '0');
   return `INV-${yyyymm}-${String(id).padStart(4, '0')}`;
+}
+function generateKuitansiNo(id, tgl) {
+  const d = new Date(tgl || todayISO());
+  const yyyymm = d.getFullYear() + String(d.getMonth() + 1).padStart(2, '0');
+  return `KW-${yyyymm}-${String(id).padStart(4, '0')}`;
+}
+function terbilangAngka(n) {
+  const satuan = ['', 'satu', 'dua', 'tiga', 'empat', 'lima', 'enam', 'tujuh', 'delapan', 'sembilan', 'sepuluh', 'sebelas'];
+  if (n < 12) return satuan[n];
+  if (n < 20) return terbilangAngka(n - 10) + ' belas';
+  if (n < 100) return terbilangAngka(Math.floor(n / 10)) + ' puluh ' + terbilangAngka(n % 10);
+  if (n < 200) return 'seratus ' + terbilangAngka(n - 100);
+  if (n < 1000) return terbilangAngka(Math.floor(n / 100)) + ' ratus ' + terbilangAngka(n % 100);
+  if (n < 2000) return 'seribu ' + terbilangAngka(n - 1000);
+  if (n < 1000000) return terbilangAngka(Math.floor(n / 1000)) + ' ribu ' + terbilangAngka(n % 1000);
+  if (n < 1000000000) return terbilangAngka(Math.floor(n / 1000000)) + ' juta ' + terbilangAngka(n % 1000000);
+  return terbilangAngka(Math.floor(n / 1000000000)) + ' miliar ' + terbilangAngka(n % 1000000000);
+}
+function terbilangRupiah(n) {
+  n = Math.floor(Number(n) || 0);
+  if (n === 0) return 'nol rupiah';
+  return terbilangAngka(n).replace(/\s+/g, ' ').trim() + ' rupiah';
 }
 
 // ─── Logout ────────────────────────────────────────────────
@@ -317,7 +347,9 @@ function renderTable() {
         <td>${link}</td>
         <td>
           <div class="btn-row">
-            <button class="btn-icon" data-invoice="${o.id}" title="Print Invoice">🖨️</button>
+            <button class="btn-icon" data-invoice="${o.id}" title="Print Invoice">🧾</button>
+            <button class="btn-icon" data-kuitansi="${o.id}" title="Print Kuitansi">💰</button>
+            <button class="btn-icon" data-perjanjian="${o.id}" title="Print Perjanjian">📄</button>
             <button class="btn-icon" data-edit="${o.id}" title="Edit">✏️</button>
             <button class="btn-icon danger" data-del="${o.id}" title="Hapus">🗑️</button>
           </div>
@@ -328,6 +360,10 @@ function renderTable() {
 
   tbody.querySelectorAll('[data-invoice]').forEach(b =>
     b.addEventListener('click', () => openInvoice(Number(b.dataset.invoice))));
+  tbody.querySelectorAll('[data-kuitansi]').forEach(b =>
+    b.addEventListener('click', () => openKuitansi(Number(b.dataset.kuitansi))));
+  tbody.querySelectorAll('[data-perjanjian]').forEach(b =>
+    b.addEventListener('click', () => openPerjanjian(Number(b.dataset.perjanjian))));
   tbody.querySelectorAll('[data-edit]').forEach(b =>
     b.addEventListener('click', () => openModal(Number(b.dataset.edit))));
   tbody.querySelectorAll('[data-del]').forEach(b =>
@@ -345,7 +381,6 @@ function openInvoice(id) {
   const invoiceNo = generateInvoiceNo(o.id, o.tanggal_mulai);
   const today = fmtDateLong(todayISO());
   const durasi = hitungDurasi(o.tanggal_mulai, o.tanggal_selesai, o.tipe_sewa);
-
   const statusLabel = { lunas: 'LUNAS', dp: 'DP', belum: 'BELUM BAYAR' }[o.status_bayar] || o.status_bayar;
 
   const html = `
@@ -356,7 +391,7 @@ function openInvoice(id) {
           <h1>GRIYA ALEENA</h1>
           <p>Kos Putri Kampus UNNES Sekaran<br>
           Jl. Sekaran, Gunungpati, Semarang<br>
-          Telp/WA: 0898-5446-121</p>
+          Telp/WA: ${escapeHtml(PEMILIK.no_hp)}</p>
         </div>
       </div>
       <div class="inv-title-block">
@@ -404,15 +439,11 @@ function openInvoice(id) {
       <div class="inv-total-value">${escapeHtml(rupiah(o.harga_total))}</div>
     </div>
 
-    ${o.catatan ? `
-      <div class="inv-notes">
-        <strong>Catatan:</strong> ${escapeHtml(o.catatan)}
-      </div>
-    ` : ''}
+    ${o.catatan ? `<div class="inv-notes"><strong>Catatan:</strong> ${escapeHtml(o.catatan)}</div>` : ''}
 
     <div class="inv-signature">
       <div>Hormat kami,</div>
-      <!-- <div class="inv-sign-line">Hakim</div> -->
+      <div class="inv-sign-line">${escapeHtml(PEMILIK.nama)}</div>
       <div class="inv-sign-role">Pemilik Griya Aleena</div>
     </div>
 
@@ -434,9 +465,308 @@ function closeInvoice() {
   document.getElementById('invoice-modal').classList.remove('open');
 }
 
-// Close invoice kalau klik backdrop (bukan wrapper)
-document.getElementById('invoice-modal').addEventListener('click', (e) => {
-  if (e.target.id === 'invoice-modal') closeInvoice();
+// ═══════════════════════════════════════════════════════════
+// KUITANSI
+// ═══════════════════════════════════════════════════════════
+
+function openKuitansi(id) {
+  const o = OCCS.find(x => x.id === id);
+  if (!o) return;
+
+  const noKuitansi = generateKuitansiNo(o.id, o.tanggal_mulai);
+  const today = fmtDateLong(todayISO());
+  const durasi = hitungDurasi(o.tanggal_mulai, o.tanggal_selesai, o.tipe_sewa);
+
+  const html = `
+    <div class="inv-header">
+      <div class="inv-brand">
+        <img src="foto/logo.png" alt="" onerror="this.style.display='none'">
+        <div>
+          <h1>GRIYA ALEENA</h1>
+          <p>Kos Putri Kampus UNNES Sekaran<br>
+          Jl. Sekaran, Gunungpati, Semarang<br>
+          Telp/WA: ${escapeHtml(PEMILIK.no_hp)}</p>
+        </div>
+      </div>
+      <div class="inv-title-block">
+        <h2>KUITANSI</h2>
+        <div class="inv-no">No. ${escapeHtml(noKuitansi)}</div>
+        <div class="inv-date">Tanggal: ${escapeHtml(today)}</div>
+      </div>
+    </div>
+
+    <div class="inv-section">
+      <div class="inv-section-title">Telah diterima dari:</div>
+      <dl class="inv-info-grid">
+        <dt>Nama</dt><dd>${escapeHtml(o.nama_penyewa)}</dd>
+        ${o.no_hp ? `<dt>No. HP</dt><dd>${escapeHtml(o.no_hp)}</dd>` : ''}
+        <dt>Kamar</dt><dd>${escapeHtml(o.nama_kamar)} (${escapeHtml(o.tipe)})</dd>
+      </dl>
+    </div>
+
+    <p style="font-size:0.9rem;margin-bottom:8px;">Untuk pembayaran sewa kamar kos dengan rincian:</p>
+    <table class="inv-table">
+      <thead>
+        <tr>
+          <th>Tipe Sewa</th>
+          <th>Periode</th>
+          <th style="text-align:right">Jumlah</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>${escapeHtml(o.tipe_sewa.charAt(0).toUpperCase() + o.tipe_sewa.slice(1))}</td>
+          <td>
+            ${escapeHtml(fmtDateLong(o.tanggal_mulai))} — ${escapeHtml(fmtDateLong(o.tanggal_selesai))}
+            <div class="inv-period">Durasi: ${escapeHtml(durasi)}</div>
+          </td>
+          <td class="inv-amount">${escapeHtml(rupiah(o.harga_total))}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="kuitansi-amount-box">
+      <div class="kuitansi-amount-label">Jumlah Dibayar</div>
+      <div class="kuitansi-amount-value">${escapeHtml(rupiah(o.harga_total))}</div>
+      <div class="kuitansi-amount-text">(${escapeHtml(terbilangRupiah(o.harga_total))})</div>
+      ${o.status_bayar === 'lunas' ? '<div class="kuitansi-check">✓ LUNAS</div>' : ''}
+      ${o.status_bayar === 'dp' ? '<div class="kuitansi-check" style="background:#F5A623">DP</div>' : ''}
+    </div>
+
+    ${o.catatan ? `<div class="inv-notes"><strong>Catatan:</strong> ${escapeHtml(o.catatan)}</div>` : ''}
+
+    <p style="font-size:0.85rem;color:#5a7373;margin-bottom:24px;">
+      Kuitansi ini merupakan bukti sah pembayaran sewa kamar kos di Griya Aleena Sekaran.
+      Mohon disimpan dengan baik.
+    </p>
+
+    <div class="inv-signature">
+      <div>Penerima,</div>
+      <div class="inv-sign-line">${escapeHtml(PEMILIK.nama)}</div>
+      <div class="inv-sign-role">Pemilik Griya Aleena</div>
+    </div>
+
+    <div class="inv-footer">
+      Terima kasih atas kepercayaan Anda. Semoga betah tinggal di Griya Aleena. 🏠
+    </div>
+
+    <div class="invoice-actions">
+      <button class="inv-btn-close" onclick="closeKuitansi()">Tutup</button>
+      <button class="inv-btn-print" onclick="window.print()">🖨️ Print / Simpan PDF</button>
+    </div>
+  `;
+
+  document.getElementById('kuitansi-content').innerHTML = html;
+  document.getElementById('kuitansi-modal').classList.add('open');
+}
+
+function closeKuitansi() {
+  document.getElementById('kuitansi-modal').classList.remove('open');
+}
+
+// ═══════════════════════════════════════════════════════════
+// PERJANJIAN
+// ═══════════════════════════════════════════════════════════
+
+function openPerjanjian(id) {
+  const o = OCCS.find(x => x.id === id);
+  if (!o) return;
+
+  const fill = (v) => v ? `<span class="pj-fill">${escapeHtml(v)}</span>` : '<span class="pj-fill">&nbsp;</span>';
+  const fillLg = (v) => v ? `<span class="pj-fill pj-fill-lg">${escapeHtml(v)}</span>` : '<span class="pj-fill pj-fill-lg">&nbsp;</span>';
+
+  const totalBiaya = rupiah(o.harga_total);
+  const tipeUpper = o.tipe_sewa.charAt(0).toUpperCase() + o.tipe_sewa.slice(1);
+  const kamarTipe = o.tipe === 'AC' ? 'AC' : 'NON AC';
+
+  const html = `
+    <h1>PERJANJIAN DAN TATA TERTIB BERSAMA<br>GRIYA ALEENA</h1>
+
+    <p>
+      Pada hari ini <span class="pj-fill pj-fill-sm">&nbsp;</span>
+      tanggal <span class="pj-fill pj-fill-sm">&nbsp;</span>
+      telah disepakati Perjanjian dan Tata Tertib Bersama terkait sewa-menyewa kamar kos antara:
+    </p>
+
+    <h2>1. Pemilik Kos</h2>
+    <div class="pj-info-block">
+      <p>Nama: ${fill(PEMILIK.nama)}</p>
+      <p>Nomor KTP/SIM: ${fill(PEMILIK.no_ktp)}</p>
+      <p>Alamat: ${fillLg(PEMILIK.alamat)}</p>
+      <p>Nomor HP: ${fill(PEMILIK.no_hp)}</p>
+    </div>
+    <p>Selanjutnya disebut <strong>Pemilik</strong>.</p>
+
+    <h2>2. Penyewa Kos</h2>
+    <div class="pj-info-block">
+      <p>Nama: ${fill(o.nama_penyewa)}</p>
+      <p>Nomor KTP/SIM: ${fill(o.no_ktp)}</p>
+      <p>Alamat: ${fillLg(o.alamat_penyewa)}</p>
+      <p>Nomor HP: ${fill(o.no_hp)}</p>
+    </div>
+    <p>Selanjutnya disebut <strong>Penyewa</strong>.</p>
+
+    <p style="margin-top:16px;">
+      Pemilik dan Penyewa sepakat mengikat diri dalam Perjanjian dan Tata Tertib Bersama dengan ketentuan sebagai berikut:
+    </p>
+
+    <h2>Pasal 1 – Objek Sewa</h2>
+    <ol>
+      <li>Pemilik menyewakan kamar kos yang beralamat di ${escapeHtml(PEMILIK.alamat)} kepada Penyewa.</li>
+      <li>Kamar kos yang disewakan hanya diperuntukkan bagi satu orang Penyewa dan tidak diperbolehkan dialihgunakan atau disewakan kembali kepada pihak lain tanpa persetujuan tertulis dari Pemilik.</li>
+      <li>Fasilitas dasar yang disiapkan oleh Pemilik meliputi:
+        <p style="margin-top:6px;"><strong>a. Fasilitas Pribadi Penyewa</strong></p>
+        <ul>
+          <li>Satu unit kamar kos</li>
+          <li>Kamar mandi dalam</li>
+          <li>Lemari pakaian besi sliding</li>
+          <li>Kasur busa, bantal, dan guling</li>
+          <li>Kipas angin dinding</li>
+          <li>Meja kayu</li>
+          <li>Rol kabel</li>
+        </ul>
+        <p><strong>b. Fasilitas Umum</strong> (dipakai bersama dengan penghuni kos lainnya)</p>
+        <ul>
+          <li>Dapur bersama</li>
+          <li>Kulkas bersama</li>
+          <li>Mesin cuci bersama dan tempat jemuran</li>
+          <li>Kompor gas (mengisi gas sendiri jika habis)</li>
+          <li>Alat-alat masak</li>
+          <li>Wastafel</li>
+          <li>Garasi motor</li>
+        </ul>
+      </li>
+    </ol>
+
+    <h2>Pasal 2 – Masa Sewa</h2>
+    <ol>
+      <li>Masa sewa kamar kos dimulai pada tanggal ${fill(o.tanggal_mulai)} dan akan berakhir pada tanggal ${fill(o.tanggal_selesai)}.</li>
+      <li>Perpanjangan/pengakhiran sewa harus diinformasikan oleh Penyewa paling lambat 30 (tiga puluh) hari sebelum masa sewa berakhir.</li>
+      <li>Keterlambatan menginformasikan perpanjangan/pengakhiran sewa kepada Pemilik dapat berakibat denda bagi Penyewa.</li>
+    </ol>
+
+    <h2>Pasal 3 – Biaya Sewa dan Pembayaran</h2>
+    <ol>
+      <li>Biaya sewa yang disepakati Para Pihak adalah sebagai berikut:
+        <div class="pj-info-block" style="margin-top:8px;">
+          <p><strong>Kamar ${escapeHtml(kamarTipe)}</strong></p>
+          <p>Durasi: <strong>${escapeHtml(tipeUpper)}</strong></p>
+          <p>Biaya: <strong>${escapeHtml(totalBiaya)}</strong></p>
+          <p>Periode: ${escapeHtml(fmtDateLong(o.tanggal_mulai))} — ${escapeHtml(fmtDateLong(o.tanggal_selesai))}</p>
+        </div>
+      </li>
+      <li>Pembayaran harus dilunasi sebelum unit kamar ditempati oleh Penyewa.</li>
+      <li>Setiap kamar memiliki meteran listrik pribadi. Setiap Penyewa mengisi token listrik prabayar sendiri sesuai yang dibutuhkan (Penyewa boleh membawa alat elektronik yang dibutuhkan).</li>
+      <li>Penyewa bebas biaya air bulanan dan bebas iuran sampah bulanan.</li>
+    </ol>
+
+    <h2>Pasal 4 – Tata Tertib</h2>
+    <ol>
+      <li>Penyewa wajib menjaga ketertiban dan tidak mengganggu kenyamanan penghuni lain.</li>
+      <li>Penyewa bertanggung jawab atas kebersihan kamar masing-masing dan kebersihan fasilitas umum (dapur bersama, kulkas bersama, mesin cuci bersama, garasi, dan lain-lain).</li>
+      <li>Penyewa wajib menjaga dan menggunakan seluruh fasilitas serta barang milik kos (seperti perabot, peralatan bersama, dan properti lainnya) dengan hati-hati, serta dilarang merusak, mengubah, atau memindahkan tanpa izin dari Pemilik.</li>
+      <li>Penggunaan fasilitas umum harus dilakukan secara tertib, bergantian, dan penuh tanggung jawab.</li>
+      <li>Kebijakan jam malam berlaku pukul 22:00 WIB, di mana setelah jam tersebut tidak diperkenankan menerima tamu, berisik, dan/atau melakukan aktivitas yang mengganggu penghuni lain.</li>
+      <li>Volume musik, televisi, atau aktivitas lain yang menghasilkan suara keras harus dijaga agar tidak mengganggu lingkungan.</li>
+      <li>Sampah harus dibuang secara teratur pada tempat yang telah disediakan.</li>
+    </ol>
+
+    <h2>Pasal 5 – Larangan</h2>
+    <ol>
+      <li>Dilarang membawa tamu lawan jenis ke dalam kamar kos.</li>
+      <li>Dilarang menutup pintu kamar apabila sedang menerima tamu di area kos.</li>
+      <li>Dilarang merokok di dalam kamar dan seluruh area dalam kos.</li>
+      <li>Dilarang membawa, menyimpan, atau menggunakan narkotika, psikotropika, zat adiktif lainnya (termasuk sabu-sabu, ganja, ekstasi, dan sejenisnya), minuman keras, serta barang terlarang lainnya dalam bentuk apa pun.</li>
+      <li>Dilarang membawa barang berbahaya seperti senjata tajam, senjata api, bahan peledak, zat kimia berbahaya, zat mudah terbakar serta barang-barang lain yang dapat membahayakan keselamatan, keamanan, atau kenyamanan penghuni lainnya.</li>
+    </ol>
+
+    <h2>Pasal 6 – Keamanan dan Keselamatan</h2>
+    <ol>
+      <li>Penyewa wajib menjaga kunci kamar dan/atau kunci gerbang, serta segera melaporkan kepada pemilik kos apabila terjadi kehilangan.</li>
+      <li>Penyewa bertanggung jawab menjaga keamanan barang pribadinya masing-masing. Pemilik Kos tidak bertanggung jawab atas kehilangan akibat kelalaian Penyewa.</li>
+      <li>Penyewa dilarang meminjamkan kunci kamar dan/atau gerbang kepada orang lain tanpa seizin Pemilik Kos.</li>
+    </ol>
+
+    <h2>Pasal 7 – Kerusakan dan Perbaikan</h2>
+    <ol>
+      <li>Penyewa bertanggung jawab atas kerusakan yang diakibatkan oleh kelalaian Penyewa.</li>
+      <li>Jika ditemukan kerusakan pada properti, Penyewa wajib melaporkannya kepada pemilik kos secepatnya untuk dapat diperbaiki.</li>
+    </ol>
+
+    <h2>Pasal 8 – Pengakhiran Sewa</h2>
+    <ol>
+      <li>Jika Penyewa ingin mengakhiri sewa sebelum waktu yang disepakati, maka uang sewa yang sudah dibayarkan tidak dapat dikembalikan.</li>
+      <li>Jika Penyewa mengakhiri sewa sebelum waktu yang disepakati, Penyewa diperbolehkan mencari pengganti hak sewa/mengoper sewa ke orang lain hanya jika mendapatkan persetujuan tertulis dari Pemilik.</li>
+      <li>Pemilik berhak menolak calon pengganti yang diajukan oleh Penyewa untuk menggantikan hak sewa/oper sewa atas pertimbangan pribadi Pemilik (misal: atas pertimbangan bahwa calon pengganti terkesan tidak bertanggung jawab, tidak dapat mematuhi tata tertib kos, dan/atau hal lain.)</li>
+      <li>Pemilik berhak memutus perjanjian jika Penyewa melanggar perjanjian dan tata tertib yang telah disepakati tanpa mengembalikan uang sewa yang telah dibayarkan.</li>
+    </ol>
+
+    <h2>Pasal 9 – Lain-lain</h2>
+    <ol>
+      <li>Segala hal yang belum diatur dalam Perjanjian ini akan dibahas bersama antara kedua pihak.</li>
+      <li>Setiap sengketa yang timbul dari Perjanjian ini akan diselesaikan terlebih dahulu secara kekeluargaan melalui musyawarah untuk mencapai mufakat, sebelum menempuh jalur hukum.</li>
+      <li>Perjanjian ini dibuat dalam dua rangkap, masing-masing untuk Pemilik dan Penyewa, dan memiliki kekuatan hukum yang sama.</li>
+    </ol>
+
+    <p style="margin-top:20px;">
+      Demikian perjanjian ini dibuat dan ditandatangani oleh kedua belah pihak tanpa paksaan dari pihak mana pun.
+    </p>
+
+    <p style="text-align:right;margin-top:16px;">Semarang, ${fill('')}</p>
+
+    <div class="pj-sign-row">
+      <div class="pj-sign-col">
+        <div class="pj-sign-label">Pemilik,</div>
+        <div class="pj-sign-name">&nbsp;</div>
+      </div>
+      <div class="pj-sign-col">
+        <div class="pj-sign-label">Penyewa,</div>
+        <div class="pj-sign-name">&nbsp;</div>
+      </div>
+    </div>
+
+    <div class="pj-lampiran">
+      <h3>Lampiran:</h3>
+      <ol type="a">
+        <li>Fotokopi KTP/SIM Pemilik.</li>
+        <li>Fotokopi KTP/SIM Penyewa dan fotokopi KTP/SIM orang tua Penyewa.</li>
+        <li>Fotokopi Kartu Tanda Mahasiswa Penyewa.</li>
+      </ol>
+      ${o.nama_ortu || o.no_ktp_ortu || o.no_hp_ortu ? `
+        <div class="pj-info-block" style="margin-top:12px;">
+          <p><strong>Data Orang Tua/Wali:</strong></p>
+          ${o.nama_ortu ? `<p>Nama: ${fill(o.nama_ortu)}</p>` : ''}
+          ${o.no_ktp_ortu ? `<p>No. KTP/SIM: ${fill(o.no_ktp_ortu)}</p>` : ''}
+          ${o.no_hp_ortu ? `<p>No. HP: ${fill(o.no_hp_ortu)}</p>` : ''}
+        </div>
+      ` : ''}
+    </div>
+
+    <div class="inv-footer">
+      Perjanjian ini dicetak otomatis dari sistem Griya Aleena. Wajib ditandatangani oleh kedua pihak.
+    </div>
+
+    <div class="invoice-actions">
+      <button class="inv-btn-close" onclick="closePerjanjian()">Tutup</button>
+      <button class="inv-btn-print" onclick="window.print()">🖨️ Print / Simpan PDF</button>
+    </div>
+  `;
+
+  document.getElementById('perjanjian-content').innerHTML = html;
+  document.getElementById('perjanjian-modal').classList.add('open');
+}
+
+function closePerjanjian() {
+  document.getElementById('perjanjian-modal').classList.remove('open');
+}
+
+// Close modal saat klik backdrop
+['invoice-modal', 'kuitansi-modal', 'perjanjian-modal'].forEach(id => {
+  document.getElementById(id).addEventListener('click', (e) => {
+    if (e.target.id === id) {
+      document.getElementById(id).classList.remove('open');
+    }
+  });
 });
 
 // ─── Filters ───────────────────────────────────────────────
@@ -484,6 +814,11 @@ function openModal(id) {
     document.getElementById('f-harga').value = o.harga_total;
     document.getElementById('f-link').value = o.link_kontrak || '';
     document.getElementById('f-catatan').value = o.catatan || '';
+    document.getElementById('f-ktp').value = o.no_ktp || '';
+    document.getElementById('f-alamat').value = o.alamat_penyewa || '';
+    document.getElementById('f-nama-ortu').value = o.nama_ortu || '';
+    document.getElementById('f-ktp-ortu').value = o.no_ktp_ortu || '';
+    document.getElementById('f-hp-ortu').value = o.no_hp_ortu || '';
   } else {
     document.getElementById('modal-title').textContent = 'Tambah Okupansi';
     document.getElementById('f-mulai').value = todayISO();
@@ -505,6 +840,11 @@ formOcc.addEventListener('submit', async (e) => {
     status_bayar: document.getElementById('f-status').value,
     link_kontrak: document.getElementById('f-link').value.trim() || null,
     catatan: document.getElementById('f-catatan').value.trim() || null,
+    no_ktp: document.getElementById('f-ktp').value.trim() || null,
+    alamat_penyewa: document.getElementById('f-alamat').value.trim() || null,
+    nama_ortu: document.getElementById('f-nama-ortu').value.trim() || null,
+    no_ktp_ortu: document.getElementById('f-ktp-ortu').value.trim() || null,
+    no_hp_ortu: document.getElementById('f-hp-ortu').value.trim() || null,
   };
 
   try {
@@ -539,11 +879,13 @@ async function deleteOcc(id) {
 // ─── Export CSV ────────────────────────────────────────────
 document.getElementById('btn-export').addEventListener('click', () => {
   const rows = [
-    ['Kamar','Penyewa','No HP','Asal Kampus','Tipe Sewa','Mulai','Selesai','Total','Status','Link Kontrak','Catatan'],
+    ['Kamar','Penyewa','No HP','Asal Kampus','Tipe Sewa','Mulai','Selesai','Total','Status','Link Kontrak','Catatan','No KTP','Alamat','Nama Ortu','No KTP Ortu','No HP Ortu'],
     ...OCCS.map(o => [
       o.nama_kamar, o.nama_penyewa, o.no_hp || '', o.asal_kampus || '',
       o.tipe_sewa, o.tanggal_mulai, o.tanggal_selesai,
-      o.harga_total, o.status_bayar, o.link_kontrak || '', o.catatan || ''
+      o.harga_total, o.status_bayar, o.link_kontrak || '', o.catatan || '',
+      o.no_ktp || '', o.alamat_penyewa || '', o.nama_ortu || '',
+      o.no_ktp_ortu || '', o.no_hp_ortu || ''
     ])
   ];
   const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
@@ -565,7 +907,7 @@ document.getElementById('import-file').addEventListener('change', async (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
-  if (!confirm(`Import ${file.name}?\n\nPastikan format CSV:\nKamar, Penyewa, No HP, Asal Kampus, Tipe Sewa, Mulai, Selesai, Total, Status, Link Kontrak, Catatan`)) {
+  if (!confirm(`Import ${file.name}?\n\nPastikan format CSV sesuai template export.`)) {
     e.target.value = '';
     return;
   }
@@ -592,6 +934,11 @@ document.getElementById('import-file').addEventListener('change', async (e) => {
       status_bayar: (r['Status'] || r['status'] || 'belum').toLowerCase(),
       link_kontrak: r['Link Kontrak'] || r['link_kontrak'] || null,
       catatan: r['Catatan'] || r['catatan'] || null,
+      no_ktp: r['No KTP'] || r['no_ktp'] || null,
+      alamat_penyewa: r['Alamat'] || r['alamat_penyewa'] || null,
+      nama_ortu: r['Nama Ortu'] || r['nama_ortu'] || null,
+      no_ktp_ortu: r['No KTP Ortu'] || r['no_ktp_ortu'] || null,
+      no_hp_ortu: r['No HP Ortu'] || r['no_hp_ortu'] || null,
     }));
 
     const result = await api('/occupancies/bulk', {
@@ -629,7 +976,6 @@ document.getElementById('import-file').addEventListener('change', async (e) => {
 function parseCSV(text) {
   const lines = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').trim().split('\n');
   if (lines.length < 2) return [];
-
   const headers = parseCSVLine(lines[0]);
   const rows = [];
   for (let i = 1; i < lines.length; i++) {
@@ -651,18 +997,11 @@ function parseCSVLine(line) {
   for (let i = 0; i < line.length; i++) {
     const c = line[i];
     if (c === '"') {
-      if (inQuote && line[i + 1] === '"') {
-        cur += '"';
-        i++;
-      } else {
-        inQuote = !inQuote;
-      }
+      if (inQuote && line[i + 1] === '"') { cur += '"'; i++; }
+      else { inQuote = !inQuote; }
     } else if (c === ',' && !inQuote) {
-      result.push(cur);
-      cur = '';
-    } else {
-      cur += c;
-    }
+      result.push(cur); cur = '';
+    } else { cur += c; }
   }
   result.push(cur);
   return result;
@@ -672,7 +1011,6 @@ function normalizeDate(s) {
   if (!s) return '';
   s = String(s).trim();
   if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
-
   const months = {
     jan: '01', feb: '02', mar: '03', apr: '04', mei: '05', may: '05',
     jun: '06', jul: '07', agu: '08', aug: '08', sep: '09', okt: '10', oct: '10',
@@ -681,19 +1019,14 @@ function normalizeDate(s) {
     juni: '06', juli: '07', agustus: '08', september: '09',
     oktober: '10', november: '11', desember: '12'
   };
-
   const m = s.match(/^(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})$/);
   if (m) {
     const day = m[1].padStart(2, '0');
     const mon = months[m[2].toLowerCase()] || '01';
     return `${m[3]}-${mon}-${day}`;
   }
-
   const m2 = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
-  if (m2) {
-    return `${m2[3]}-${m2[2].padStart(2, '0')}-${m2[1].padStart(2, '0')}`;
-  }
-
+  if (m2) return `${m2[3]}-${m2[2].padStart(2, '0')}-${m2[1].padStart(2, '0')}`;
   return s;
 }
 
