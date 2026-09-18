@@ -602,8 +602,8 @@ function openPerjanjian(id) {
     <h1>PERJANJIAN DAN TATA TERTIB BERSAMA<br>GRIYA ALEENA</h1>
 
     <p>
-      Pada hari ini <span class="pj-fill pj-fill-sm">${escapeHtml(getHariIndonesia())}</span>
-      tanggal <span class="pj-fill pj-fill-sm">${escapeHtml(fmtDateLong(todayISO()))}</span>
+      Pada hari ini <span class="pj-fill-inline">${escapeHtml(getHariIndonesia())}</span>
+      tanggal <span class="pj-fill-inline">${escapeHtml(fmtDateLong(todayISO()))}</span>
       telah disepakati Perjanjian dan Tata Tertib Bersama terkait sewa-menyewa kamar kos antara:
     </p>
 
@@ -742,7 +742,7 @@ function openPerjanjian(id) {
     </p>
 
     <div class="pj-tanggal">
-      Semarang, <span class="pj-tanggal-fill">${escapeHtml(fmtDateLong(todayISO()))}</span>
+      Semarang, <span class="pj-fill-inline">${escapeHtml(fmtDateLong(todayISO()))}</span>
     </div>
 
     <div class="pj-sign-row">
