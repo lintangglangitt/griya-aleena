@@ -464,3 +464,18 @@ tbody tr.akan-habis td:first-child { border-left: 4px solid var(--red); }
   display: block;
   width: 100%;
 }
+/* ============================================ */
+/* UPDATE: Styling dropdown kamar terisi */
+/* ============================================ */
+
+/* Option yang disabled — dibuat lebih pudar */
+select option:disabled {
+  color: #999;
+  background: #f5f5f5;
+  font-style: italic;
+}
+
+/* Select utama saat semua option disabled */
+select option:disabled:checked {
+  color: #999;
+}
