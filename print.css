@@ -560,3 +560,16 @@
     margin: 1cm;
   }
 }
+
+/* ============================================ */
+/* UPDATE: Garis bawah hanya sepanjang teks */
+/* ============================================ */
+
+.perjanjian-wrapper .pj-fill-inline {
+  display: inline-block;
+  border-bottom: 1px solid #1c2e2e;
+  padding: 0 8px;
+  font-weight: 600;
+  color: #1a5c5c;
+  /* Tidak ada min-width — panjang mengikuti teks */
+}
