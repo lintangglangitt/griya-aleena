@@ -12,11 +12,11 @@ let ACTIVE_ROOM_FILTER = 'all';
 let ACTIVE_INCOME_FILTER = null;
 
 // ─── Konfigurasi Pemilik (untuk perjanjian) ────────────────
-
 const PEMILIK = {
   nama: 'Hakim',
   no_ktp: '',
   alamat: 'Jl. Margasatwa, Gg. Sadewa No. 14, Sekaran 005/005, Kec. Gunungpati, Kota Semarang, Jawa Tengah, 50229',
+  alamat_singkat: 'Jl. Margasatwa, Gg. Sadewa No. 14, Sekaran, Gunungpati, Semarang',
   no_hp: '0898-5446-121',
 };
 
@@ -388,14 +388,12 @@ function openInvoice(id) {
     <div class="inv-header">
       <div class="inv-brand">
         <img src="foto/logo.png" alt="" onerror="this.style.display='none'">
-
         <div>
           <h1>GRIYA ALEENA</h1>
           <p>Kos Putri Kampus UNNES Sekaran<br>
           ${escapeHtml(PEMILIK.alamat_singkat)}<br>
           Telp/WA: ${escapeHtml(PEMILIK.no_hp)}</p>
         </div>
-        
       </div>
       <div class="inv-title-block">
         <h2>INVOICE</h2>
@@ -484,14 +482,13 @@ function openKuitansi(id) {
     <div class="inv-header">
       <div class="inv-brand">
         <img src="foto/logo.png" alt="" onerror="this.style.display='none'">
-
-         <div>
+        <div>
           <h1>GRIYA ALEENA</h1>
           <p>Kos Putri Kampus UNNES Sekaran<br>
           ${escapeHtml(PEMILIK.alamat_singkat)}<br>
           Telp/WA: ${escapeHtml(PEMILIK.no_hp)}</p>
         </div>
-        
+      </div>
       <div class="inv-title-block">
         <h2>KUITANSI</h2>
         <div class="inv-no">No. ${escapeHtml(noKuitansi)}</div>
@@ -587,6 +584,17 @@ function openPerjanjian(id) {
   const totalBiaya = rupiah(o.harga_total);
   const tipeUpper = o.tipe_sewa.charAt(0).toUpperCase() + o.tipe_sewa.slice(1);
   const kamarTipe = o.tipe === 'AC' ? 'AC' : 'NON AC';
+
+  // Data orang tua — selalu tampilkan (dengan placeholder jika kosong)
+  const hasOrtuData = o.nama_ortu || o.no_ktp_ortu || o.no_hp_ortu;
+  const ortuBlock = `
+    <div class="pj-info-block" style="margin-top:12px;">
+      <p><strong>Data Orang Tua/Wali:</strong></p>
+      ${field('Nama', o.nama_ortu || '')}
+      ${field('No. KTP/SIM', o.no_ktp_ortu || '')}
+      ${field('No. HP', o.no_hp_ortu || '')}
+    </div>
+  `;
 
   const html = `
     <div class="perjanjian-logo">
@@ -745,14 +753,7 @@ function openPerjanjian(id) {
         <li>Fotokopi KTP/SIM Penyewa dan fotokopi KTP/SIM orang tua Penyewa.</li>
         <li>Fotokopi Kartu Tanda Mahasiswa Penyewa.</li>
       </ol>
-      ${o.nama_ortu || o.no_ktp_ortu || o.no_hp_ortu ? `
-        <div class="pj-info-block" style="margin-top:12px;">
-          <p><strong>Data Orang Tua/Wali:</strong></p>
-          ${o.nama_ortu ? field('Nama', o.nama_ortu) : ''}
-          ${o.no_ktp_ortu ? field('No. KTP/SIM', o.no_ktp_ortu) : ''}
-          ${o.no_hp_ortu ? field('No. HP', o.no_hp_ortu) : ''}
-        </div>
-      ` : ''}
+      ${ortuBlock}
     </div>
 
     <div class="inv-footer">
