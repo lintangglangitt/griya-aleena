@@ -412,7 +412,7 @@ function openInvoice(id) {
 
     <div class="inv-signature">
       <div>Hormat kami,</div>
-      <div class="inv-sign-line">Hakim</div>
+      // -- <div class="inv-sign-line">Hakim</div> --
       <div class="inv-sign-role">Pemilik Griya Aleena</div>
     </div>
 
