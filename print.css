@@ -557,6 +557,6 @@
   /* A4 dengan margin 2cm */
   @page {
     size: A4;
-    margin: 2cm;
+    margin: 1cm;
   }
 }
