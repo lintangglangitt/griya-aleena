@@ -1,5 +1,5 @@
 // ============================================================
-// admin.js - Dashboard Okupansi Griya Aleena
+// ngadmin.js - Dashboard Okupansi Griya Aleena
 // ============================================================
 
 const API = 'https://griya-api.lintangglangitt.workers.dev';
@@ -17,8 +17,8 @@ const PEMILIK = {
   no_ktp: '3304025911900001',
   alamat: 'Jl. Margasatwa, Gg. Sadewa No. 14, Sekaran 005/005, Kec. Gunungpati, Kota Semarang, Jawa Tengah, 50229',
   alamat_singkat: 'Jl. Margasatwa, Gg. Sadewa No. 14, Sekaran, Gunungpati, Semarang.',
-  no_hp: '0898-5446-121',              // untuk header invoice & kuitansi
-  no_hp_perjanjian: '0899-5677-419',   // untuk perjanjian Pemilik Kos
+  no_hp: '0898-5446-121',
+  no_hp_perjanjian: '0899-5677-419',
 };
 
 if (!TOKEN) window.location.href = 'ibun.html';
@@ -614,7 +614,6 @@ function openPerjanjian(id) {
       ${field('Alamat', PEMILIK.alamat)}
       ${field('Nomor HP/WA', PEMILIK.no_hp_perjanjian)}
     </div>
-    
     <p>Selanjutnya disebut <strong>Pemilik</strong>.</p>
 
     <h2>2. Penyewa Kos</h2>
@@ -808,7 +807,6 @@ modalOcc.addEventListener('click', e => {
   if (e.target === modalOcc) modalOcc.classList.remove('open');
 });
 
-
 function fillRoomSelect(currentEditingId = null) {
   const fr = document.getElementById('f-room');
   const today = todayISO();
@@ -841,12 +839,17 @@ function fillRoomSelect(currentEditingId = null) {
   }).join('');
 }
 
-
 function openModal(id) {
   EDITING_ID = id;
   const f = formOcc;
   f.reset();
-  fillRoomSelect(id);   // ← kirim ID yang di-edit (null kalau tambah baru)
+  fillRoomSelect(id);
+
+  // Reset upload UI
+  const status = document.getElementById('upload-status');
+  const preview = document.getElementById('link-preview');
+  if (status) { status.innerHTML = ''; status.className = 'upload-status'; }
+  if (preview) preview.innerHTML = '';
 
   if (id) {
     const o = OCCS.find(x => x.id === id);
@@ -870,6 +873,11 @@ function openModal(id) {
     document.getElementById('f-alamat-ortu').value = o.alamat_ortu || '';
     document.getElementById('f-hp-ortu').value = o.no_hp_ortu || '';
     document.getElementById('f-catatan').value = o.catatan || '';
+
+    // Kalau ada link kontrak tersimpan, tampilkan preview
+    if (o.link_kontrak && preview) {
+      preview.innerHTML = `<a href="${escapeHtml(o.link_kontrak)}" target="_blank">📄 Lihat file yang tersimpan</a>`;
+    }
   } else {
     document.getElementById('modal-title').textContent = 'Tambah Okupansi';
     document.getElementById('f-mulai').value = todayISO();
@@ -925,6 +933,106 @@ async function deleteOcc(id) {
     renderTable();
   } catch (err) {
     alert('Gagal hapus: ' + err.message);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// UPLOAD FILE KONTRAK KE R2
+// ═══════════════════════════════════════════════════════════
+
+const btnUpload = document.getElementById('btn-upload-file');
+if (btnUpload) {
+  btnUpload.addEventListener('click', () => {
+    document.getElementById('f-file').click();
+  });
+}
+
+const fileInput = document.getElementById('f-file');
+if (fileInput) {
+  fileInput.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    await uploadKontrak(file);
+  });
+}
+
+async function uploadKontrak(file) {
+  const status = document.getElementById('upload-status');
+  const linkInput = document.getElementById('f-link');
+  const preview = document.getElementById('link-preview');
+  const btn = document.getElementById('btn-upload-file');
+
+  // Validasi tipe file
+  const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+  if (!allowedTypes.includes(file.type)) {
+    status.innerHTML = '❌ Hanya PDF, JPG, PNG';
+    status.className = 'upload-status error';
+    return;
+  }
+
+  // Validasi ukuran
+  const MAX_SIZE = 5 * 1024 * 1024;
+  if (file.size > MAX_SIZE) {
+    status.innerHTML = '❌ File terlalu besar (max 5 MB)';
+    status.className = 'upload-status error';
+    return;
+  }
+
+  // UI: uploading
+  status.innerHTML = '⏳ Mengunggah... 0%';
+  status.className = 'upload-status loading';
+  btn.disabled = true;
+
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    // Pakai XMLHttpRequest untuk progress
+    const result = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', `${API}/upload`);
+      xhr.setRequestHeader('Authorization', `Bearer ${TOKEN}`);
+
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) {
+          const percent = Math.round((e.loaded / e.total) * 100);
+          status.innerHTML = `⏳ Mengunggah... ${percent}%`;
+        }
+      };
+
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          try {
+            resolve(JSON.parse(xhr.responseText));
+          } catch {
+            reject(new Error('Response tidak valid'));
+          }
+        } else {
+          try {
+            const err = JSON.parse(xhr.responseText);
+            reject(new Error(err.error || `HTTP ${xhr.status}`));
+          } catch {
+            reject(new Error(`HTTP ${xhr.status}`));
+          }
+        }
+      };
+
+      xhr.onerror = () => reject(new Error('Network error'));
+      xhr.send(formData);
+    });
+
+    // Sukses
+    linkInput.value = result.url;
+    status.innerHTML = '✅ Upload berhasil';
+    status.className = 'upload-status success';
+    preview.innerHTML = `<a href="${escapeHtml(result.url)}" target="_blank">📄 Lihat file yang diunggah</a>`;
+
+  } catch (err) {
+    status.innerHTML = `❌ Gagal: ${escapeHtml(err.message)}`;
+    status.className = 'upload-status error';
+  } finally {
+    btn.disabled = false;
+    fileInput.value = '';
   }
 }
 
