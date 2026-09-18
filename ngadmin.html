@@ -130,9 +130,21 @@
           <label>Harga Total (Rp)
             <input type="number" id="f-harga" min="0" step="1000" required>
           </label>
-          <label>Link Kontrak (Drive/URL)
-            <input type="url" id="f-link" placeholder="https://drive.google.com/…">
-          </label>
+
+
+  <label>Kontrak Sewa
+  <div class="upload-box">
+    <input type="file" id="f-file" accept=".pdf,.jpg,.jpeg,.png" style="display:none">
+    <button type="button" class="btn-upload" id="btn-upload-file">
+      📎 Pilih File Kontrak
+    </button>
+    <span class="upload-hint">PDF/JPG/PNG · max 5 MB</span>
+    <div id="upload-status" class="upload-status"></div>
+    <input type="hidden" id="f-link">
+    <div id="link-preview" class="link-preview"></div>
+  </div>
+</label>
+          
           <label>Status Bayar
             <select id="f-status" required>
               <option value="lunas">✅ Lunas</option>
