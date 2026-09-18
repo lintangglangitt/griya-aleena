@@ -11,12 +11,12 @@ let EDITING_ID = null;
 let ACTIVE_ROOM_FILTER = 'all';
 let ACTIVE_INCOME_FILTER = null;
 
-// ─── Konfigurasi Pemilik (untuk perjanjian) ────────────────
+// ─── Konfigurasi Pemilik ──────────────────────────────────
 const PEMILIK = {
-  nama: 'Hakim',
+  nama: '',
   no_ktp: '',
   alamat: 'Jl. Margasatwa, Gg. Sadewa No. 14, Sekaran 005/005, Kec. Gunungpati, Kota Semarang, Jawa Tengah, 50229',
-  alamat_singkat: 'Jl. Margasatwa, Gg. Sadewa No. 14, Sekaran, Gunungpati, Semarang',
+  alamat_singkat: 'Jl. Margasatwa, Gg. Sadewa No. 14, Sekaran, Gunungpati, Semarang.',
   no_hp: '0898-5446-121',
 };
 
@@ -90,7 +90,7 @@ function generateInvoiceNo(id, tgl) {
 function generateKuitansiNo(id, tgl) {
   const d = new Date(tgl || todayISO());
   const yyyymm = d.getFullYear() + String(d.getMonth() + 1).padStart(2, '0');
-  return `KW-${yyyymm}-${String(id).padStart(4, '0')}`;
+  return `KU-${yyyymm}-${String(id).padStart(4, '0')}`;
 }
 function terbilangAngka(n) {
   const satuan = ['', 'satu', 'dua', 'tiga', 'empat', 'lima', 'enam', 'tujuh', 'delapan', 'sembilan', 'sepuluh', 'sebelas'];
@@ -372,6 +372,29 @@ function renderTable() {
 }
 
 // ═══════════════════════════════════════════════════════════
+// HEADER BERSAMA (untuk invoice & kuitansi)
+// ═══════════════════════════════════════════════════════════
+
+function buildDocHeader(title, no, tgl) {
+  return `
+    <div class="inv-header">
+      <div class="inv-brand">
+        <img src="foto/logo.png" alt="" onerror="this.style.display='none'">
+        <div>
+          <h1>GRIYA ALEENA</h1>
+          <p>Kos Putri Nyaman, Kampus Unnes Sekaran.<br>
+          ${escapeHtml(PEMILIK.alamat_singkat)} Telp/WA: ${escapeHtml(PEMILIK.no_hp)}</p>
+        </div>
+      </div>
+      <div class="inv-title-block">
+        <h2>${escapeHtml(title)}</h2>
+        <div class="inv-no">No. ${escapeHtml(no)}</div>
+      </div>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════
 // INVOICE
 // ═══════════════════════════════════════════════════════════
 
@@ -385,22 +408,7 @@ function openInvoice(id) {
   const statusLabel = { lunas: 'LUNAS', dp: 'DP', belum: 'BELUM BAYAR' }[o.status_bayar] || o.status_bayar;
 
   const html = `
-    <div class="inv-header">
-      <div class="inv-brand">
-        <img src="foto/logo.png" alt="" onerror="this.style.display='none'">
-        <div>
-          <h1>GRIYA ALEENA</h1>
-          <p>Kos Putri Kampus UNNES Sekaran<br>
-          ${escapeHtml(PEMILIK.alamat_singkat)}<br>
-          Telp/WA: ${escapeHtml(PEMILIK.no_hp)}</p>
-        </div>
-      </div>
-      <div class="inv-title-block">
-        <h2>INVOICE</h2>
-        <div class="inv-no">No. ${escapeHtml(invoiceNo)}</div>
-        <div class="inv-date">Tanggal: ${escapeHtml(today)}</div>
-      </div>
-    </div>
+    ${buildDocHeader('INVOICE', invoiceNo, today)}
 
     <div class="inv-section">
       <div class="inv-section-title">Ditagihkan kepada:</div>
@@ -443,6 +451,7 @@ function openInvoice(id) {
     ${o.catatan ? `<div class="inv-notes"><strong>Catatan:</strong> ${escapeHtml(o.catatan)}</div>` : ''}
 
     <div class="inv-signature">
+      <div class="inv-sign-date">Semarang, ${escapeHtml(today)}</div>
       <div>Hormat kami,</div>
       <div class="inv-sign-line">&nbsp;</div>
       <div class="inv-sign-role">Pemilik Griya Aleena</div>
@@ -479,22 +488,7 @@ function openKuitansi(id) {
   const durasi = hitungDurasi(o.tanggal_mulai, o.tanggal_selesai, o.tipe_sewa);
 
   const html = `
-    <div class="inv-header">
-      <div class="inv-brand">
-        <img src="foto/logo.png" alt="" onerror="this.style.display='none'">
-        <div>
-          <h1>GRIYA ALEENA</h1>
-          <p>Kos Putri Kampus UNNES Sekaran<br>
-          ${escapeHtml(PEMILIK.alamat_singkat)}<br>
-          Telp/WA: ${escapeHtml(PEMILIK.no_hp)}</p>
-        </div>
-      </div>
-      <div class="inv-title-block">
-        <h2>KUITANSI</h2>
-        <div class="inv-no">No. ${escapeHtml(noKuitansi)}</div>
-        <div class="inv-date">Tanggal: ${escapeHtml(today)}</div>
-      </div>
-    </div>
+    ${buildDocHeader('KUITANSI', noKuitansi, today)}
 
     <div class="inv-section">
       <div class="inv-section-title">Telah diterima dari:</div>
@@ -537,11 +531,12 @@ function openKuitansi(id) {
     ${o.catatan ? `<div class="inv-notes"><strong>Catatan:</strong> ${escapeHtml(o.catatan)}</div>` : ''}
 
     <p style="font-size:0.85rem;color:#5a7373;margin-bottom:24px;">
-      Kuitansi ini merupakan bukti sah pembayaran sewa kamar kos di Griya Aleena Sekaran.
+      Kuitansi ini merupakan bukti sah pembayaran sewa kamar kos di Griya Aleena.
       Mohon disimpan dengan baik.
     </p>
 
     <div class="inv-signature">
+      <div class="inv-sign-date">Semarang, ${escapeHtml(today)}</div>
       <div>Penerima,</div>
       <div class="inv-sign-line">&nbsp;</div>
       <div class="inv-sign-role">Pemilik Griya Aleena</div>
@@ -584,17 +579,6 @@ function openPerjanjian(id) {
   const totalBiaya = rupiah(o.harga_total);
   const tipeUpper = o.tipe_sewa.charAt(0).toUpperCase() + o.tipe_sewa.slice(1);
   const kamarTipe = o.tipe === 'AC' ? 'AC' : 'NON AC';
-
-  // Data orang tua — selalu tampilkan (dengan placeholder jika kosong)
-  const hasOrtuData = o.nama_ortu || o.no_ktp_ortu || o.no_hp_ortu;
-  const ortuBlock = `
-    <div class="pj-info-block" style="margin-top:12px;">
-      <p><strong>Data Orang Tua/Wali:</strong></p>
-      ${field('Nama', o.nama_ortu || '')}
-      ${field('No. KTP/SIM', o.no_ktp_ortu || '')}
-      ${field('No. HP', o.no_hp_ortu || '')}
-    </div>
-  `;
 
   const html = `
     <div class="perjanjian-logo">
@@ -753,7 +737,12 @@ function openPerjanjian(id) {
         <li>Fotokopi KTP/SIM Penyewa dan fotokopi KTP/SIM orang tua Penyewa.</li>
         <li>Fotokopi Kartu Tanda Mahasiswa Penyewa.</li>
       </ol>
-      ${ortuBlock}
+      <div class="pj-info-block" style="margin-top:12px;">
+        <p><strong>Data Orang Tua/Wali:</strong></p>
+        ${field('Nama', o.nama_ortu || '')}
+        ${field('No. KTP/SIM', o.no_ktp_ortu || '')}
+        ${field('No. HP', o.no_hp_ortu || '')}
+      </div>
     </div>
 
     <div class="inv-footer">
@@ -1040,7 +1029,7 @@ function normalizeDate(s) {
     return `${m[3]}-${mon}-${day}`;
   }
   const m2 = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
-  if (m2) return `${m2[3]}-${m2[2].padStart(2, '0')}-${m2[1].padStart(2, '0')}`;
+  if (m2) return `${m[2]?.[2] || m2[3]}-${m2[2].padStart(2, '0')}-${m2[1].padStart(2, '0')}`;
   return s;
 }
 
