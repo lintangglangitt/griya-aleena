@@ -124,7 +124,7 @@
           <label>Tanggal Mulai
             <input type="date" id="f-mulai" required>
           </label>
-          <label>Tanggal Selesai <small class="auto-hint">⚡ auto-isi</small>
+          <label>Tanggal Selesai
             <input type="date" id="f-selesai" required>
           </label>
           <label>Harga Total (Rp)
@@ -132,6 +132,13 @@
           </label>
           <label>Link Kontrak (Drive/URL)
             <input type="url" id="f-link" placeholder="https://drive.google.com/…">
+          </label>
+          <label>Status Bayar
+            <select id="f-status" required>
+              <option value="lunas">✅ Lunas</option>
+              <option value="dp">⏳ DP</option>
+              <option value="belum">❌ Belum</option>
+            </select>
           </label>
         </div>
       </div>
@@ -178,18 +185,6 @@
         <div class="form-section-title">📝 Catatan</div>
         <label>
           <textarea id="f-catatan" rows="2" placeholder="Mis. dapat diskon prestasi"></textarea>
-        </label>
-      </div>
-
-      <!-- ═══ STATUS BAYAR ═══ -->
-      <div class="form-section">
-        <div class="form-section-title">💰 Status Pembayaran</div>
-        <label>Status Bayar
-          <select id="f-status" required>
-            <option value="lunas">✅ Lunas</option>
-            <option value="dp">⏳ DP</option>
-            <option value="belum">❌ Belum</option>
-          </select>
         </label>
       </div>
 
