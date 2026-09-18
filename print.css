@@ -382,50 +382,70 @@
 .invoice-actions .inv-btn-close:hover { background: #f4f7f7; }
 
 /* ─── SAAT PRINT ─── */
+
+/* ─── SAAT PRINT ─── */
 @media print {
   /* Sembunyikan semua, tampilkan hanya modal yang terbuka */
   body * { visibility: hidden; }
   .invoice-modal.open, 
   .invoice-modal.open * { visibility: visible; }
   
+  html, body {
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+  
   .invoice-modal {
-    position: absolute;
-    inset: 0;
-    padding: 0;
-    margin: 0;
-    background: white;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: white !important;
     display: block !important;
-    overflow: visible;
-    height: auto;
+    overflow: visible !important;
   }
   .invoice-modal:not(.open) { display: none !important; }
   
   .invoice-wrapper {
-    box-shadow: none;
-    border-radius: 0;
-    padding: 0;
-    margin: 0;
-    max-width: 100%;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    height: auto !important;
   }
   
   .invoice-actions { display: none !important; }
   .admin-header { display: none !important; }
   
-  /* Paksa background & warna tetap tercetak */
+  /* Paksa warna tetap tercetak */
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     color-adjust: exact !important;
   }
   
-  /* Hapus page-break setelah elemen */
-  .inv-footer { 
-    page-break-after: avoid; 
-    break-after: avoid;
+  /* Hindari page break setelah elemen terakhir */
+  .invoice-wrapper > *:last-child,
+  .inv-footer {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
   }
-  .invoice-wrapper > *:last-child { 
-    page-break-after: avoid; 
-    break-after: avoid;
+  
+  /* Hilangkan margin default elemen terakhir */
+  .inv-footer:last-child {
+    margin-bottom: 0 !important;
   }
   
   /* A4 dengan margin 2cm */
@@ -433,6 +453,7 @@
     margin: 2cm; 
     size: A4; 
   }
+}
   
   html, body {
     width: 100%;
