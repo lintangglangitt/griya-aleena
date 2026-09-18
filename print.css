@@ -307,7 +307,7 @@
   min-width: 200px;
 }
 
-/* Tanggal Semarang dengan spasi panjang */
+/* Tanggal Semarang */
 .perjanjian-wrapper .pj-tanggal {
   text-align: right;
   margin-top: 16px;
@@ -383,13 +383,16 @@
 
 /* ─── SAAT PRINT ─── */
 @media print {
-  /* ─── HAPUS TOTAL SEMUA ELEMEN DASHBOARD ─── */
+  /* Sembunyikan semua, tampilkan hanya modal yang terbuka */
+  body * { visibility: hidden; }
+  .invoice-modal.open,
+  .invoice-modal.open * { visibility: visible; }
+
+  /* Hapus total elemen dashboard dari layout */
   body > *:not(.invoice-modal) {
     display: none !important;
-    visibility: hidden !important;
   }
-  
-  /* ─── RESET BODY & HTML ─── */
+
   html, body {
     width: 100% !important;
     height: auto !important;
@@ -399,8 +402,8 @@
     overflow: visible !important;
     background: white !important;
   }
-  
-  /* ─── MODAL: RENDER SEBAGAI STATIC, BUKAN OVERLAY ─── */
+
+  /* Modal jadi static, bukan overlay */
   .invoice-modal {
     display: block !important;
     position: static !important;
@@ -417,13 +420,8 @@
     right: auto !important;
     bottom: auto !important;
   }
-  
-  /* Sembunyikan modal yang tidak aktif */
-  .invoice-modal:not(.open) {
-    display: none !important;
-  }
-  
-  /* ─── WRAPPER ─── */
+  .invoice-modal:not(.open) { display: none !important; }
+
   .invoice-wrapper {
     display: block !important;
     position: static !important;
@@ -436,185 +434,62 @@
     height: auto !important;
     min-height: 0 !important;
   }
-  
-  /* ─── HAPUS RUANG DARI ELEMEN TERSEMBUNYI ─── */
-  .invoice-actions,
-  .admin-header {
-    display: none !important;
+
+  .invoice-wrapper,
+  .invoice-wrapper * {
+    min-height: 0 !important;
+    max-height: none !important;
   }
-  
-  /* ─── PAKSA WARNA TERCETAK ─── */
+
+  .invoice-actions,
+  .admin-header { display: none !important; }
+
+  /* Paksa warna tetap tercetak */
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     color-adjust: exact !important;
   }
-  
-  /* ─── PREVENT PAGE BREAK DI TENGAH DOKUMEN ─── */
-  .inv-header,
-  .inv-section,
-  .inv-table,
-  .inv-total,
-  .inv-notes,
-  .inv-signature,
-  .inv-footer {
+
+  /* Cegah judul perjanjian terpotong */
+  .perjanjian-wrapper h2 {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
   }
-  
-  /* ─── HILANGKAN MARGIN ELEMEN TERAKHIR ─── */
-  .invoice-wrapper > *:last-child,
-  .inv-footer:last-child {
-    margin-bottom: 0 !important;
-    padding-bottom: 0 !important;
+  .perjanjian-wrapper h3 {
     page-break-after: avoid !important;
     break-after: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
-  
-  /* ─── A4 MARGIN 2CM ─── */
+  .perjanjian-wrapper .pj-info-block {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  .perjanjian-wrapper .pj-field {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  .perjanjian-wrapper ol li,
+  .perjanjian-wrapper ul li {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Hindari page break setelah elemen terakhir */
+  .invoice-wrapper > *:last-child,
+  .inv-footer {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  /* A4 dengan margin 2cm */
   @page {
     size: A4;
     margin: 2cm;
   }
-}
-  
-  html, body {
-    width: 100%;
-    height: auto;
-    margin: 0;
-    padding: 0;
-  }
-}
-
-
-/* ============================================ */
-/* UPDATE: Perjanjian — cegah judul terpotong */
-/* ============================================ */
-
-/* Cegah judul H2 terpisah dari kontennya */
-.perjanjian-wrapper h2 {
-  page-break-after: avoid !important;
-  break-after: avoid !important;
-  page-break-inside: avoid !important;
-  break-inside: avoid !important;
-}
-
-.perjanjian-wrapper h1 {
-  page-break-after: avoid !important;
-  break-after: avoid !important;
-}
-
-.perjanjian-wrapper h3 {
-  page-break-after: avoid !important;
-  break-after: avoid !important;
-  page-break-inside: avoid !important;
-  break-inside: avoid !important;
-}
-
-/* Info block jangan terpotong tengah */
-.perjanjian-wrapper .pj-info-block {
-  page-break-inside: avoid !important;
-  break-inside: avoid !important;
-}
-
-/* Judul + info block berikutnya tetap satu grup */
-.perjanjian-wrapper h2 + .pj-info-block,
-.perjanjian-wrapper h2 + p {
-  page-break-before: avoid !important;
-  break-before: avoid !important;
-}
-
-/* Field individual jangan terpotong */
-.perjanjian-wrapper .pj-field {
-  page-break-inside: avoid !important;
-  break-inside: avoid !important;
-}
-
-/* Tanda tangan jangan terpisah */
-.perjanjian-wrapper .pj-sign-row {
-  page-break-inside: avoid !important;
-  break-inside: avoid !important;
-  page-break-before: avoid !important;
-}
-
-/* Tanggal perjanjian (Semarang, ___) */
-.perjanjian-wrapper .pj-tanggal {
-  text-align: right;
-  margin-top: 16px;
-  margin-bottom: 8px;
-}
-.perjanjian-wrapper .pj-tanggal .pj-tanggal-fill {
-  display: inline-block;
-  min-width: 200px;
-  border-bottom: 1px solid #1c2e2e;
-  padding: 0 8px;
-  font-weight: 600;
-  color: #1a5c5c;
-}
-
-/* List item jangan terpotong */
-.perjanjian-wrapper ol li,
-.perjanjian-wrapper ul li {
-  page-break-inside: avoid !important;
-  break-inside: avoid !important;
-}
-
-
-
-/* ============================================ */
-/* UPDATE: Page break manual + nomor halaman */
-/* ============================================ */
-
-/* ─── PAGE BREAK MANUAL ─── */
-/* Pakai class ini untuk memaksa halaman baru */
-.perjanjian-wrapper .page-break-before {
-  page-break-before: always !important;
-  break-before: page !important;
-}
-
-.perjanjian-wrapper .page-break-after {
-  page-break-after: always !important;
-  break-after: page !important;
-}
-
-/* Jangan break di dalam section yang tidak seharusnya */
-.perjanjian-wrapper .keep-together {
-  page-break-inside: avoid !important;
-  break-inside: avoid !important;
-}
-
-/* ─── NOMOR HALAMAN ─── */
-/* Nomor halaman di bawah center — pakai CSS counter */
-@media print {
-  /* Sembunyikan nomor halaman dari body utama */
-  body {
-    counter-reset: page;
-  }
-  
-  /* Nomor halaman di setiap wrapper */
-  .invoice-wrapper {
-    position: relative;
-  }
-  
-  /* Nomor halaman muncul di bawah setiap halaman */
-  .page-number {
-    display: block !important;
-    position: fixed;
-    bottom: 0.5cm;
-    left: 0;
-    right: 0;
-    text-align: center;
-    font-size: 0.75rem;
-    color: #5a7373;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-  }
-  
-  .page-number::after {
-    content: "Halaman " counter(page);
-  }
-}
-
-/* Sembunyikan nomor halaman di layar (hanya muncul saat print) */
-.page-number {
-  display: none;
 }
