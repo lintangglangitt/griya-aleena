@@ -125,6 +125,39 @@ function printDoc(namaFile) {
   }, 1500);
 }
 
+// ─── Auto-hitung tanggal selesai ───────────────────────────
+function hitungTanggalSelesai(tanggalMulai, tipeSewa) {
+  if (!tanggalMulai) return '';
+  const d = new Date(tanggalMulai);
+  if (isNaN(d.getTime())) return '';
+  
+  switch (tipeSewa) {
+    case 'harian':
+      d.setDate(d.getDate() + 1);
+      break;
+    case 'mingguan':
+      d.setDate(d.getDate() + 7);
+      break;
+    case 'bulanan':
+      d.setMonth(d.getMonth() + 1);
+      break;
+    case 'semesteran':
+      d.setMonth(d.getMonth() + 6);
+      break;
+    case 'tahunan':
+      d.setMonth(d.getMonth() + 12);
+      break;
+    default:
+      d.setDate(d.getDate() + 1);
+  }
+  
+  // Format YYYY-MM-DD
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 // ─── Logout ────────────────────────────────────────────────
 document.getElementById('btn-logout').addEventListener('click', async () => {
   try { await api('/auth/logout', { method: 'POST' }); } catch {}
@@ -143,6 +176,7 @@ async function init() {
   renderRooms();
   renderTable();
   setupIncomeCardListeners();
+  setupAutoDateLogic();
 
   if (USER.role !== 'owner') {
     document.getElementById('btn-users').style.display = 'none';
@@ -166,6 +200,24 @@ async function loadStats() {
   document.getElementById('st-income-all').textContent = rupiahFull(s.penghasilan_keseluruhan);
   document.getElementById('st-income-year').textContent = rupiahFull(s.penghasilan_tahun_ini);
   document.getElementById('st-income-month').textContent = rupiahFull(s.penghasilan_bulan_ini);
+}
+
+// ─── Auto Date Logic ───────────────────────────────────────
+function setupAutoDateLogic() {
+  const fMulai = document.getElementById('f-mulai');
+  const fSelesai = document.getElementById('f-selesai');
+  const fTipe = document.getElementById('f-tipe');
+
+  // Ketika tanggal mulai atau tipe sewa diubah → auto hitung tanggal selesai
+  function updateSelesai() {
+    const mulai = fMulai.value;
+    const tipe = fTipe.value;
+    if (!mulai) return;
+    fSelesai.value = hitungTanggalSelesai(mulai, tipe);
+  }
+
+  fMulai.addEventListener('change', updateSelesai);
+  fTipe.addEventListener('change', updateSelesai);
 }
 
 // ─── Kartu Pembayaran jadi Filter ──────────────────────────
@@ -628,6 +680,7 @@ function openPerjanjian(id) {
     <div class="pj-info-block">
       ${field('Nama', o.nama_ortu || '')}
       ${field('Nomor KTP/SIM', o.no_ktp_ortu || '')}
+      ${field('Alamat', o.alamat_ortu || '')}
       ${field('Nomor HP', o.no_hp_ortu || '')}
     </div>
     <p>Data orang tua/wali di atas dicatat sebagai penanggung jawab.</p>
@@ -824,24 +877,28 @@ function openModal(id) {
     document.getElementById('modal-title').textContent = 'Edit Okupansi';
     document.getElementById('f-id').value = o.id;
     document.getElementById('f-room').value = o.room_id;
-    document.getElementById('f-nama').value = o.nama_penyewa;
-    document.getElementById('f-hp').value = o.no_hp || '';
-    document.getElementById('f-kampus').value = o.asal_kampus || '';
     document.getElementById('f-tipe').value = o.tipe_sewa;
-    document.getElementById('f-status').value = o.status_bayar;
     document.getElementById('f-mulai').value = o.tanggal_mulai;
     document.getElementById('f-selesai').value = o.tanggal_selesai;
     document.getElementById('f-harga').value = o.harga_total;
     document.getElementById('f-link').value = o.link_kontrak || '';
-    document.getElementById('f-catatan').value = o.catatan || '';
+    document.getElementById('f-nama').value = o.nama_penyewa;
     document.getElementById('f-ktp').value = o.no_ktp || '';
     document.getElementById('f-alamat').value = o.alamat_penyewa || '';
+    document.getElementById('f-hp').value = o.no_hp || '';
+    document.getElementById('f-kampus').value = o.asal_kampus || '';
     document.getElementById('f-nama-ortu').value = o.nama_ortu || '';
     document.getElementById('f-ktp-ortu').value = o.no_ktp_ortu || '';
+    document.getElementById('f-alamat-ortu').value = o.alamat_ortu || '';
     document.getElementById('f-hp-ortu').value = o.no_hp_ortu || '';
+    document.getElementById('f-catatan').value = o.catatan || '';
+    document.getElementById('f-status').value = o.status_bayar;
   } else {
     document.getElementById('modal-title').textContent = 'Tambah Okupansi';
     document.getElementById('f-mulai').value = todayISO();
+    // Auto-isi tanggal selesai berdasarkan tipe default (bulanan)
+    const tipe = document.getElementById('f-tipe').value;
+    document.getElementById('f-selesai').value = hitungTanggalSelesai(todayISO(), tipe);
   }
   modalOcc.classList.add('open');
 }
@@ -850,21 +907,22 @@ formOcc.addEventListener('submit', async (e) => {
   e.preventDefault();
   const payload = {
     room_id: Number(document.getElementById('f-room').value),
-    nama_penyewa: document.getElementById('f-nama').value.trim(),
-    no_hp: document.getElementById('f-hp').value.trim() || null,
-    asal_kampus: document.getElementById('f-kampus').value.trim() || null,
     tipe_sewa: document.getElementById('f-tipe').value,
     tanggal_mulai: document.getElementById('f-mulai').value,
     tanggal_selesai: document.getElementById('f-selesai').value,
     harga_total: Number(document.getElementById('f-harga').value),
-    status_bayar: document.getElementById('f-status').value,
     link_kontrak: document.getElementById('f-link').value.trim() || null,
-    catatan: document.getElementById('f-catatan').value.trim() || null,
+    nama_penyewa: document.getElementById('f-nama').value.trim(),
     no_ktp: document.getElementById('f-ktp').value.trim() || null,
     alamat_penyewa: document.getElementById('f-alamat').value.trim() || null,
+    no_hp: document.getElementById('f-hp').value.trim() || null,
+    asal_kampus: document.getElementById('f-kampus').value.trim() || null,
     nama_ortu: document.getElementById('f-nama-ortu').value.trim() || null,
     no_ktp_ortu: document.getElementById('f-ktp-ortu').value.trim() || null,
+    alamat_ortu: document.getElementById('f-alamat-ortu').value.trim() || null,
     no_hp_ortu: document.getElementById('f-hp-ortu').value.trim() || null,
+    catatan: document.getElementById('f-catatan').value.trim() || null,
+    status_bayar: document.getElementById('f-status').value,
   };
 
   try {
@@ -899,13 +957,13 @@ async function deleteOcc(id) {
 // ─── Export CSV ────────────────────────────────────────────
 document.getElementById('btn-export').addEventListener('click', () => {
   const rows = [
-    ['Kamar','Penyewa','No HP','Asal Kampus','Tipe Sewa','Mulai','Selesai','Total','Status','Link Kontrak','Catatan','No KTP','Alamat','Nama Ortu','No KTP Ortu','No HP Ortu'],
+    ['Kamar','Penyewa','No HP','Asal Kampus','Tipe Sewa','Mulai','Selesai','Total','Status','Link Kontrak','Catatan','No KTP','Alamat','Nama Ortu','No KTP Ortu','No HP Ortu','Alamat Ortu'],
     ...OCCS.map(o => [
       o.nama_kamar, o.nama_penyewa, o.no_hp || '', o.asal_kampus || '',
       o.tipe_sewa, o.tanggal_mulai, o.tanggal_selesai,
       o.harga_total, o.status_bayar, o.link_kontrak || '', o.catatan || '',
       o.no_ktp || '', o.alamat_penyewa || '', o.nama_ortu || '',
-      o.no_ktp_ortu || '', o.no_hp_ortu || ''
+      o.no_ktp_ortu || '', o.no_hp_ortu || '', o.alamat_ortu || ''
     ])
   ];
   const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
@@ -959,6 +1017,7 @@ document.getElementById('import-file').addEventListener('change', async (e) => {
       nama_ortu: r['Nama Ortu'] || r['nama_ortu'] || null,
       no_ktp_ortu: r['No KTP Ortu'] || r['no_ktp_ortu'] || null,
       no_hp_ortu: r['No HP Ortu'] || r['no_hp_ortu'] || null,
+      alamat_ortu: r['Alamat Ortu'] || r['alamat_ortu'] || null,
     }));
 
     const result = await api('/occupancies/bulk', {
