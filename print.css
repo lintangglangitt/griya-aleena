@@ -382,43 +382,51 @@
 .invoice-actions .inv-btn-close:hover { background: #f4f7f7; }
 
 /* ─── SAAT PRINT ─── */
-
-/* ─── SAAT PRINT ─── */
 @media print {
-    /* Sembunyikan total body kecuali modal */
+  /* ─── HAPUS TOTAL SEMUA ELEMEN DASHBOARD ─── */
   body > *:not(.invoice-modal) {
     display: none !important;
+    visibility: hidden !important;
   }
-  /* Sembunyikan semua, tampilkan hanya modal yang terbuka */
-  body * { visibility: hidden; }
-  .invoice-modal.open, 
-  .invoice-modal.open * { visibility: visible; }
   
+  /* ─── RESET BODY & HTML ─── */
   html, body {
     width: 100% !important;
     height: auto !important;
+    min-height: 0 !important;
     margin: 0 !important;
     padding: 0 !important;
     overflow: visible !important;
+    background: white !important;
   }
   
+  /* ─── MODAL: RENDER SEBAGAI STATIC, BUKAN OVERLAY ─── */
   .invoice-modal {
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: auto !important;
-    bottom: auto !important;
+    display: block !important;
+    position: static !important;
     width: 100% !important;
     height: auto !important;
+    min-height: 0 !important;
     padding: 0 !important;
     margin: 0 !important;
     background: white !important;
-    display: block !important;
     overflow: visible !important;
+    inset: auto !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
   }
-  .invoice-modal:not(.open) { display: none !important; }
   
+  /* Sembunyikan modal yang tidak aktif */
+  .invoice-modal:not(.open) {
+    display: none !important;
+  }
+  
+  /* ─── WRAPPER ─── */
   .invoice-wrapper {
+    display: block !important;
+    position: static !important;
     box-shadow: none !important;
     border-radius: 0 !important;
     padding: 0 !important;
@@ -426,36 +434,47 @@
     max-width: 100% !important;
     width: 100% !important;
     height: auto !important;
+    min-height: 0 !important;
   }
   
-  .invoice-actions { display: none !important; }
-  .admin-header { display: none !important; }
+  /* ─── HAPUS RUANG DARI ELEMEN TERSEMBUNYI ─── */
+  .invoice-actions,
+  .admin-header {
+    display: none !important;
+  }
   
-  /* Paksa warna tetap tercetak */
+  /* ─── PAKSA WARNA TERCETAK ─── */
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     color-adjust: exact !important;
   }
   
-  /* Hindari page break setelah elemen terakhir */
-  .invoice-wrapper > *:last-child,
+  /* ─── PREVENT PAGE BREAK DI TENGAH DOKUMEN ─── */
+  .inv-header,
+  .inv-section,
+  .inv-table,
+  .inv-total,
+  .inv-notes,
+  .inv-signature,
   .inv-footer {
-    page-break-after: avoid !important;
-    break-after: avoid !important;
-    margin-bottom: 0 !important;
-    padding-bottom: 0 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
   
-  /* Hilangkan margin default elemen terakhir */
+  /* ─── HILANGKAN MARGIN ELEMEN TERAKHIR ─── */
+  .invoice-wrapper > *:last-child,
   .inv-footer:last-child {
     margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
   }
   
-  /* A4 dengan margin 2cm */
-  @page { 
-    margin: 2cm; 
-    size: A4; 
+  /* ─── A4 MARGIN 2CM ─── */
+  @page {
+    size: A4;
+    margin: 2cm;
   }
 }
   
