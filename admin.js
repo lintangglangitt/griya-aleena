@@ -17,7 +17,7 @@ const PEMILIK = {
   no_ktp: '',
   alamat: 'Jl. Margasatwa, Gg. Sadewa No. 14, Sekaran 005/005, Kec. Gunungpati, Kota Semarang, Jawa Tengah, 50229',
   alamat_singkat: 'Jl. Margasatwa, Gg. Sadewa No. 14, Sekaran, Gunungpati, Semarang.',
-  no_hp: '0898-5446-121',
+  no_hp: '',
 };
 
 if (!TOKEN) window.location.href = 'ibun.html';
@@ -108,6 +108,18 @@ function terbilangRupiah(n) {
   n = Math.floor(Number(n) || 0);
   if (n === 0) return 'nol rupiah';
   return terbilangAngka(n).replace(/\s+/g, ' ').trim() + ' rupiah';
+}
+function getHariIndonesia() {
+  const hari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+  return hari[new Date().getDay()];
+}
+function printDoc(namaFile) {
+  const originalTitle = document.title;
+  document.title = namaFile;
+  window.print();
+  setTimeout(() => {
+    document.title = originalTitle;
+  }, 1500);
 }
 
 // ─── Logout ────────────────────────────────────────────────
@@ -372,10 +384,10 @@ function renderTable() {
 }
 
 // ═══════════════════════════════════════════════════════════
-// HEADER BERSAMA (untuk invoice & kuitansi)
+// HEADER BERSAMA
 // ═══════════════════════════════════════════════════════════
 
-function buildDocHeader(title, no, tgl) {
+function buildDocHeader(title, no) {
   return `
     <div class="inv-header">
       <div class="inv-brand">
@@ -383,7 +395,7 @@ function buildDocHeader(title, no, tgl) {
         <div>
           <h1>GRIYA ALEENA</h1>
           <p>Kos Putri Nyaman, Kampus Unnes Sekaran.<br>
-          ${escapeHtml(PEMILIK.alamat_singkat)} Telp/WA: ${escapeHtml(PEMILIK.no_hp)}</p>
+          ${escapeHtml(PEMILIK.alamat_singkat)}</p>
         </div>
       </div>
       <div class="inv-title-block">
@@ -405,10 +417,9 @@ function openInvoice(id) {
   const invoiceNo = generateInvoiceNo(o.id, o.tanggal_mulai);
   const today = fmtDateLong(todayISO());
   const durasi = hitungDurasi(o.tanggal_mulai, o.tanggal_selesai, o.tipe_sewa);
-  const statusLabel = { lunas: 'LUNAS', dp: 'DP', belum: 'BELUM BAYAR' }[o.status_bayar] || o.status_bayar;
 
   const html = `
-    ${buildDocHeader('INVOICE', invoiceNo, today)}
+    ${buildDocHeader('INVOICE', invoiceNo)}
 
     <div class="inv-section">
       <div class="inv-section-title">Ditagihkan kepada:</div>
@@ -462,7 +473,7 @@ function openInvoice(id) {
 
     <div class="invoice-actions">
       <button class="inv-btn-close" onclick="closeInvoice()">Tutup</button>
-      <button class="inv-btn-print" onclick="window.print()">🖨️ Print / Simpan PDF</button>
+      <button class="inv-btn-print" onclick="printDoc('Invoice - ${escapeHtml(o.nama_penyewa).replace(/'/g, "\\'")}')">🖨️ Print / Simpan PDF</button>
     </div>
   `;
 
@@ -487,7 +498,7 @@ function openKuitansi(id) {
   const durasi = hitungDurasi(o.tanggal_mulai, o.tanggal_selesai, o.tipe_sewa);
 
   const html = `
-    ${buildDocHeader('KUITANSI', noKuitansi, today)}
+    ${buildDocHeader('KUITANSI', noKuitansi)}
 
     <div class="inv-section">
       <div class="inv-section-title">Telah diterima dari:</div>
@@ -547,7 +558,7 @@ function openKuitansi(id) {
 
     <div class="invoice-actions">
       <button class="inv-btn-close" onclick="closeKuitansi()">Tutup</button>
-      <button class="inv-btn-print" onclick="window.print()">🖨️ Print / Simpan PDF</button>
+      <button class="inv-btn-print" onclick="printDoc('Kuitansi - ${escapeHtml(o.nama_penyewa).replace(/'/g, "\\'")}')">🖨️ Print / Simpan PDF</button>
     </div>
   `;
 
@@ -587,8 +598,8 @@ function openPerjanjian(id) {
     <h1>PERJANJIAN DAN TATA TERTIB BERSAMA<br>GRIYA ALEENA</h1>
 
     <p>
-      Pada hari ini <span class="pj-fill pj-fill-sm">&nbsp;</span>
-      tanggal <span class="pj-fill pj-fill-sm">&nbsp;</span>
+      Pada hari ini <span class="pj-fill pj-fill-sm">${escapeHtml(getHariIndonesia())}</span>
+      tanggal <span class="pj-fill pj-fill-sm">${escapeHtml(fmtDateLong(todayISO()))}</span>
       telah disepakati Perjanjian dan Tata Tertib Bersama terkait sewa-menyewa kamar kos antara:
     </p>
 
@@ -597,10 +608,8 @@ function openPerjanjian(id) {
       ${field('Nama', PEMILIK.nama)}
       ${field('Nomor KTP/SIM', PEMILIK.no_ktp)}
       ${field('Alamat', PEMILIK.alamat)}
-      ${field('Nomor HP', PEMILIK.no_hp)}
     </div>
     <p>Selanjutnya disebut <strong>Pemilik</strong>.</p>
-
 
     <h2>2. Penyewa Kos</h2>
     <div class="pj-info-block">
@@ -726,7 +735,7 @@ function openPerjanjian(id) {
     </p>
 
     <div class="pj-tanggal">
-      Semarang, <span class="pj-tanggal-fill">&nbsp;</span>
+      Semarang, <span class="pj-tanggal-fill">${escapeHtml(fmtDateLong(todayISO()))}</span>
     </div>
 
     <div class="pj-sign-row">
@@ -755,7 +764,7 @@ function openPerjanjian(id) {
 
     <div class="invoice-actions">
       <button class="inv-btn-close" onclick="closePerjanjian()">Tutup</button>
-      <button class="inv-btn-print" onclick="window.print()">🖨️ Print / Simpan PDF</button>
+      <button class="inv-btn-print" onclick="printDoc('Perjanjian - ${escapeHtml(o.nama_penyewa).replace(/'/g, "\\'")}')">🖨️ Print / Simpan PDF</button>
     </div>
   `;
 
@@ -1033,7 +1042,7 @@ function normalizeDate(s) {
     return `${m[3]}-${mon}-${day}`;
   }
   const m2 = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
-  if (m2) return `${m[2]?.[2] || m2[3]}-${m2[2].padStart(2, '0')}-${m2[1].padStart(2, '0')}`;
+  if (m2) return `${m2[3]}-${m2[2].padStart(2, '0')}-${m2[1].padStart(2, '0')}`;
   return s;
 }
 
