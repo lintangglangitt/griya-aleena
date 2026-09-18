@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tata Tertib – Griya Aleena</title>
+<link rel="icon" type="image/png" sizes="32x32" href="foto/favicon.png">
+<link rel="icon" type="image/png" sizes="16x16" href="foto/favicon.png">
+<link rel="apple-touch-icon" href="foto/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal: #1a5c5c;
+    --teal-lt: #3aadad;
+    --amber: #F5A623;
+    --amber-lt: #ffc654;
+    --navy: #0f1e2e;
+    --text: #1c2e2e;
+    --muted: #5a7373;
+    --gray: #f4f7f7;
+    --border: #e3ebeb;
+  }
+
+  html, body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: var(--text);
+    background: #e8eaea;
+    padding: 24px 16px;
+    line-height: 1.5;
+  }
+
+  .page {
+    width: 21cm;
+    min-height: 29.7cm;
+    padding: 1.5cm 1.8cm 1cm 1.8cm;
+    margin: 0 auto;
+    background: white;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .page::before {
+    content: '';
+    position: absolute;
+    inset: 12px;
+    border: 2px solid var(--teal);
+    border-radius: 6px;
+    pointer-events: none;
+  }
+  .page::after {
+    content: '';
+    position: absolute;
+    inset: 18px;
+    border: 1px solid var(--amber);
+    border-radius: 4px;
+    pointer-events: none;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding-bottom: 18px;
+    margin-bottom: 22px;
+    border-bottom: 2px solid var(--teal);
+    position: relative;
+    z-index: 1;
+  }
+
+  .header-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 12px;
+  }
+
+  .header-logo img {
+    height: 70px;
+    width: auto;
+    object-fit: contain;
+  }
+
+  .header-text { text-align: left; }
+
+  .header-text .brand {
+    font-family: 'Sora', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--teal);
+    letter-spacing: 0.04em;
+    line-height: 1.1;
+    margin-bottom: 2px;
+  }
+
+  .header-text .tagline {
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    font-weight: 500;
+  }
+
+  .header h1 {
+    font-family: 'Sora', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--teal);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 8px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--amber);
+  }
+
+  .header .subtitle {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-top: 4px;
+    font-style: italic;
+  }
+
+  /* Content */
+  .content {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+  }
+
+  .section {
+    margin-bottom: 18px;
+  }
+
+  .section-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: white;
+    background: linear-gradient(135deg, var(--teal) 0%, #0d3d3d 100%);
+    padding: 7px 16px;
+    border-radius: 50px;
+    display: inline-block;
+    margin-bottom: 12px;
+    letter-spacing: 0.03em;
+    box-shadow: 0 3px 10px rgba(26, 92, 92, 0.25);
+  }
+
+  .section ol {
+    list-style: none;
+    counter-reset: item;
+    padding-left: 4px;
+  }
+
+  .section ol li {
+    position: relative;
+    padding-left: 32px;
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+    line-height: 1.55;
+    text-align: justify;
+    counter-increment: item;
+  }
+
+  .section ol li::before {
+    content: counter(item);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 22px;
+    height: 22px;
+    background: var(--amber);
+    color: var(--navy);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 800;
+    font-family: 'Sora', sans-serif;
+  }
+
+  /* Highlight penting */
+  .section.highlight {
+    background: #fff9e6;
+    border-left: 4px solid var(--amber);
+    border-radius: 8px;
+    padding: 14px 16px 14px 14px;
+    margin-left: -4px;
+  }
+  .section.highlight .section-title {
+    background: var(--amber);
+    color: var(--navy);
+  }
+  .section.highlight ol li::before {
+    background: var(--navy);
+    color: var(--amber-lt);
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 2px solid var(--teal);
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .footer-quote {
+    font-family: 'Sora', sans-serif;
+    font-size: 0.82rem;
+    color: var(--teal);
+    font-weight: 700;
+    margin-bottom: 6px;
+    font-style: italic;
+  }
+
+  .footer-info {
+    font-size: 0.72rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .footer-info strong {
+    color: var(--teal);
+  }
+
+  /* Tombol Print */
+  .print-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--teal);
+    color: white;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 50px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 6px 24px rgba(26, 92, 92, 0.4);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.15s, box-shadow 0.15s;
+    z-index: 100;
+  }
+
+  .print-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 32px rgba(26, 92, 92, 0.5);
+  }
+
+  @media print {
+    html, body {
+      background: white;
+      padding: 0;
+      width: 100%;
+      height: auto;
+    }
+
+    .page {
+      width: 100%;
+      min-height: auto;
+      padding: 1cm 1.2cm;
+      box-shadow: none;
+      border-radius: 0;
+      margin: 0;
+    }
+
+    .print-btn { display: none !important; }
+
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      color-adjust: exact !important;
+    }
+
+    @page {
+      size: A4;
+      margin: 0;
+    }
+
+    .section { page-break-inside: avoid; break-inside: avoid; }
+  }
+
+  @media screen and (max-width: 800px) {
+    body { padding: 12px 8px; }
+    .page { width: 100%; padding: 24px 20px; min-height: auto; }
+    .header-text .brand { font-size: 1.2rem; }
+    .header-logo img { height: 50px; }
+    .header h1 { font-size: 1.05rem; }
+    .section ol li { font-size: 0.8rem; padding-left: 28px; }
+    .section ol li::before { width: 20px; height: 20px; font-size: 0.65rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="header">
+    <div class="header-logo">
+      <img src="foto/logo.png" alt="Griya Aleena" onerror="this.style.display='none'">
+      <div class="header-text">
+        <div class="brand">GRIYA ALEENA</div>
+        <div class="tagline">KOS PUTRI NYAMAN · KAMPUS UNNES SEKARAN</div>
+      </div>
+    </div>
+    <h1>Tata Tertib Penghuni</h1>
+    <div class="subtitle">Berlaku untuk seluruh penghuni kos tanpa terkecuali</div>
+  </div>
+
+  <div class="content">
+
+    <!-- TATA TERTIB -->
+    <div class="section">
+      <div class="section-title">TATA TERTIB</div>
+      <ol>
+        <li>Penyewa wajib menjaga ketertiban dan tidak mengganggu kenyamanan penghuni lain.</li>
+        <li>Penyewa bertanggung jawab atas kebersihan kamar masing-masing dan kebersihan fasilitas umum (dapur bersama, kulkas bersama, mesin cuci bersama, garasi, dan lain-lain).</li>
+        <li>Penyewa wajib menjaga dan menggunakan seluruh fasilitas serta barang milik kos (seperti perabot, peralatan bersama, dan properti lainnya) dengan hati-hati, serta dilarang merusak, mengubah, atau memindahkan tanpa izin dari Pemilik.</li>
+        <li>Penggunaan fasilitas umum harus dilakukan secara tertib, bergantian, dan penuh tanggung jawab.</li>
+        <li>Kebijakan jam malam berlaku pukul 22:00 WIB, di mana setelah jam tersebut tidak diperkenankan menerima tamu, berisik, dan/atau melakukan aktivitas yang mengganggu penghuni lain.</li>
+        <li>Volume musik, televisi, atau aktivitas lain yang menghasilkan suara keras harus dijaga agar tidak mengganggu lingkungan.</li>
+        <li>Sampah harus dibuang secara teratur pada tempat yang telah disediakan.</li>
+      </ol>
+    </div>
+
+    <!-- LARANGAN -->
+    <div class="section highlight">
+      <div class="section-title">LARANGAN</div>
+      <ol>
+        <li>Dilarang membawa tamu lawan jenis ke dalam kamar kos.</li>
+        <li>Dilarang menutup pintu kamar apabila sedang menerima tamu di area kos.</li>
+        <li>Dilarang merokok di dalam kamar dan seluruh area dalam kos.</li>
+        <li>Dilarang membawa, menyimpan, atau menggunakan narkotika, psikotropika, zat adiktif lainnya (termasuk sabu-sabu, ganja, ekstasi, dan sejenisnya), minuman keras, serta barang terlarang lainnya dalam bentuk apa pun.</li>
+        <li>Dilarang membawa barang berbahaya seperti senjata tajam, senjata api, bahan peledak, zat kimia berbahaya, zat mudah terbakar serta barang-barang lain yang dapat membahayakan keselamatan, keamanan, atau kenyamanan penghuni lainnya.</li>
+      </ol>
+    </div>
+
+    <!-- KEAMANAN DAN KENYAMANAN -->
+    <div class="section">
+      <div class="section-title">KEAMANAN DAN KENYAMANAN</div>
+      <ol>
+        <li>Penyewa wajib menjaga kunci kamar dan/atau kunci gerbang, serta segera melaporkan kepada pemilik kos apabila terjadi kehilangan.</li>
+        <li>Penyewa bertanggung jawab menjaga keamanan barang pribadinya masing-masing. Pemilik Kos tidak bertanggung jawab atas kehilangan akibat kelalaian Penyewa.</li>
+        <li>Penyewa dilarang meminjamkan kunci kamar dan/atau gerbang kepada orang lain tanpa seizin Pemilik Kos.</li>
+      </ol>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <div class="footer-quote">"Kenyamanan bersama adalah tanggung jawab kita bersama."</div>
+    <div class="footer-info">
+      <strong>Griya Aleena Sekaran</strong> · Jl. Margasatwa, Gg. Sadewa No. 14, Sekaran, Gunungpati, Semarang<br>
+      Telp/WA: 0898-5446-121
+    </div>
+  </div>
+</div>
+
+<button class="print-btn" onclick="window.print()">
+  🖨️ Print / Simpan PDF
+</button>
+
+</body>
+</html>
