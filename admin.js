@@ -747,12 +747,6 @@ function openPerjanjian(id) {
         <li>Fotokopi KTP/SIM Penyewa dan fotokopi KTP/SIM orang tua Penyewa.</li>
         <li>Fotokopi Kartu Tanda Mahasiswa Penyewa.</li>
       </ol>
-      <div class="pj-info-block" style="margin-top:12px;">
-        <p><strong>Data Orang Tua/Wali:</strong></p>
-        ${field('Nama', o.nama_ortu || '')}
-        ${field('No. KTP/SIM', o.no_ktp_ortu || '')}
-        ${field('No. HP', o.no_hp_ortu || '')}
-      </div>
     </div>
 
     <div class="inv-footer">
