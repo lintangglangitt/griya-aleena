@@ -125,39 +125,6 @@ function printDoc(namaFile) {
   }, 1500);
 }
 
-// ─── Auto-hitung tanggal selesai ───────────────────────────
-function hitungTanggalSelesai(tanggalMulai, tipeSewa) {
-  if (!tanggalMulai) return '';
-  const d = new Date(tanggalMulai);
-  if (isNaN(d.getTime())) return '';
-  
-  switch (tipeSewa) {
-    case 'harian':
-      d.setDate(d.getDate() + 1);
-      break;
-    case 'mingguan':
-      d.setDate(d.getDate() + 7);
-      break;
-    case 'bulanan':
-      d.setMonth(d.getMonth() + 1);
-      break;
-    case 'semesteran':
-      d.setMonth(d.getMonth() + 6);
-      break;
-    case 'tahunan':
-      d.setMonth(d.getMonth() + 12);
-      break;
-    default:
-      d.setDate(d.getDate() + 1);
-  }
-  
-  // Format YYYY-MM-DD
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-}
-
 // ─── Logout ────────────────────────────────────────────────
 document.getElementById('btn-logout').addEventListener('click', async () => {
   try { await api('/auth/logout', { method: 'POST' }); } catch {}
@@ -176,7 +143,6 @@ async function init() {
   renderRooms();
   renderTable();
   setupIncomeCardListeners();
-  setupAutoDateLogic();
 
   if (USER.role !== 'owner') {
     document.getElementById('btn-users').style.display = 'none';
@@ -200,24 +166,6 @@ async function loadStats() {
   document.getElementById('st-income-all').textContent = rupiahFull(s.penghasilan_keseluruhan);
   document.getElementById('st-income-year').textContent = rupiahFull(s.penghasilan_tahun_ini);
   document.getElementById('st-income-month').textContent = rupiahFull(s.penghasilan_bulan_ini);
-}
-
-// ─── Auto Date Logic ───────────────────────────────────────
-function setupAutoDateLogic() {
-  const fMulai = document.getElementById('f-mulai');
-  const fSelesai = document.getElementById('f-selesai');
-  const fTipe = document.getElementById('f-tipe');
-
-  // Ketika tanggal mulai atau tipe sewa diubah → auto hitung tanggal selesai
-  function updateSelesai() {
-    const mulai = fMulai.value;
-    const tipe = fTipe.value;
-    if (!mulai) return;
-    fSelesai.value = hitungTanggalSelesai(mulai, tipe);
-  }
-
-  fMulai.addEventListener('change', updateSelesai);
-  fTipe.addEventListener('change', updateSelesai);
 }
 
 // ─── Kartu Pembayaran jadi Filter ──────────────────────────
@@ -882,6 +830,7 @@ function openModal(id) {
     document.getElementById('f-selesai').value = o.tanggal_selesai;
     document.getElementById('f-harga').value = o.harga_total;
     document.getElementById('f-link').value = o.link_kontrak || '';
+    document.getElementById('f-status').value = o.status_bayar;
     document.getElementById('f-nama').value = o.nama_penyewa;
     document.getElementById('f-ktp').value = o.no_ktp || '';
     document.getElementById('f-alamat').value = o.alamat_penyewa || '';
@@ -892,13 +841,9 @@ function openModal(id) {
     document.getElementById('f-alamat-ortu').value = o.alamat_ortu || '';
     document.getElementById('f-hp-ortu').value = o.no_hp_ortu || '';
     document.getElementById('f-catatan').value = o.catatan || '';
-    document.getElementById('f-status').value = o.status_bayar;
   } else {
     document.getElementById('modal-title').textContent = 'Tambah Okupansi';
     document.getElementById('f-mulai').value = todayISO();
-    // Auto-isi tanggal selesai berdasarkan tipe default (bulanan)
-    const tipe = document.getElementById('f-tipe').value;
-    document.getElementById('f-selesai').value = hitungTanggalSelesai(todayISO(), tipe);
   }
   modalOcc.classList.add('open');
 }
@@ -912,6 +857,7 @@ formOcc.addEventListener('submit', async (e) => {
     tanggal_selesai: document.getElementById('f-selesai').value,
     harga_total: Number(document.getElementById('f-harga').value),
     link_kontrak: document.getElementById('f-link').value.trim() || null,
+    status_bayar: document.getElementById('f-status').value,
     nama_penyewa: document.getElementById('f-nama').value.trim(),
     no_ktp: document.getElementById('f-ktp').value.trim() || null,
     alamat_penyewa: document.getElementById('f-alamat').value.trim() || null,
@@ -922,7 +868,6 @@ formOcc.addEventListener('submit', async (e) => {
     alamat_ortu: document.getElementById('f-alamat-ortu').value.trim() || null,
     no_hp_ortu: document.getElementById('f-hp-ortu').value.trim() || null,
     catatan: document.getElementById('f-catatan').value.trim() || null,
-    status_bayar: document.getElementById('f-status').value,
   };
 
   try {
