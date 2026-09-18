@@ -352,3 +352,103 @@
   .admin-header { display: none !important; }
   @page { margin: 1cm; size: A4; }
 }
+
+
+/* ============================================ */
+/* UPDATE: Logo perjanjian + form isian rapi */
+/* ============================================ */
+
+/* Logo header di perjanjian */
+.perjanjian-logo {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.perjanjian-logo img {
+  max-height: 90px;
+  display: inline-block;
+}
+
+/* ── Form isian perjanjian — titik dua rata ── */
+.pj-field {
+  display: grid;
+  grid-template-columns: 130px 20px 1fr;
+  gap: 6px 0;
+  align-items: start;
+  margin-bottom: 8px;
+  font-size: 0.88rem;
+}
+.pj-field .pj-label {
+  color: #1c2e2e;
+  line-height: 1.6;
+}
+.pj-field .pj-colon {
+  color: #1c2e2e;
+  line-height: 1.6;
+}
+.pj-field .pj-value {
+  color: #1c2e2e;
+  font-weight: 600;
+  line-height: 1.6;
+  word-break: break-word;
+}
+.pj-field .pj-value-line {
+  color: #1c2e2e;
+  font-weight: 600;
+  line-height: 1.6;
+  border-bottom: 1px solid #1c2e2e;
+  padding-bottom: 2px;
+  min-height: 1.6em;
+  word-break: break-word;
+}
+.pj-field .pj-value-line.empty {
+  min-width: 200px;
+}
+
+/* Alamat panjang — biar tidak overflow */
+.pj-field.alamat {
+  grid-template-columns: 130px 20px 1fr;
+}
+.pj-field.alamat .pj-value,
+.pj-field.alamat .pj-value-line {
+  line-height: 1.5;
+}
+
+/* Info block tanpa grid (untuk yang sederhana) */
+.pj-info-block {
+  background: #f4f7f7;
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 16px;
+}
+
+/* Baris tanggal di atas perjanjian */
+.pj-tanggal-row {
+  display: grid;
+  grid-template-columns: 130px 20px 1fr;
+  gap: 6px 0;
+  align-items: start;
+  margin-bottom: 8px;
+  font-size: 0.88rem;
+}
+
+/* Tanda tangan — tanpa nama */
+.pj-sign-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  margin-top: 40px;
+}
+.pj-sign-col {
+  flex: 1;
+  text-align: center;
+}
+.pj-sign-col .pj-sign-label {
+  font-size: 0.9rem;
+  margin-bottom: 80px;
+}
+.pj-sign-col .pj-sign-name {
+  border-top: 1.5px solid #1c2e2e;
+  padding-top: 6px;
+  font-weight: 700;
+  min-height: 30px;
+}
