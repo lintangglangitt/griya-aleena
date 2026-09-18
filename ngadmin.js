@@ -2,7 +2,7 @@
 // ngadmin.js - Dashboard Okupansi Griya Aleena
 // ============================================================
 
-const API = 'https://griya-api.lintangglangitt.workers.dev';
+const API = 'https://griya-api.lintanglangitt.workers.dev';
 let TOKEN = localStorage.getItem('ga_token') || '';
 let USER = JSON.parse(localStorage.getItem('ga_user') || '{}');
 let ROOMS = [];
@@ -19,6 +19,16 @@ const PEMILIK = {
   alamat_singkat: 'Jl. Margasatwa, Gg. Sadewa No. 14, Sekaran, Gunungpati, Semarang.',
   no_hp: '0898-5446-121',
   no_hp_perjanjian: '0899-5677-419',
+};
+
+// ─── Harga Default per Tipe Sewa ───────────────────────────
+// Sesuaikan nilainya dengan harga kos Anda
+const HARGA_DEFAULT = {
+  harian: 150000,       // sesuaikan
+  mingguan: 500000,    // sesuaikan
+  bulanan: 800000,
+  semesteran: 4600000,
+  tahunan: 9100000,
 };
 
 if (!TOKEN) window.location.href = 'ibun.html';
@@ -126,6 +136,26 @@ function printDoc(namaFile) {
   }, 1500);
 }
 
+// ─── Auto-isi Harga Sesuai Tipe Sewa ───────────────────────
+function updateHargaOtomatis() {
+  const tipe = document.getElementById('f-tipe').value;
+  const hargaInput = document.getElementById('f-harga');
+  if (!tipe || !hargaInput) return;
+
+  // Set harga default sesuai tipe (hanya kalau HARGA_DEFAULT punya nilai)
+  if (HARGA_DEFAULT[tipe]) {
+    hargaInput.value = HARGA_DEFAULT[tipe];
+  }
+}
+
+function setupAutoHarga() {
+  const tipeSelect = document.getElementById('f-tipe');
+  if (tipeSelect && !tipeSelect.dataset.listenerBound) {
+    tipeSelect.addEventListener('change', updateHargaOtomatis);
+    tipeSelect.dataset.listenerBound = 'true';
+  }
+}
+
 // ─── Logout ────────────────────────────────────────────────
 document.getElementById('btn-logout').addEventListener('click', async () => {
   try { await api('/auth/logout', { method: 'POST' }); } catch {}
@@ -144,6 +174,7 @@ async function init() {
   renderRooms();
   renderTable();
   setupIncomeCardListeners();
+  setupAutoHarga();
 
   if (USER.role !== 'owner') {
     document.getElementById('btn-users').style.display = 'none';
@@ -844,6 +875,7 @@ function openModal(id) {
   const f = formOcc;
   f.reset();
   fillRoomSelect(id);
+  setupAutoHarga();
 
   // Reset upload UI
   const status = document.getElementById('upload-status');
@@ -881,6 +913,8 @@ function openModal(id) {
   } else {
     document.getElementById('modal-title').textContent = 'Tambah Okupansi';
     document.getElementById('f-mulai').value = todayISO();
+    // Auto-isi harga sesuai tipe default (bulanan)
+    updateHargaOtomatis();
   }
   modalOcc.classList.add('open');
 }
