@@ -622,7 +622,7 @@ function openPerjanjian(id) {
       ${field('Nama', o.nama_penyewa)}
       ${field('Nomor KTP/SIM', o.no_ktp)}
       ${field('Alamat', o.alamat_penyewa)}
-      ${field('Nomor HP', o.no_hp)}
+      ${field('Nomor HP/WA', o.no_hp)}
     </div>
     <p>Selanjutnya disebut <strong>Penyewa</strong>.</p>
 
@@ -631,7 +631,7 @@ function openPerjanjian(id) {
       ${field('Nama', o.nama_ortu || '')}
       ${field('Nomor KTP/SIM', o.no_ktp_ortu || '')}
       ${field('Alamat', o.alamat_ortu || '')}
-      ${field('Nomor HP', o.no_hp_ortu || '')}
+      ${field('Nomor HP/WA', o.no_hp_ortu || '')}
     </div>
     <p>Data orang tua/wali di atas dicatat sebagai penanggung jawab.</p>
 
