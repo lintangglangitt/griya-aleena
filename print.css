@@ -385,6 +385,10 @@
 
 /* ─── SAAT PRINT ─── */
 @media print {
+    /* Sembunyikan total body kecuali modal */
+  body > *:not(.invoice-modal) {
+    display: none !important;
+  }
   /* Sembunyikan semua, tampilkan hanya modal yang terbuka */
   body * { visibility: hidden; }
   .invoice-modal.open, 
