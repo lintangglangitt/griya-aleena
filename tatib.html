@@ -7,316 +7,785 @@
 <link rel="icon" type="image/png" sizes="32x32" href="foto/favicon.png">
 <link rel="icon" type="image/png" sizes="16x16" href="foto/favicon.png">
 <link rel="apple-touch-icon" href="foto/favicon.png">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@400;600;700;800&family=Playfair+Display:wght@500;700;900&family=Cormorant+Garamond:wght@500;700&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+/* ═══════════════════════════════════════════════════════════
+   BASE RESET
+   ═══════════════════════════════════════════════════════════ */
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
-    --teal: #1a5c5c;
-    --teal-lt: #3aadad;
-    --amber: #F5A623;
-    --amber-lt: #ffc654;
-    --navy: #0f1e2e;
-    --text: #1c2e2e;
-    --muted: #5a7373;
-    --gray: #f4f7f7;
-    --border: #e3ebeb;
-  }
+html, body {
+  padding: 24px 16px;
+  background: #e8eaea;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  line-height: 1.55;
+  transition: background 0.3s;
+}
 
+/* ═══════════════════════════════════════════════════════════
+   SWITCHER TOMBOL VERSI (kanan atas)
+   ═══════════════════════════════════════════════════════════ */
+.version-switcher {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+  padding: 8px;
+  display: flex;
+  gap: 6px;
+  z-index: 200;
+}
+
+.version-switcher button {
+  background: #f4f7f7;
+  color: #1c2e2e;
+  border: 2px solid transparent;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  min-width: 60px;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.version-switcher button:hover {
+  background: #e8f0f0;
+}
+
+.version-switcher button.active {
+  background: #1a5c5c;
+  color: white;
+  border-color: #F5A623;
+}
+
+.version-switcher button small {
+  display: block;
+  font-size: 0.6rem;
+  font-weight: 500;
+  opacity: 0.7;
+  margin-top: 1px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PAGE — base untuk semua versi
+   ═══════════════════════════════════════════════════════════ */
+.page {
+  width: 21cm;
+  min-height: 29.7cm;
+  margin: 0 auto;
+  padding: 1.2cm 1.8cm 1cm 1.8cm;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.header {
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.header-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header-logo img {
+  width: auto;
+  object-fit: contain;
+}
+
+.header-brand,
+.header-tagline,
+.header h1,
+.header .subtitle { position: relative; z-index: 2; }
+
+.content {
+  flex: 1;
+  position: relative;
+  z-index: 2;
+}
+
+.section ol {
+  list-style: none;
+  counter-reset: item;
+  padding-left: 4px;
+}
+
+.section ol li {
+  position: relative;
+  counter-increment: item;
+  text-align: justify;
+}
+
+.section ol li::before {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: 0;
+  font-family: 'Sora', sans-serif;
+  font-weight: 800;
+}
+
+.footer {
+  margin-top: auto;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.print-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 50px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 100;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.print-btn:hover { transform: translateY(-2px); }
+
+/* ═══════════════════════════════════════════════════════════
+   VERSI 1: TEAL FORMAL (Default)
+   ═══════════════════════════════════════════════════════════ */
+body.ver-1 { background: #e8eaea; }
+body.ver-1 .page {
+  background: white;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+  border-radius: 4px;
+}
+body.ver-1 .page::before {
+  content: '';
+  position: absolute; inset: 12px;
+  border: 2px solid #1a5c5c;
+  border-radius: 6px;
+  pointer-events: none; z-index: 1;
+}
+body.ver-1 .page::after {
+  content: '';
+  position: absolute; inset: 18px;
+  border: 1px solid #F5A623;
+  border-radius: 4px;
+  pointer-events: none; z-index: 1;
+}
+body.ver-1 .header {
+  padding-bottom: 18px;
+  margin-bottom: 22px;
+  border-bottom: 2px solid #1a5c5c;
+}
+body.ver-1 .header-logo { margin-bottom: 12px; }
+body.ver-1 .header-logo img { height: 90px; }
+body.ver-1 .header-brand {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.7rem; font-weight: 800;
+  color: #1a5c5c; letter-spacing: 0.08em;
+  line-height: 1.1; margin-bottom: 4px;
+}
+body.ver-1 .header-tagline {
+  font-size: 0.78rem; color: #5a7373;
+  letter-spacing: 0.15em; font-weight: 500;
+  margin-bottom: 14px;
+}
+body.ver-1 .header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem; font-weight: 900;
+  color: #1a5c5c; letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding-top: 12px;
+  border-top: 1px dashed #F5A623;
+  margin-bottom: 4px;
+}
+body.ver-1 .header .subtitle {
+  font-size: 0.82rem; color: #5a7373; font-style: italic;
+}
+body.ver-1 .section { margin-bottom: 18px; }
+body.ver-1 .section-title {
+  font-family: 'Sora', sans-serif;
+  font-size: 0.95rem; font-weight: 800;
+  color: white;
+  background: linear-gradient(135deg, #1a5c5c 0%, #0d3d3d 100%);
+  padding: 7px 20px; border-radius: 50px;
+  display: inline-block; margin-bottom: 12px;
+  letter-spacing: 0.05em;
+  box-shadow: 0 3px 10px rgba(26,92,92,0.25);
+}
+body.ver-1 .section ol li {
+  padding-left: 32px; margin-bottom: 8px;
+  font-size: 0.85rem; line-height: 1.55;
+}
+body.ver-1 .section ol li::before {
+  content: counter(item);
+  top: 0; width: 22px; height: 22px;
+  background: #F5A623; color: #0f1e2e;
+  border-radius: 50%; font-size: 0.7rem;
+}
+body.ver-1 .section.highlight {
+  background: #fff9e6;
+  border-left: 4px solid #F5A623;
+  border-radius: 8px;
+  padding: 14px 16px 14px 14px;
+  margin-left: -4px;
+}
+body.ver-1 .section.highlight .section-title {
+  background: #F5A623; color: #0f1e2e;
+}
+body.ver-1 .section.highlight ol li::before {
+  background: #0f1e2e; color: #ffc654;
+}
+body.ver-1 .footer {
+  padding-top: 16px;
+  border-top: 2px solid #1a5c5c;
+}
+body.ver-1 .footer-quote {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.9rem; color: #1a5c5c;
+  font-weight: 700; font-style: italic;
+  margin-bottom: 8px;
+}
+body.ver-1 .footer-info {
+  font-size: 0.72rem; color: #5a7373; line-height: 1.5;
+}
+body.ver-1 .footer-info strong { color: #1a5c5c; }
+body.ver-1 .print-btn {
+  background: #1a5c5c; color: white;
+  box-shadow: 0 6px 24px rgba(26,92,92,0.4);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   VERSI 2: CLASSIC GOLD (Cream & Gold)
+   ═══════════════════════════════════════════════════════════ */
+body.ver-2 { background: #f0ebe0; font-family: 'Playfair Display', Georgia, serif; }
+body.ver-2 .page {
+  background: #fdfbf5;
+  box-shadow: 0 10px 40px rgba(139,111,71,0.2);
+  border-radius: 4px;
+}
+body.ver-2 .page::before {
+  content: '';
+  position: absolute; inset: 12px;
+  border: 3px double #C9A961;
+  border-radius: 4px;
+  pointer-events: none; z-index: 1;
+}
+body.ver-2 .page::after {
+  content: '';
+  position: absolute; inset: 22px;
+  border: 1px solid #8B6F47;
+  border-radius: 2px;
+  pointer-events: none; z-index: 1;
+  opacity: 0.5;
+}
+body.ver-2 .header {
+  padding-bottom: 18px;
+  margin-bottom: 22px;
+}
+body.ver-2 .header-logo { margin-bottom: 12px; }
+body.ver-2 .header-logo img { height: 90px; }
+body.ver-2 .header-brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.9rem; font-weight: 900;
+  color: #8B6F47; letter-spacing: 0.15em;
+  line-height: 1.1; margin-bottom: 4px;
+}
+body.ver-2 .header-tagline {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.78rem; color: #7A6A55;
+  letter-spacing: 0.25em; font-weight: 500;
+  font-style: italic;
+  margin-bottom: 16px;
+}
+body.ver-2 .header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.7rem; font-weight: 900;
+  color: #8B6F47; letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+body.ver-2 .header .subtitle {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.88rem; color: #7A6A55;
+  font-style: italic;
+}
+body.ver-2 .section { margin-bottom: 20px; }
+body.ver-2 .section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.05rem; font-weight: 900;
+  color: white;
+  background: linear-gradient(135deg, #C9A961 0%, #8B6F47 100%);
+  padding: 8px 22px; border-radius: 2px;
+  display: inline-block; margin-bottom: 14px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  box-shadow: 0 3px 10px rgba(139,111,71,0.3);
+}
+body.ver-2 .section ol li {
+  padding-left: 34px; margin-bottom: 9px;
+  font-family: 'Playfair Display', serif;
+  font-size: 0.88rem; line-height: 1.6;
+}
+body.ver-2 .section ol li::before {
+  content: counter(item);
+  top: 2px; width: 22px; height: 22px;
+  background: #C9A961; color: white;
+  border-radius: 2px; font-size: 0.75rem;
+}
+body.ver-2 .section.highlight {
+  background: #f5ecd0;
+  border-left: 4px solid #C9A961;
+  border-radius: 2px;
+  padding: 14px 16px 14px 14px;
+  margin-left: -4px;
+}
+body.ver-2 .section.highlight .section-title {
+  background: #8B6F47; color: #E6D194;
+}
+body.ver-2 .section.highlight ol li::before {
+  background: #8B6F47; color: #E6D194;
+}
+body.ver-2 .footer {
+  padding-top: 20px;
+  border-top: 1px solid #C9A961;
+}
+body.ver-2 .footer-quote {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.98rem; color: #8B6F47;
+  font-weight: 700; font-style: italic;
+  margin-bottom: 10px;
+}
+body.ver-2 .footer-info {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.75rem; color: #7A6A55; line-height: 1.6;
+}
+body.ver-2 .footer-info strong { color: #8B6F47; }
+body.ver-2 .print-btn {
+  background: #8B6F47; color: white;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  box-shadow: 0 6px 24px rgba(139,111,71,0.4);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   VERSI 3: MODERN MINIMALIS (Hitam + Kuning Bold)
+   ═══════════════════════════════════════════════════════════ */
+body.ver-3 { background: #f5f5f5; }
+body.ver-3 .page {
+  background: white;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+  border-left: 10px solid #FFD400;
+  border-radius: 0;
+}
+body.ver-3 .header {
+  padding-bottom: 22px;
+  margin-bottom: 24px;
+  border-bottom: 4px solid #0a0a0a;
+}
+body.ver-3 .header-logo { margin-bottom: 14px; }
+body.ver-3 .header-logo img { height: 90px; }
+body.ver-3 .header-brand {
+  font-family: 'Sora', sans-serif;
+  font-size: 2rem; font-weight: 800;
+  color: #0a0a0a; letter-spacing: -0.02em;
+  line-height: 1; margin-bottom: 6px;
+}
+body.ver-3 .header-tagline {
+  font-family: 'Sora', sans-serif;
+  font-size: 0.75rem; color: #666;
+  letter-spacing: 0.2em; font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+body.ver-3 .header h1 {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.4rem; font-weight: 800;
+  color: #0a0a0a; letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: #FFD400;
+  display: inline-block;
+  padding: 8px 24px;
+  margin-bottom: 8px;
+}
+body.ver-3 .header .subtitle {
+  font-size: 0.82rem; color: #666;
+  font-style: italic; margin-top: 8px;
+}
+body.ver-3 .section { margin-bottom: 22px; }
+body.ver-3 .section-title {
+  font-family: 'Sora', sans-serif;
+  font-size: 0.88rem; font-weight: 800;
+  color: white;
+  background: #0a0a0a;
+  padding: 8px 18px; border-radius: 0;
+  display: inline-block; margin-bottom: 14px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+body.ver-3 .section ol li {
+  padding-left: 34px; margin-bottom: 9px;
+  font-size: 0.86rem; line-height: 1.6;
+}
+body.ver-3 .section ol li::before {
+  content: counter(item, decimal-leading-zero);
+  top: 1px; width: 26px; height: 22px;
+  background: #FFD400; color: #0a0a0a;
+  border-radius: 0; font-size: 0.7rem;
+}
+body.ver-3 .section.highlight {
+  background: #fffbe0;
+  border-left: 4px solid #FFD400;
+  border-radius: 0;
+  padding: 14px 16px 14px 14px;
+  margin-left: -4px;
+}
+body.ver-3 .section.highlight .section-title {
+  background: #FFD400; color: #0a0a0a;
+}
+body.ver-3 .section.highlight ol li::before {
+  background: #0a0a0a; color: #FFD400;
+}
+body.ver-3 .footer {
+  padding-top: 20px;
+  border-top: 4px solid #0a0a0a;
+}
+body.ver-3 .footer-quote {
+  font-family: 'Sora', sans-serif;
+  font-size: 0.9rem; color: #0a0a0a;
+  font-weight: 800; letter-spacing: 0.02em;
+  margin-bottom: 10px;
+}
+body.ver-3 .footer-info {
+  font-size: 0.72rem; color: #666; line-height: 1.6;
+}
+body.ver-3 .footer-info strong { color: #0a0a0a; font-weight: 800; }
+body.ver-3 .print-btn {
+  background: #0a0a0a; color: #FFD400;
+  border-radius: 0;
+  font-family: 'Sora', sans-serif;
+  font-weight: 800; letter-spacing: 0.05em;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   VERSI 4: PREMIUM WATERMARK (Logo Transparan)
+   ═══════════════════════════════════════════════════════════ */
+body.ver-4 { background: #e8eaea; }
+body.ver-4 .page {
+  background: white;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  border-radius: 2px;
+}
+body.ver-4 .page::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: url('foto/logo.png');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 65%;
+  opacity: 0.05;
+  pointer-events: none; z-index: 0;
+}
+body.ver-4 .page::after {
+  content: '';
+  position: absolute; inset: 14px;
+  border: 2px solid #C9A961;
+  border-radius: 4px;
+  pointer-events: none; z-index: 1;
+}
+body.ver-4 .header {
+  padding-bottom: 18px;
+  margin-bottom: 22px;
+}
+body.ver-4 .header-logo { margin-bottom: 14px; }
+body.ver-4 .header-logo img {
+  height: 100px;
+  filter: drop-shadow(0 4px 12px rgba(26,92,92,0.15));
+}
+body.ver-4 .header-brand {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.8rem; font-weight: 800;
+  color: #1a5c5c; letter-spacing: 0.12em;
+  line-height: 1.1; margin-bottom: 4px;
+}
+body.ver-4 .header-tagline {
+  font-size: 0.75rem; color: #5a7373;
+  letter-spacing: 0.25em; font-weight: 600;
+  margin-bottom: 14px;
+  text-transform: uppercase;
+}
+body.ver-4 .header h1 {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.5rem; font-weight: 800;
+  color: #1a5c5c; letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding-top: 14px;
+  border-top: 1px solid #C9A961;
+  margin-bottom: 6px;
+}
+body.ver-4 .header .subtitle {
+  font-size: 0.82rem; color: #5a7373;
+  font-style: italic;
+}
+body.ver-4 .section { margin-bottom: 18px; }
+body.ver-4 .section-title {
+  font-family: 'Sora', sans-serif;
+  font-size: 0.92rem; font-weight: 800;
+  color: white;
+  background: linear-gradient(135deg, #1a5c5c 0%, #0d3d3d 100%);
+  padding: 7px 20px; border-radius: 50px;
+  display: inline-block; margin-bottom: 12px;
+  letter-spacing: 0.08em;
+  box-shadow: 0 3px 12px rgba(26,92,92,0.3);
+}
+body.ver-4 .section ol li {
+  padding-left: 32px; margin-bottom: 8px;
+  font-size: 0.85rem; line-height: 1.55;
+}
+body.ver-4 .section ol li::before {
+  content: counter(item);
+  top: 1px; width: 22px; height: 22px;
+  background: #C9A961; color: white;
+  border-radius: 50%; font-size: 0.72rem;
+  box-shadow: 0 2px 6px rgba(201,169,97,0.4);
+}
+body.ver-4 .section.highlight {
+  background: #fdf6e3;
+  border-left: 4px solid #C9A961;
+  border-radius: 8px;
+  padding: 14px 16px 14px 14px;
+  margin-left: -4px;
+}
+body.ver-4 .section.highlight .section-title {
+  background: #C9A961;
+}
+body.ver-4 .section.highlight ol li::before {
+  background: #1a5c5c;
+}
+body.ver-4 .footer {
+  padding-top: 20px;
+  border-top: 1px solid #C9A961;
+}
+body.ver-4 .footer-quote {
+  font-family: 'Sora', sans-serif;
+  font-size: 0.92rem; color: #1a5c5c;
+  font-weight: 700; font-style: italic;
+  margin-bottom: 8px;
+}
+body.ver-4 .footer-info {
+  font-size: 0.72rem; color: #5a7373; line-height: 1.55;
+}
+body.ver-4 .footer-info strong { color: #1a5c5c; }
+body.ver-4 .print-btn {
+  background: #1a5c5c; color: white;
+  box-shadow: 0 6px 24px rgba(26,92,92,0.4);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   VERSI 5: ELEGAN MAROON (Formal Klasik)
+   ═══════════════════════════════════════════════════════════ */
+body.ver-5 { background: #f0ebe6; font-family: 'Cormorant Garamond', Georgia, serif; }
+body.ver-5 .page {
+  background: #fefcf9;
+  box-shadow: 0 10px 40px rgba(109,22,22,0.2);
+  border-radius: 2px;
+}
+body.ver-5 .page::before {
+  content: '';
+  position: absolute; inset: 15px;
+  border: 2px solid #6D1616;
+  border-radius: 0;
+  pointer-events: none; z-index: 1;
+}
+body.ver-5 .page::after {
+  content: '';
+  position: absolute; inset: 20px;
+  border: 1px solid #B8860B;
+  border-radius: 0;
+  pointer-events: none; z-index: 1;
+  opacity: 0.6;
+}
+body.ver-5 .header {
+  padding-bottom: 20px;
+  margin-bottom: 22px;
+  border-bottom: 2px double #6D1616;
+}
+body.ver-5 .header-logo { margin-bottom: 12px; }
+body.ver-5 .header-logo img { height: 90px; }
+body.ver-5 .header-brand {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.1rem; font-weight: 700;
+  color: #6D1616; letter-spacing: 0.2em;
+  line-height: 1.1; margin-bottom: 4px;
+}
+body.ver-5 .header-tagline {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.85rem; color: #8B6F47;
+  letter-spacing: 0.2em; font-weight: 500;
+  font-style: italic;
+  margin-bottom: 16px;
+}
+body.ver-5 .header h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.9rem; font-weight: 700;
+  color: #6D1616; letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+body.ver-5 .header .subtitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem; color: #8B6F47;
+  font-style: italic;
+}
+body.ver-5 .section { margin-bottom: 20px; }
+body.ver-5 .section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.15rem; font-weight: 700;
+  color: white;
+  background: linear-gradient(135deg, #6D1616 0%, #4A0E0E 100%);
+  padding: 8px 24px; border-radius: 0;
+  display: inline-block; margin-bottom: 14px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  box-shadow: 0 3px 10px rgba(109,22,22,0.3);
+}
+body.ver-5 .section ol li {
+  padding-left: 34px; margin-bottom: 9px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem; line-height: 1.55;
+}
+body.ver-5 .section ol li::before {
+  content: counter(item);
+  top: 1px; width: 22px; height: 22px;
+  background: #B8860B; color: white;
+  border-radius: 50%; font-size: 0.8rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 700;
+}
+body.ver-5 .section.highlight {
+  background: #faf3e6;
+  border-left: 4px solid #B8860B;
+  border-radius: 0;
+  padding: 14px 16px 14px 14px;
+  margin-left: -4px;
+}
+body.ver-5 .section.highlight .section-title {
+  background: #B8860B; color: #4A0E0E;
+}
+body.ver-5 .section.highlight ol li::before {
+  background: #6D1616; color: #E6D194;
+}
+body.ver-5 .footer {
+  padding-top: 20px;
+  border-top: 2px double #6D1616;
+}
+body.ver-5 .footer-quote {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem; color: #6D1616;
+  font-weight: 700; font-style: italic;
+  margin-bottom: 10px;
+}
+body.ver-5 .footer-info {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.85rem; color: #8B6F47; line-height: 1.5;
+}
+body.ver-5 .footer-info strong { color: #6D1616; }
+body.ver-5 .print-btn {
+  background: #6D1616; color: #E6D194;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  box-shadow: 0 6px 24px rgba(109,22,22,0.4);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PRINT — yang ke-print hanya versi aktif
+   ═══════════════════════════════════════════════════════════ */
+@media print {
   html, body {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    color: var(--text);
-    background: #e8eaea;
-    padding: 24px 16px;
-    line-height: 1.5;
+    background: white !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
   }
+
+  .version-switcher,
+  .print-btn { display: none !important; }
 
   .page {
-    width: 21cm;
-    min-height: 29.7cm;
-    padding: 1.5cm 1.8cm 1cm 1.8cm;
-    margin: 0 auto;
-    background: white;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-    border-radius: 4px;
-    position: relative;
-    display: flex;
-    flex-direction: column;
+    width: 100% !important;
+    min-height: auto !important;
+    padding: 1cm 1.2cm !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
   }
 
-  .page::before {
-    content: '';
-    position: absolute;
-    inset: 12px;
-    border: 2px solid var(--teal);
-    border-radius: 6px;
-    pointer-events: none;
-  }
-  .page::after {
-    content: '';
-    position: absolute;
-    inset: 18px;
-    border: 1px solid var(--amber);
-    border-radius: 4px;
-    pointer-events: none;
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
   }
 
-  /* Header */
-  .header {
-    text-align: center;
-    padding-bottom: 18px;
-    margin-bottom: 22px;
-    border-bottom: 2px solid var(--teal);
-    position: relative;
-    z-index: 1;
-  }
+  @page { size: A4; margin: 0; }
 
-  .header-logo {
-    display: flex;
-    align-items: center;
+  .section { page-break-inside: avoid; break-inside: avoid; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   RESPONSIVE MOBILE
+   ═══════════════════════════════════════════════════════════ */
+@media screen and (max-width: 850px) {
+  body { padding: 80px 8px 12px 8px; }
+  .page { width: 100%; padding: 24px 20px; min-height: auto; }
+  .version-switcher {
+    top: 8px; right: 8px; left: 8px;
     justify-content: center;
-    gap: 14px;
-    margin-bottom: 12px;
+    flex-wrap: wrap;
   }
-
-  .header-logo img {
-    height: 70px;
-    width: auto;
-    object-fit: contain;
-  }
-
-  .header-text { text-align: left; }
-
-  .header-text .brand {
-    font-family: 'Sora', sans-serif;
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: var(--teal);
-    letter-spacing: 0.04em;
-    line-height: 1.1;
-    margin-bottom: 2px;
-  }
-
-  .header-text .tagline {
-    font-size: 0.75rem;
-    color: var(--muted);
-    letter-spacing: 0.08em;
-    font-weight: 500;
-  }
-
-  .header h1 {
-    font-family: 'Sora', sans-serif;
-    font-size: 1.35rem;
-    font-weight: 800;
-    color: var(--teal);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    margin-top: 8px;
-    padding-top: 12px;
-    border-top: 1px dashed var(--amber);
-  }
-
-  .header .subtitle {
-    font-size: 0.82rem;
-    color: var(--muted);
-    margin-top: 4px;
-    font-style: italic;
-  }
-
-  /* Content */
-  .content {
-    flex: 1;
-    position: relative;
-    z-index: 1;
-  }
-
-  .section {
-    margin-bottom: 18px;
-  }
-
-  .section-title {
-    font-family: 'Sora', sans-serif;
-    font-size: 0.95rem;
-    font-weight: 800;
-    color: white;
-    background: linear-gradient(135deg, var(--teal) 0%, #0d3d3d 100%);
-    padding: 7px 16px;
-    border-radius: 50px;
-    display: inline-block;
-    margin-bottom: 12px;
-    letter-spacing: 0.03em;
-    box-shadow: 0 3px 10px rgba(26, 92, 92, 0.25);
-  }
-
-  .section ol {
-    list-style: none;
-    counter-reset: item;
-    padding-left: 4px;
-  }
-
-  .section ol li {
-    position: relative;
-    padding-left: 32px;
-    margin-bottom: 8px;
-    font-size: 0.85rem;
-    line-height: 1.55;
-    text-align: justify;
-    counter-increment: item;
-  }
-
-  .section ol li::before {
-    content: counter(item);
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 22px;
-    height: 22px;
-    background: var(--amber);
-    color: var(--navy);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.7rem;
-    font-weight: 800;
-    font-family: 'Sora', sans-serif;
-  }
-
-  /* Highlight penting */
-  .section.highlight {
-    background: #fff9e6;
-    border-left: 4px solid var(--amber);
-    border-radius: 8px;
-    padding: 14px 16px 14px 14px;
-    margin-left: -4px;
-  }
-  .section.highlight .section-title {
-    background: var(--amber);
-    color: var(--navy);
-  }
-  .section.highlight ol li::before {
-    background: var(--navy);
-    color: var(--amber-lt);
-  }
-
-  /* Footer */
-  .footer {
-    margin-top: auto;
-    padding-top: 16px;
-    border-top: 2px solid var(--teal);
-    text-align: center;
-    position: relative;
-    z-index: 1;
-  }
-
-  .footer-quote {
-    font-family: 'Sora', sans-serif;
-    font-size: 0.82rem;
-    color: var(--teal);
-    font-weight: 700;
-    margin-bottom: 6px;
-    font-style: italic;
-  }
-
-  .footer-info {
-    font-size: 0.72rem;
-    color: var(--muted);
-    line-height: 1.5;
-  }
-
-  .footer-info strong {
-    color: var(--teal);
-  }
-
-  /* Tombol Print */
-  .print-btn {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    background: var(--teal);
-    color: white;
-    border: none;
-    padding: 14px 24px;
-    border-radius: 50px;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 0.92rem;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 6px 24px rgba(26, 92, 92, 0.4);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: transform 0.15s, box-shadow 0.15s;
-    z-index: 100;
-  }
-
-  .print-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 32px rgba(26, 92, 92, 0.5);
-  }
-
-  @media print {
-    html, body {
-      background: white;
-      padding: 0;
-      width: 100%;
-      height: auto;
-    }
-
-    .page {
-      width: 100%;
-      min-height: auto;
-      padding: 1cm 1.2cm;
-      box-shadow: none;
-      border-radius: 0;
-      margin: 0;
-    }
-
-    .print-btn { display: none !important; }
-
-    * {
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
-      color-adjust: exact !important;
-    }
-
-    @page {
-      size: A4;
-      margin: 0;
-    }
-
-    .section { page-break-inside: avoid; break-inside: avoid; }
-  }
-
-  @media screen and (max-width: 800px) {
-    body { padding: 12px 8px; }
-    .page { width: 100%; padding: 24px 20px; min-height: auto; }
-    .header-text .brand { font-size: 1.2rem; }
-    .header-logo img { height: 50px; }
-    .header h1 { font-size: 1.05rem; }
-    .section ol li { font-size: 0.8rem; padding-left: 28px; }
-    .section ol li::before { width: 20px; height: 20px; font-size: 0.65rem; }
-  }
+  .version-switcher button { font-size: 0.65rem; padding: 6px 8px; min-width: 50px; }
+  body .header-logo img { height: 70px; }
+  body .header h1 { font-size: 1.2rem; }
+  body .section ol li { font-size: 0.8rem; padding-left: 28px; }
+  body .section ol li::before { width: 20px; height: 20px; font-size: 0.65rem; }
+}
 </style>
 </head>
-<body>
+<body class="ver-1">
 
+<!-- ═══ SWITCHER VERSI ═══ -->
+<div class="version-switcher">
+  <button data-version="1" class="active">V1<small>Teal</small></button>
+  <button data-version="2">V2<small>Gold</small></button>
+  <button data-version="3">V3<small>Modern</small></button>
+  <button data-version="4">V4<small>Premium</small></button>
+  <button data-version="5">V5<small>Maroon</small></button>
+</div>
+
+<!-- ═══ HALAMAN TATA TERTIB ═══ -->
 <div class="page">
   <div class="header">
     <div class="header-logo">
       <img src="foto/logo.png" alt="Griya Aleena" onerror="this.style.display='none'">
-      <div class="header-text">
-        <div class="brand">GRIYA ALEENA</div>
-        <div class="tagline">KOS PUTRI NYAMAN · KAMPUS UNNES SEKARAN</div>
-      </div>
     </div>
+    <div class="header-brand">GRIYA ALEENA</div>
+    <div class="header-tagline">KOS PUTRI NYAMAN · KAMPUS UNNES SEKARAN</div>
     <h1>Tata Tertib Penghuni</h1>
     <div class="subtitle">Berlaku untuk seluruh penghuni kos tanpa terkecuali</div>
   </div>
 
   <div class="content">
-
-    <!-- TATA TERTIB -->
     <div class="section">
       <div class="section-title">TATA TERTIB</div>
       <ol>
@@ -330,7 +799,6 @@
       </ol>
     </div>
 
-    <!-- LARANGAN -->
     <div class="section highlight">
       <div class="section-title">LARANGAN</div>
       <ol>
@@ -342,7 +810,6 @@
       </ol>
     </div>
 
-    <!-- KEAMANAN DAN KENYAMANAN -->
     <div class="section">
       <div class="section-title">KEAMANAN DAN KENYAMANAN</div>
       <ol>
@@ -351,7 +818,6 @@
         <li>Penyewa dilarang meminjamkan kunci kamar dan/atau gerbang kepada orang lain tanpa seizin Pemilik Kos.</li>
       </ol>
     </div>
-
   </div>
 
   <div class="footer">
@@ -363,9 +829,38 @@
   </div>
 </div>
 
-<button class="print-btn" onclick="window.print()">
-  🖨️ Print / Simpan PDF
-</button>
+<!-- ═══ TOMBOL PRINT ═══ -->
+<button class="print-btn" onclick="window.print()">🖨️ Print / Simpan PDF</button>
+
+<!-- ═══ JAVASCRIPT SWITCHER ═══ -->
+<script>
+  // Cek versi terakhir dari localStorage
+  const savedVer = localStorage.getItem('tatib_version') || '1';
+  document.body.className = `ver-${savedVer}`;
+  document.querySelectorAll('.version-switcher button').forEach(b => {
+    b.classList.toggle('active', b.dataset.version === savedVer);
+  });
+
+  // Handle klik switcher
+  document.querySelectorAll('.version-switcher button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const ver = btn.dataset.version;
+      document.body.className = `ver-${ver}`;
+      localStorage.setItem('tatib_version', ver);
+      document.querySelectorAll('.version-switcher button').forEach(b => {
+        b.classList.toggle('active', b === btn);
+      });
+    });
+  });
+
+  // Keyboard shortcut 1-5 untuk ganti versi
+  document.addEventListener('keydown', (e) => {
+    if (['1','2','3','4','5'].includes(e.key)) {
+      const btn = document.querySelector(`.version-switcher button[data-version="${e.key}"]`);
+      if (btn) btn.click();
+    }
+  });
+</script>
 
 </body>
 </html>
