@@ -2,7 +2,7 @@
 // ngadmin.js - Dashboard Okupansi Griya Aleena
 // ============================================================
 
-const API = 'https://griya-api.lintanglangitt.workers.dev';
+const API = 'https://griya-api.lintangglangitt.workers.dev';
 let TOKEN = localStorage.getItem('ga_token') || '';
 let USER = JSON.parse(localStorage.getItem('ga_user') || '{}');
 let ROOMS = [];
