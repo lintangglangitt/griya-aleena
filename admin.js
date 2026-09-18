@@ -443,7 +443,6 @@ function openInvoice(id) {
     <div class="inv-total">
       <div>
         <div class="inv-total-label">Total Pembayaran</div>
-        <span class="inv-status ${escapeHtml(o.status_bayar)}">${escapeHtml(statusLabel)}</span>
       </div>
       <div class="inv-total-value">${escapeHtml(rupiah(o.harga_total))}</div>
     </div>
@@ -602,6 +601,7 @@ function openPerjanjian(id) {
     </div>
     <p>Selanjutnya disebut <strong>Pemilik</strong>.</p>
 
+
     <h2>2. Penyewa Kos</h2>
     <div class="pj-info-block">
       ${field('Nama', o.nama_penyewa)}
@@ -610,6 +610,14 @@ function openPerjanjian(id) {
       ${field('Nomor HP', o.no_hp)}
     </div>
     <p>Selanjutnya disebut <strong>Penyewa</strong>.</p>
+
+    <h2>3. Data Orang Tua/Wali</h2>
+    <div class="pj-info-block">
+      ${field('Nama', o.nama_ortu || '')}
+      ${field('Nomor KTP/SIM', o.no_ktp_ortu || '')}
+      ${field('Nomor HP', o.no_hp_ortu || '')}
+    </div>
+    <p>Data orang tua/wali di atas dicatat sebagai penanggung jawab.</p>
 
     <p style="margin-top:16px;">
       Pemilik dan Penyewa sepakat mengikat diri dalam Perjanjian dan Tata Tertib Bersama dengan ketentuan sebagai berikut:
@@ -717,7 +725,9 @@ function openPerjanjian(id) {
       Demikian perjanjian ini dibuat dan ditandatangani oleh kedua belah pihak tanpa paksaan dari pihak mana pun.
     </p>
 
-    <p style="text-align:right;margin-top:16px;">Semarang, <span class="pj-fill pj-fill-sm">&nbsp;</span></p>
+    <div class="pj-tanggal">
+      Semarang, <span class="pj-tanggal-fill">&nbsp;</span>
+    </div>
 
     <div class="pj-sign-row">
       <div class="pj-sign-col">
