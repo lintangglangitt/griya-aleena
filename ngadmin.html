@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard Admin – Griya Aleena</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="admin.css">
-<link rel="stylesheet" href="print.css">
 <link rel="icon" type="image/png" sizes="32x32" href="foto/favicon.png">
 <link rel="icon" type="image/png" sizes="16x16" href="foto/favicon.png">
 <link rel="apple-touch-icon" href="foto/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+<link rel="stylesheet" href="print.css">
 </head>
 <body class="admin-body">
 
@@ -37,7 +37,7 @@
   <div class="stat-card"><div class="stat-label">Okupansi</div><div class="stat-num amber" id="st-okupansi">–</div></div>
 </section>
 
-<!-- STATS ROW 2 (Pembayaran) -->
+<!-- STATS ROW 2 -->
 <section class="stats-grid income-grid">
   <div class="stat-card income clickable" id="card-income-all" data-filter="all" role="button" tabindex="0">
     <div class="stat-label">Pembayaran Keseluruhan</div>
@@ -100,32 +100,90 @@
 
 <!-- MODAL: Okupansi -->
 <div class="modal" id="modal-occ">
-  <div class="modal-card">
+  <div class="modal-card modal-card-wide">
     <h3 id="modal-title">Tambah Okupansi</h3>
     <form id="form-occ">
       <input type="hidden" id="f-id">
-      <div class="grid-2">
-        <label>Kamar
-          <select id="f-room" required></select>
-        </label>
+
+      <!-- ═══ DATA KONTRAK ═══ -->
+      <div class="form-section">
+        <div class="form-section-title">📋 Data Kontrak</div>
+        <div class="grid-2">
+          <label>Kamar
+            <select id="f-room" required></select>
+          </label>
+          <label>Tipe Sewa
+            <select id="f-tipe" required>
+              <option value="harian">Harian</option>
+              <option value="mingguan">Mingguan</option>
+              <option value="bulanan" selected>Bulanan</option>
+              <option value="semesteran">Semesteran</option>
+              <option value="tahunan">Tahunan</option>
+            </select>
+          </label>
+          <label>Tanggal Mulai
+            <input type="date" id="f-mulai" required>
+          </label>
+          <label>Tanggal Selesai <small class="auto-hint">⚡ auto-isi</small>
+            <input type="date" id="f-selesai" required>
+          </label>
+          <label>Harga Total (Rp)
+            <input type="number" id="f-harga" min="0" step="1000" required>
+          </label>
+          <label>Link Kontrak (Drive/URL)
+            <input type="url" id="f-link" placeholder="https://drive.google.com/…">
+          </label>
+        </div>
+      </div>
+
+      <!-- ═══ DATA PENYEWA ═══ -->
+      <div class="form-section">
+        <div class="form-section-title">👤 Data Penyewa</div>
         <label>Nama Penyewa
           <input type="text" id="f-nama" required>
         </label>
-        <label>No. HP (opsional)
+        <label>No. KTP/SIM
+          <input type="text" id="f-ktp" placeholder="16 digit NIK / No SIM">
+        </label>
+        <label>Alamat
+          <input type="text" id="f-alamat" placeholder="Alamat lengkap sesuai KTP">
+        </label>
+        <label>Nomor HP
           <input type="text" id="f-hp" placeholder="08xx…">
         </label>
         <label>Asal Kampus (opsional)
           <input type="text" id="f-kampus" placeholder="UNNES, dll.">
         </label>
-        <label>Tipe Sewa
-          <select id="f-tipe" required>
-            <option value="harian">Harian</option>
-            <option value="mingguan">Mingguan</option>
-            <option value="bulanan" selected>Bulanan</option>
-            <option value="semesteran">Semesteran</option>
-            <option value="tahunan">Tahunan</option>
-          </select>
+      </div>
+
+      <!-- ═══ DATA ORTU/WALI ═══ -->
+      <div class="form-section">
+        <div class="form-section-title">👨‍👩‍👧 Data Orang Tua/Wali <small>(Opsional untuk perjanjian)</small></div>
+        <label>Nama Orang Tua/Wali
+          <input type="text" id="f-nama-ortu" placeholder="Nama lengkap orang tua/wali">
         </label>
+        <label>No. KTP/SIM
+          <input type="text" id="f-ktp-ortu" placeholder="16 digit NIK / No SIM">
+        </label>
+        <label>Alamat
+          <input type="text" id="f-alamat-ortu" placeholder="Alamat lengkap orang tua/wali">
+        </label>
+        <label>Nomor HP
+          <input type="text" id="f-hp-ortu" placeholder="08xx…">
+        </label>
+      </div>
+
+      <!-- ═══ CATATAN ═══ -->
+      <div class="form-section">
+        <div class="form-section-title">📝 Catatan</div>
+        <label>
+          <textarea id="f-catatan" rows="2" placeholder="Mis. dapat diskon prestasi"></textarea>
+        </label>
+      </div>
+
+      <!-- ═══ STATUS BAYAR ═══ -->
+      <div class="form-section">
+        <div class="form-section-title">💰 Status Pembayaran</div>
         <label>Status Bayar
           <select id="f-status" required>
             <option value="lunas">✅ Lunas</option>
@@ -133,42 +191,7 @@
             <option value="belum">❌ Belum</option>
           </select>
         </label>
-        <label>Tanggal Mulai
-          <input type="date" id="f-mulai" required>
-        </label>
-        <label>Tanggal Selesai
-          <input type="date" id="f-selesai" required>
-        </label>
-        <label>Harga Total (Rp)
-          <input type="number" id="f-harga" min="0" step="1000" required>
-        </label>
-        <label>Link Kontrak (Drive/URL)
-          <input type="url" id="f-link" placeholder="https://drive.google.com/…">
-        </label>
       </div>
-
-      <h4 style="margin-top:20px;margin-bottom:12px;color:var(--teal);font-size:0.9rem;">Data untuk Perjanjian (opsional)</h4>
-      <div class="grid-2">
-        <label>No. KTP/SIM Penyewa
-          <input type="text" id="f-ktp" placeholder="16 digit NIK / No SIM">
-        </label>
-        <label>No. HP Orang Tua
-          <input type="text" id="f-hp-ortu" placeholder="08xx…">
-        </label>
-        <label>Nama Orang Tua
-          <input type="text" id="f-nama-ortu" placeholder="Nama lengkap">
-        </label>
-        <label>No. KTP/SIM Orang Tua
-          <input type="text" id="f-ktp-ortu" placeholder="16 digit NIK / No SIM">
-        </label>
-      </div>
-      <label>Alamat Penyewa
-        <textarea id="f-alamat" rows="2" placeholder="Alamat lengkap sesuai KTP"></textarea>
-      </label>
-
-      <label>Catatan
-        <textarea id="f-catatan" rows="2" placeholder="Mis. dapat diskon prestasi"></textarea>
-      </label>
 
       <div class="modal-actions">
         <button type="button" class="btn-ghost" data-close>Batal</button>
