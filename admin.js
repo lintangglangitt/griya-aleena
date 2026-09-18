@@ -17,7 +17,7 @@ const PEMILIK = {
   no_ktp: '',
   alamat: 'Jl. Margasatwa, Gg. Sadewa No. 14, Sekaran 005/005, Kec. Gunungpati, Kota Semarang, Jawa Tengah, 50229',
   alamat_singkat: 'Jl. Margasatwa, Gg. Sadewa No. 14, Sekaran, Gunungpati, Semarang.',
-  no_hp: '',
+  no_hp: '0898-5446-121',
 };
 
 if (!TOKEN) window.location.href = 'ibun.html';
@@ -46,6 +46,9 @@ async function api(path, options = {}) {
 // ─── Utility ───────────────────────────────────────────────
 function rupiah(n) {
   return 'Rp' + new Intl.NumberFormat('id-ID').format(n || 0);
+}
+function rupiahFull(n) {
+  return 'Rp' + new Intl.NumberFormat('id-ID').format(n || 0) + ',00';
 }
 function fmtDate(s) {
   if (!s) return '—';
@@ -160,9 +163,9 @@ async function loadStats() {
   document.getElementById('st-terisi').textContent = s.terisi;
   document.getElementById('st-kosong').textContent = s.kosong;
   document.getElementById('st-okupansi').textContent = s.okupansi_persen + '%';
-  document.getElementById('st-income-all').textContent = rupiah(s.penghasilan_keseluruhan);
-  document.getElementById('st-income-year').textContent = rupiah(s.penghasilan_tahun_ini);
-  document.getElementById('st-income-month').textContent = rupiah(s.penghasilan_bulan_ini);
+  document.getElementById('st-income-all').textContent = rupiahFull(s.penghasilan_keseluruhan);
+  document.getElementById('st-income-year').textContent = rupiahFull(s.penghasilan_tahun_ini);
+  document.getElementById('st-income-month').textContent = rupiahFull(s.penghasilan_bulan_ini);
 }
 
 // ─── Kartu Pembayaran jadi Filter ──────────────────────────
@@ -355,7 +358,7 @@ function renderTable() {
         <td><span class="badge tipe">${escapeHtml(o.tipe_sewa)}</span></td>
         <td>${fmtDate(o.tanggal_mulai)}</td>
         <td>${fmtDate(o.tanggal_selesai)}</td>
-        <td><strong>${rupiah(o.harga_total)}</strong></td>
+        <td><strong>${rupiahFull(o.harga_total)}</strong></td>
         <td><span class="badge ${badgeClass}">${escapeHtml(o.status_bayar)}</span></td>
         <td>${link}</td>
         <td>
@@ -395,7 +398,7 @@ function buildDocHeader(title, no) {
         <div>
           <h1>GRIYA ALEENA</h1>
           <p>Kos Putri Nyaman, Kampus Unnes Sekaran.<br>
-          ${escapeHtml(PEMILIK.alamat_singkat)}</p>
+          ${escapeHtml(PEMILIK.alamat_singkat)} Telp/WA: ${escapeHtml(PEMILIK.no_hp)}</p>
         </div>
       </div>
       <div class="inv-title-block">
@@ -446,7 +449,7 @@ function openInvoice(id) {
             ${escapeHtml(fmtDateLong(o.tanggal_mulai))} — ${escapeHtml(fmtDateLong(o.tanggal_selesai))}
             <div class="inv-period">Durasi: ${escapeHtml(durasi)}</div>
           </td>
-          <td class="inv-amount">${escapeHtml(rupiah(o.harga_total))}</td>
+          <td class="inv-amount">${escapeHtml(rupiahFull(o.harga_total))}</td>
         </tr>
       </tbody>
     </table>
@@ -455,7 +458,7 @@ function openInvoice(id) {
       <div>
         <div class="inv-total-label">Total Pembayaran</div>
       </div>
-      <div class="inv-total-value">${escapeHtml(rupiah(o.harga_total))}</div>
+      <div class="inv-total-value">${escapeHtml(rupiahFull(o.harga_total))}</div>
     </div>
 
     ${o.catatan ? `<div class="inv-notes"><strong>Catatan:</strong> ${escapeHtml(o.catatan)}</div>` : ''}
@@ -525,14 +528,14 @@ function openKuitansi(id) {
             ${escapeHtml(fmtDateLong(o.tanggal_mulai))} — ${escapeHtml(fmtDateLong(o.tanggal_selesai))}
             <div class="inv-period">Durasi: ${escapeHtml(durasi)}</div>
           </td>
-          <td class="inv-amount">${escapeHtml(rupiah(o.harga_total))}</td>
+          <td class="inv-amount">${escapeHtml(rupiahFull(o.harga_total))}</td>
         </tr>
       </tbody>
     </table>
 
     <div class="kuitansi-amount-box">
       <div class="kuitansi-amount-label">Jumlah Dibayar</div>
-      <div class="kuitansi-amount-value">${escapeHtml(rupiah(o.harga_total))}</div>
+      <div class="kuitansi-amount-value">${escapeHtml(rupiahFull(o.harga_total))}</div>
       <div class="kuitansi-amount-text">(${escapeHtml(terbilangRupiah(o.harga_total))})</div>
       ${o.status_bayar === 'lunas' ? '<div class="kuitansi-check">✓ LUNAS</div>' : ''}
       ${o.status_bayar === 'dp' ? '<div class="kuitansi-check" style="background:#F5A623">DP</div>' : ''}
@@ -586,7 +589,7 @@ function openPerjanjian(id) {
     </div>
   `;
 
-  const totalBiaya = rupiah(o.harga_total);
+  const totalBiaya = rupiahFull(o.harga_total);
   const tipeUpper = o.tipe_sewa.charAt(0).toUpperCase() + o.tipe_sewa.slice(1);
   const kamarTipe = o.tipe === 'AC' ? 'AC' : 'NON AC';
 
@@ -621,16 +624,13 @@ function openPerjanjian(id) {
     </div>
     <p>Selanjutnya disebut <strong>Penyewa</strong>.</p>
 
-     <div class="keep-together">
-      <h2>3. Data Orang Tua/Wali</h2>
-      <div class="pj-info-block">
-        ${field('Nama', o.nama_ortu || '')}
-        ${field('Nomor KTP/SIM', o.no_ktp_ortu || '')}
-        ${field('Nomor HP', o.no_hp_ortu || '')}
-      </div>
-      <p>Data orang tua/wali di atas dicatat sebagai penanggung jawab.</p>
+    <h2>3. Data Orang Tua/Wali</h2>
+    <div class="pj-info-block">
+      ${field('Nama', o.nama_ortu || '')}
+      ${field('Nomor KTP/SIM', o.no_ktp_ortu || '')}
+      ${field('Nomor HP', o.no_hp_ortu || '')}
     </div>
-
+    <p>Data orang tua/wali di atas dicatat sebagai penanggung jawab.</p>
 
     <p style="margin-top:16px;">
       Pemilik dan Penyewa sepakat mengikat diri dalam Perjanjian dan Tata Tertib Bersama dengan ketentuan sebagai berikut:
@@ -765,8 +765,7 @@ function openPerjanjian(id) {
     <div class="inv-footer">
       Perjanjian ini dicetak otomatis dari sistem Griya Aleena. Wajib ditandatangani oleh kedua pihak.
     </div>
-    
-     <div class="page-number"></div>
+
     <div class="invoice-actions">
       <button class="inv-btn-close" onclick="closePerjanjian()">Tutup</button>
       <button class="inv-btn-print" onclick="printDoc('Perjanjian - ${escapeHtml(o.nama_penyewa).replace(/'/g, "\\'")}')">🖨️ Print / Simpan PDF</button>
