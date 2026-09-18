@@ -13,11 +13,12 @@ let ACTIVE_INCOME_FILTER = null;
 
 // ─── Konfigurasi Pemilik ──────────────────────────────────
 const PEMILIK = {
-  nama: '',
-  no_ktp: '',
+  nama: 'Nawang Wulan',
+  no_ktp: '3304025911900001',
   alamat: 'Jl. Margasatwa, Gg. Sadewa No. 14, Sekaran 005/005, Kec. Gunungpati, Kota Semarang, Jawa Tengah, 50229',
   alamat_singkat: 'Jl. Margasatwa, Gg. Sadewa No. 14, Sekaran, Gunungpati, Semarang.',
-  no_hp: '0898-5446-121',
+  no_hp: '0898-5446-121',              // untuk header invoice & kuitansi
+  no_hp_perjanjian: '0899-5677-419',   // untuk perjanjian Pemilik Kos
 };
 
 if (!TOKEN) window.location.href = 'ibun.html';
@@ -611,8 +612,9 @@ function openPerjanjian(id) {
       ${field('Nama', PEMILIK.nama)}
       ${field('Nomor KTP/SIM', PEMILIK.no_ktp)}
       ${field('Alamat', PEMILIK.alamat)}
-      ${field('Nomor HP', '')}
+      ${field('Nomor HP/WA', PEMILIK.no_hp_perjanjian)}
     </div>
+    
     <p>Selanjutnya disebut <strong>Pemilik</strong>.</p>
 
     <h2>2. Penyewa Kos</h2>
