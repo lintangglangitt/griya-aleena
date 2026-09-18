@@ -631,9 +631,6 @@ function openPerjanjian(id) {
       <p>Data orang tua/wali di atas dicatat sebagai penanggung jawab.</p>
     </div>
 
-    
-<div class="page-break-before"></div>
-
 
     <p style="margin-top:16px;">
       Pemilik dan Penyewa sepakat mengikat diri dalam Perjanjian dan Tata Tertib Bersama dengan ketentuan sebagai berikut:
