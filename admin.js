@@ -608,6 +608,7 @@ function openPerjanjian(id) {
       ${field('Nama', PEMILIK.nama)}
       ${field('Nomor KTP/SIM', PEMILIK.no_ktp)}
       ${field('Alamat', PEMILIK.alamat)}
+      ${field('Nomor HP', '')}
     </div>
     <p>Selanjutnya disebut <strong>Pemilik</strong>.</p>
 
@@ -620,13 +621,19 @@ function openPerjanjian(id) {
     </div>
     <p>Selanjutnya disebut <strong>Penyewa</strong>.</p>
 
-    <h2>3. Data Orang Tua/Wali</h2>
-    <div class="pj-info-block">
-      ${field('Nama', o.nama_ortu || '')}
-      ${field('Nomor KTP/SIM', o.no_ktp_ortu || '')}
-      ${field('Nomor HP', o.no_hp_ortu || '')}
+     <div class="keep-together">
+      <h2>3. Data Orang Tua/Wali</h2>
+      <div class="pj-info-block">
+        ${field('Nama', o.nama_ortu || '')}
+        ${field('Nomor KTP/SIM', o.no_ktp_ortu || '')}
+        ${field('Nomor HP', o.no_hp_ortu || '')}
+      </div>
+      <p>Data orang tua/wali di atas dicatat sebagai penanggung jawab.</p>
     </div>
-    <p>Data orang tua/wali di atas dicatat sebagai penanggung jawab.</p>
+
+    
+<div class="page-break-before"></div>
+
 
     <p style="margin-top:16px;">
       Pemilik dan Penyewa sepakat mengikat diri dalam Perjanjian dan Tata Tertib Bersama dengan ketentuan sebagai berikut:
@@ -761,7 +768,8 @@ function openPerjanjian(id) {
     <div class="inv-footer">
       Perjanjian ini dicetak otomatis dari sistem Griya Aleena. Wajib ditandatangani oleh kedua pihak.
     </div>
-
+    
+     <div class="page-number"></div>
     <div class="invoice-actions">
       <button class="inv-btn-close" onclick="closePerjanjian()">Tutup</button>
       <button class="inv-btn-print" onclick="printDoc('Perjanjian - ${escapeHtml(o.nama_penyewa).replace(/'/g, "\\'")}')">🖨️ Print / Simpan PDF</button>
