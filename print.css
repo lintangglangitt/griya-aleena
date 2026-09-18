@@ -558,3 +558,63 @@
   page-break-inside: avoid !important;
   break-inside: avoid !important;
 }
+
+
+
+/* ============================================ */
+/* UPDATE: Page break manual + nomor halaman */
+/* ============================================ */
+
+/* ─── PAGE BREAK MANUAL ─── */
+/* Pakai class ini untuk memaksa halaman baru */
+.perjanjian-wrapper .page-break-before {
+  page-break-before: always !important;
+  break-before: page !important;
+}
+
+.perjanjian-wrapper .page-break-after {
+  page-break-after: always !important;
+  break-after: page !important;
+}
+
+/* Jangan break di dalam section yang tidak seharusnya */
+.perjanjian-wrapper .keep-together {
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+}
+
+/* ─── NOMOR HALAMAN ─── */
+/* Nomor halaman di bawah center — pakai CSS counter */
+@media print {
+  /* Sembunyikan nomor halaman dari body utama */
+  body {
+    counter-reset: page;
+  }
+  
+  /* Nomor halaman di setiap wrapper */
+  .invoice-wrapper {
+    position: relative;
+  }
+  
+  /* Nomor halaman muncul di bawah setiap halaman */
+  .page-number {
+    display: block !important;
+    position: fixed;
+    bottom: 0.5cm;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 0.75rem;
+    color: #5a7373;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+  
+  .page-number::after {
+    content: "Halaman " counter(page);
+  }
+}
+
+/* Sembunyikan nomor halaman di layar (hanya muncul saat print) */
+.page-number {
+  display: none;
+}
