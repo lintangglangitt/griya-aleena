@@ -12,6 +12,7 @@ let ACTIVE_ROOM_FILTER = 'all';
 let ACTIVE_INCOME_FILTER = null;
 
 // ─── Konfigurasi Pemilik (untuk perjanjian) ────────────────
+
 const PEMILIK = {
   nama: 'Hakim',
   no_ktp: '',
@@ -387,12 +388,14 @@ function openInvoice(id) {
     <div class="inv-header">
       <div class="inv-brand">
         <img src="foto/logo.png" alt="" onerror="this.style.display='none'">
+
         <div>
           <h1>GRIYA ALEENA</h1>
           <p>Kos Putri Kampus UNNES Sekaran<br>
-          Jl. Sekaran, Gunungpati, Semarang<br>
+          ${escapeHtml(PEMILIK.alamat_singkat)}<br>
           Telp/WA: ${escapeHtml(PEMILIK.no_hp)}</p>
         </div>
+        
       </div>
       <div class="inv-title-block">
         <h2>INVOICE</h2>
@@ -443,7 +446,7 @@ function openInvoice(id) {
 
     <div class="inv-signature">
       <div>Hormat kami,</div>
-      <div class="inv-sign-line">${escapeHtml(PEMILIK.nama)}</div>
+      <div class="inv-sign-line">&nbsp;</div>
       <div class="inv-sign-role">Pemilik Griya Aleena</div>
     </div>
 
@@ -481,13 +484,14 @@ function openKuitansi(id) {
     <div class="inv-header">
       <div class="inv-brand">
         <img src="foto/logo.png" alt="" onerror="this.style.display='none'">
-        <div>
+
+         <div>
           <h1>GRIYA ALEENA</h1>
           <p>Kos Putri Kampus UNNES Sekaran<br>
-          Jl. Sekaran, Gunungpati, Semarang<br>
+          ${escapeHtml(PEMILIK.alamat_singkat)}<br>
           Telp/WA: ${escapeHtml(PEMILIK.no_hp)}</p>
         </div>
-      </div>
+        
       <div class="inv-title-block">
         <h2>KUITANSI</h2>
         <div class="inv-no">No. ${escapeHtml(noKuitansi)}</div>
@@ -542,7 +546,7 @@ function openKuitansi(id) {
 
     <div class="inv-signature">
       <div>Penerima,</div>
-      <div class="inv-sign-line">${escapeHtml(PEMILIK.nama)}</div>
+      <div class="inv-sign-line">&nbsp;</div>
       <div class="inv-sign-role">Pemilik Griya Aleena</div>
     </div>
 
@@ -572,14 +576,23 @@ function openPerjanjian(id) {
   const o = OCCS.find(x => x.id === id);
   if (!o) return;
 
-  const fill = (v) => v ? `<span class="pj-fill">${escapeHtml(v)}</span>` : '<span class="pj-fill">&nbsp;</span>';
-  const fillLg = (v) => v ? `<span class="pj-fill pj-fill-lg">${escapeHtml(v)}</span>` : '<span class="pj-fill pj-fill-lg">&nbsp;</span>';
+  const field = (label, value) => `
+    <div class="pj-field">
+      <div class="pj-label">${escapeHtml(label)}</div>
+      <div class="pj-colon">:</div>
+      <div class="pj-value-line ${value ? '' : 'empty'}">${value ? escapeHtml(value) : '&nbsp;'}</div>
+    </div>
+  `;
 
   const totalBiaya = rupiah(o.harga_total);
   const tipeUpper = o.tipe_sewa.charAt(0).toUpperCase() + o.tipe_sewa.slice(1);
   const kamarTipe = o.tipe === 'AC' ? 'AC' : 'NON AC';
 
   const html = `
+    <div class="perjanjian-logo">
+      <img src="foto/logo.png" alt="Griya Aleena" onerror="this.style.display='none'">
+    </div>
+
     <h1>PERJANJIAN DAN TATA TERTIB BERSAMA<br>GRIYA ALEENA</h1>
 
     <p>
@@ -590,19 +603,19 @@ function openPerjanjian(id) {
 
     <h2>1. Pemilik Kos</h2>
     <div class="pj-info-block">
-      <p>Nama: ${fill(PEMILIK.nama)}</p>
-      <p>Nomor KTP/SIM: ${fill(PEMILIK.no_ktp)}</p>
-      <p>Alamat: ${fillLg(PEMILIK.alamat)}</p>
-      <p>Nomor HP: ${fill(PEMILIK.no_hp)}</p>
+      ${field('Nama', PEMILIK.nama)}
+      ${field('Nomor KTP/SIM', PEMILIK.no_ktp)}
+      ${field('Alamat', PEMILIK.alamat)}
+      ${field('Nomor HP', PEMILIK.no_hp)}
     </div>
     <p>Selanjutnya disebut <strong>Pemilik</strong>.</p>
 
     <h2>2. Penyewa Kos</h2>
     <div class="pj-info-block">
-      <p>Nama: ${fill(o.nama_penyewa)}</p>
-      <p>Nomor KTP/SIM: ${fill(o.no_ktp)}</p>
-      <p>Alamat: ${fillLg(o.alamat_penyewa)}</p>
-      <p>Nomor HP: ${fill(o.no_hp)}</p>
+      ${field('Nama', o.nama_penyewa)}
+      ${field('Nomor KTP/SIM', o.no_ktp)}
+      ${field('Alamat', o.alamat_penyewa)}
+      ${field('Nomor HP', o.no_hp)}
     </div>
     <p>Selanjutnya disebut <strong>Penyewa</strong>.</p>
 
@@ -640,7 +653,7 @@ function openPerjanjian(id) {
 
     <h2>Pasal 2 – Masa Sewa</h2>
     <ol>
-      <li>Masa sewa kamar kos dimulai pada tanggal ${fill(o.tanggal_mulai)} dan akan berakhir pada tanggal ${fill(o.tanggal_selesai)}.</li>
+      <li>Masa sewa kamar kos dimulai pada tanggal <strong>${escapeHtml(fmtDateLong(o.tanggal_mulai))}</strong> dan akan berakhir pada tanggal <strong>${escapeHtml(fmtDateLong(o.tanggal_selesai))}</strong>.</li>
       <li>Perpanjangan/pengakhiran sewa harus diinformasikan oleh Penyewa paling lambat 30 (tiga puluh) hari sebelum masa sewa berakhir.</li>
       <li>Keterlambatan menginformasikan perpanjangan/pengakhiran sewa kepada Pemilik dapat berakibat denda bagi Penyewa.</li>
     </ol>
@@ -650,9 +663,9 @@ function openPerjanjian(id) {
       <li>Biaya sewa yang disepakati Para Pihak adalah sebagai berikut:
         <div class="pj-info-block" style="margin-top:8px;">
           <p><strong>Kamar ${escapeHtml(kamarTipe)}</strong></p>
-          <p>Durasi: <strong>${escapeHtml(tipeUpper)}</strong></p>
-          <p>Biaya: <strong>${escapeHtml(totalBiaya)}</strong></p>
-          <p>Periode: ${escapeHtml(fmtDateLong(o.tanggal_mulai))} — ${escapeHtml(fmtDateLong(o.tanggal_selesai))}</p>
+          ${field('Durasi', tipeUpper)}
+          ${field('Biaya', totalBiaya)}
+          ${field('Periode', fmtDateLong(o.tanggal_mulai) + ' — ' + fmtDateLong(o.tanggal_selesai))}
         </div>
       </li>
       <li>Pembayaran harus dilunasi sebelum unit kamar ditempati oleh Penyewa.</li>
@@ -712,7 +725,7 @@ function openPerjanjian(id) {
       Demikian perjanjian ini dibuat dan ditandatangani oleh kedua belah pihak tanpa paksaan dari pihak mana pun.
     </p>
 
-    <p style="text-align:right;margin-top:16px;">Semarang, ${fill('')}</p>
+    <p style="text-align:right;margin-top:16px;">Semarang, <span class="pj-fill pj-fill-sm">&nbsp;</span></p>
 
     <div class="pj-sign-row">
       <div class="pj-sign-col">
@@ -735,9 +748,9 @@ function openPerjanjian(id) {
       ${o.nama_ortu || o.no_ktp_ortu || o.no_hp_ortu ? `
         <div class="pj-info-block" style="margin-top:12px;">
           <p><strong>Data Orang Tua/Wali:</strong></p>
-          ${o.nama_ortu ? `<p>Nama: ${fill(o.nama_ortu)}</p>` : ''}
-          ${o.no_ktp_ortu ? `<p>No. KTP/SIM: ${fill(o.no_ktp_ortu)}</p>` : ''}
-          ${o.no_hp_ortu ? `<p>No. HP: ${fill(o.no_hp_ortu)}</p>` : ''}
+          ${o.nama_ortu ? field('Nama', o.nama_ortu) : ''}
+          ${o.no_ktp_ortu ? field('No. KTP/SIM', o.no_ktp_ortu) : ''}
+          ${o.no_hp_ortu ? field('No. HP', o.no_hp_ortu) : ''}
         </div>
       ` : ''}
     </div>
