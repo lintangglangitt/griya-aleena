@@ -457,7 +457,7 @@ function openInvoice(id) {
 
     <div class="inv-total">
       <div>
-        <div class="inv-total-label">Total Pembayaran</div>
+        <div class="inv-total-label">Total Tagihan</div>
       </div>
       <div class="inv-total-value">${escapeHtml(rupiahFull(o.harga_total))}</div>
     </div>
