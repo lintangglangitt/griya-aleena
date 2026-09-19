@@ -164,6 +164,122 @@ document.getElementById('btn-logout').addEventListener('click', async () => {
   window.location.href = 'ibun.html';
 });
 
+// ─── Analitik ─────────────────────────────────────────────
+document.getElementById('btn-analytics').addEventListener('click', async () => {
+  document.getElementById('modal-analytics').classList.add('open');
+  await loadAnalytics();
+});
+
+document.getElementById('analytics-period').addEventListener('change', loadAnalytics);
+
+document.querySelectorAll('[data-close-analytics]').forEach(b =>
+  b.addEventListener('click', () => document.getElementById('modal-analytics').classList.remove('open')));
+
+document.getElementById('modal-analytics').addEventListener('click', e => {
+  if (e.target.id === 'modal-analytics') {
+    document.getElementById('modal-analytics').classList.remove('open');
+  }
+});
+
+async function loadAnalytics() {
+  const wrap = document.getElementById('analytics-content');
+  wrap.innerHTML = '<div class="analytics-loading">⏳ Memuat data...</div>';
+
+  const days = document.getElementById('analytics-period').value;
+
+  try {
+    const data = await api(`/analytics?days=${days}`);
+    wrap.innerHTML = renderAnalytics(data, Number(days));
+  } catch (err) {
+    wrap.innerHTML = `<div class="analytics-loading" style="color:#e74c3c;">❌ Gagal memuat: ${escapeHtml(err.message)}</div>`;
+  }
+}
+
+function renderAnalytics(d, days) {
+  const pct = (n, total) => total > 0 ? Math.round((n / total) * 100) : 0;
+
+  // Grafik batang sederhana
+  const maxDaily = Math.max(...d.daily.map(x => x.n), 1);
+  const dailyBars = d.daily.map(x => {
+    const h = Math.round((x.n / maxDaily) * 100);
+    const tgl = new Date(x.tanggal).toLocaleDateString('id-ID', { day: '2-digit', month: 'short' });
+    return `<div class="bar-item" title="${tgl}: ${x.n} visitor (${x.unique_ip} unique)">
+      <div class="bar" style="height:${h}%"></div>
+      <div class="bar-label">${tgl}</div>
+    </div>`;
+  }).join('');
+
+  // Helper render list
+  const renderList = (arr, key1, key2 = null) => {
+    if (!arr.length) return '<div class="analytics-empty">—</div>';
+    const total = arr.reduce((s, x) => s + x.n, 0);
+    return arr.map(x => `
+      <div class="analytics-list-item">
+        <div class="ali-label">
+          <strong>${escapeHtml(x[key1] || 'Unknown')}</strong>
+          ${key2 && x[key2] ? `<small>${escapeHtml(x[key2])}</small>` : ''}
+        </div>
+        <div class="ali-bar-wrap">
+          <div class="ali-bar" style="width:${pct(x.n, total)}%"></div>
+        </div>
+        <div class="ali-count">${x.n} <small>(${pct(x.n, total)}%)</small></div>
+      </div>
+    `).join('');
+  };
+
+  return `
+    <div class="analytics-stats">
+      <div class="astat">
+        <div class="astat-label">Hari Ini</div>
+        <div class="astat-num">${d.today_total}</div>
+        <div class="astat-sub">${d.today_unique} unique IP</div>
+      </div>
+      <div class="astat">
+        <div class="astat-label">${days} Hari Terakhir</div>
+        <div class="astat-num">${d.total}</div>
+        <div class="astat-sub">${d.unique_ips} unique IP</div>
+      </div>
+    </div>
+
+    <div class="analytics-block">
+      <h4>📈 Visitor ${days} Hari Terakhir</h4>
+      <div class="bar-chart">${dailyBars || '<div class="analytics-empty">Belum ada data</div>'}</div>
+    </div>
+
+    <div class="analytics-grid-2">
+      <div class="analytics-block">
+        <h4>🌐 Browser</h4>
+        ${renderList(d.browsers, 'browser')}
+      </div>
+      <div class="analytics-block">
+        <h4>💻 Sistem Operasi</h4>
+        ${renderList(d.os_list, 'os')}
+      </div>
+      <div class="analytics-block">
+        <h4>📱 Device</h4>
+        ${renderList(d.devices, 'device_type')}
+      </div>
+      <div class="analytics-block">
+        <h4>🔗 Sumber Traffic</h4>
+        ${renderList(d.referers, 'source')}
+      </div>
+      <div class="analytics-block">
+        <h4>📍 Kota</h4>
+        ${renderList(d.cities, 'city', 'country_name')}
+      </div>
+      <div class="analytics-block">
+        <h4>📡 ISP</h4>
+        ${renderList(d.isps, 'isp')}
+      </div>
+    </div>
+
+    <div class="analytics-footer">
+      <button class="btn-ghost" id="btn-view-logs">📋 Lihat Detail Log</button>
+      <button class="btn-ghost" id="btn-export-logs">⬇ Export CSV</button>
+    </div>
+  `;
+}
+
 // ─── Init ──────────────────────────────────────────────────
 async function init() {
   document.getElementById('user-name').textContent = USER.nama_lengkap || USER.username || '—';
