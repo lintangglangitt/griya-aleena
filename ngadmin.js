@@ -22,10 +22,9 @@ const PEMILIK = {
 };
 
 // ─── Harga Default per Tipe Sewa ───────────────────────────
-// Sesuaikan nilainya dengan harga kos Anda
 const HARGA_DEFAULT = {
-  harian: 100000,       // sesuaikan
-  mingguan: 500000,    // sesuaikan
+  harian: 100000,
+  mingguan: 500000,
   bulanan: 800000,
   semesteran: 4600000,
   tahunan: 9100000,
@@ -141,8 +140,6 @@ function updateHargaOtomatis() {
   const tipe = document.getElementById('f-tipe').value;
   const hargaInput = document.getElementById('f-harga');
   if (!tipe || !hargaInput) return;
-
-  // Set harga default sesuai tipe (hanya kalau HARGA_DEFAULT punya nilai)
   if (HARGA_DEFAULT[tipe]) {
     hargaInput.value = HARGA_DEFAULT[tipe];
   }
@@ -163,279 +160,6 @@ document.getElementById('btn-logout').addEventListener('click', async () => {
   localStorage.removeItem('ga_user');
   window.location.href = 'ibun.html';
 });
-
-// ─── Analitik ─────────────────────────────────────────────
-document.getElementById('btn-analytics').addEventListener('click', async () => {
-  document.getElementById('modal-analytics').classList.add('open');
-  await loadAnalytics();
-});
-
-document.getElementById('analytics-period').addEventListener('change', loadAnalytics);
-
-document.querySelectorAll('[data-close-analytics]').forEach(b =>
-  b.addEventListener('click', () => document.getElementById('modal-analytics').classList.remove('open')));
-
-document.getElementById('modal-analytics').addEventListener('click', e => {
-  if (e.target.id === 'modal-analytics') {
-    document.getElementById('modal-analytics').classList.remove('open');
-  }
-});
-
-async function loadAnalytics() {
-  const wrap = document.getElementById('analytics-content');
-  wrap.innerHTML = '<div class="analytics-loading">⏳ Memuat data...</div>';
-
-  const days = document.getElementById('analytics-period').value;
-
-  try {
-    const data = await api(`/analytics?days=${days}`);
-    wrap.innerHTML = renderAnalytics(data, Number(days));
-  } catch (err) {
-    wrap.innerHTML = `<div class="analytics-loading" style="color:#e74c3c;">❌ Gagal memuat: ${escapeHtml(err.message)}</div>`;
-  }
-}
-
-function renderAnalytics(d, days) {
-  const pct = (n, total) => total > 0 ? Math.round((n / total) * 100) : 0;
-
-  // Grafik batang sederhana
-  const maxDaily = Math.max(...d.daily.map(x => x.n), 1);
-  const dailyBars = d.daily.map(x => {
-    const h = Math.round((x.n / maxDaily) * 100);
-    const tgl = new Date(x.tanggal).toLocaleDateString('id-ID', { day: '2-digit', month: 'short' });
-    return `<div class="bar-item" title="${tgl}: ${x.n} visitor (${x.unique_ip} unique)">
-      <div class="bar" style="height:${h}%"></div>
-      <div class="bar-label">${tgl}</div>
-    </div>`;
-  }).join('');
-
-  // Helper render list
-  const renderList = (arr, key1, key2 = null) => {
-    if (!arr.length) return '<div class="analytics-empty">—</div>';
-    const total = arr.reduce((s, x) => s + x.n, 0);
-    return arr.map(x => `
-      <div class="analytics-list-item">
-        <div class="ali-label">
-          <strong>${escapeHtml(x[key1] || 'Unknown')}</strong>
-          ${key2 && x[key2] ? `<small>${escapeHtml(x[key2])}</small>` : ''}
-        </div>
-        <div class="ali-bar-wrap">
-          <div class="ali-bar" style="width:${pct(x.n, total)}%"></div>
-        </div>
-        <div class="ali-count">${x.n} <small>(${pct(x.n, total)}%)</small></div>
-      </div>
-    `).join('');
-  };
-
-  return `
-    <div class="analytics-stats">
-      <div class="astat">
-        <div class="astat-label">Hari Ini</div>
-        <div class="astat-num">${d.today_total}</div>
-        <div class="astat-sub">${d.today_unique} unique IP</div>
-      </div>
-      <div class="astat">
-        <div class="astat-label">${days} Hari Terakhir</div>
-        <div class="astat-num">${d.total}</div>
-        <div class="astat-sub">${d.unique_ips} unique IP</div>
-      </div>
-    </div>
-
-    <div class="analytics-block">
-      <h4>📈 Visitor ${days} Hari Terakhir</h4>
-      <div class="bar-chart">${dailyBars || '<div class="analytics-empty">Belum ada data</div>'}</div>
-    </div>
-
-    <div class="analytics-grid-2">
-      <div class="analytics-block">
-        <h4>🌐 Browser</h4>
-        ${renderList(d.browsers, 'browser')}
-      </div>
-      <div class="analytics-block">
-        <h4>💻 Sistem Operasi</h4>
-        ${renderList(d.os_list, 'os')}
-      </div>
-      <div class="analytics-block">
-        <h4>📱 Device</h4>
-        ${renderList(d.devices, 'device_type')}
-      </div>
-      <div class="analytics-block">
-        <h4>🔗 Sumber Traffic</h4>
-        ${renderList(d.referers, 'source')}
-      </div>
-      <div class="analytics-block">
-        <h4>📍 Kota</h4>
-        ${renderList(d.cities, 'city', 'country_name')}
-      </div>
-      <div class="analytics-block">
-        <h4>📡 ISP</h4>
-        ${renderList(d.isps, 'isp')}
-      </div>
-    </div>
-
-    <div class="analytics-footer">
-      <button class="btn-ghost" id="btn-view-logs">📋 Lihat Detail Log</button>
-      <button class="btn-ghost" id="btn-export-logs">⬇ Export CSV</button>
-    </div>
-  `;
-}
-
-// ─── Detail Log Visitor ────────────────────────────────────
-document.getElementById('modal-analytics').addEventListener('click', (e) => {
-  if (e.target.id === 'btn-view-logs') {
-    openLogsModal();
-  }
-  if (e.target.id === 'btn-export-logs') {
-    exportLogsCsv();
-  }
-});
-
-async function openLogsModal() {
-  document.getElementById('modal-logs').classList.add('open');
-  await loadLogsModal();
-}
-
-async function loadLogsModal() {
-  const wrap = document.getElementById('logs-content');
-  wrap.innerHTML = '<div class="analytics-loading">⏳ Memuat log...</div>';
-
-  try {
-    const data = await api('/analytics/logs?limit=200');
-    window.__logsCache = data.logs || [];
-    wrap.innerHTML = renderLogsTable(window.__logsCache);
-    
-    // Attach event search
-    document.getElementById('log-search').addEventListener('input', (e) => {
-      const q = e.target.value.toLowerCase().trim();
-      const filtered = window.__logsCache.filter(l => 
-        (l.ip || '').toLowerCase().includes(q) ||
-        (l.city || '').toLowerCase().includes(q) ||
-        (l.browser || '').toLowerCase().includes(q) ||
-        (l.os || '').toLowerCase().includes(q) ||
-        (l.isp || '').toLowerCase().includes(q)
-      );
-      document.getElementById('logs-content').innerHTML = renderLogsTable(filtered);
-    });
-  } catch (err) {
-    wrap.innerHTML = `<div class="analytics-loading" style="color:#e74c3c;">❌ Gagal memuat: ${escapeHtml(err.message)}</div>`;
-  }
-}
-
-function renderLogsTable(logs) {
-  if (!logs.length) {
-    return '<div class="analytics-empty">Belum ada log</div>';
-  }
-
-  const fmtDT = (s) => {
-    if (!s) return '—';
-    const d = new Date(s);
-    return d.toLocaleString('id-ID', {
-      day: '2-digit', month: 'short', year: 'numeric',
-      hour: '2-digit', minute: '2-digit'
-    });
-  };
-
-  const rows = logs.map(l => `
-    <tr>
-      <td><code style="font-size:0.72rem;">${escapeHtml(l.ip || '—')}</code></td>
-      <td>${escapeHtml(l.city || '—')}<br><small style="color:#5a7373;">${escapeHtml(l.country_name || '')}</small></td>
-      <td>${escapeHtml(l.browser || '—')} ${l.browser_version ? '<small>v'+escapeHtml(l.browser_version)+'</small>' : ''}</td>
-      <td>${escapeHtml(l.os || '—')}</td>
-      <td><span style="display:inline-block;padding:2px 8px;border-radius:50px;background:#e0f0f0;color:#1a5c5c;font-size:0.7rem;font-weight:700;">${escapeHtml(l.device_type || '—')}</span></td>
-      <td><small style="color:#5a7373;">${escapeHtml((l.isp || '—').substring(0, 30))}</small></td>
-      <td><small style="color:#5a7373;">${escapeHtml(l.referer || 'Direct').substring(0, 40)}</small></td>
-      <td><small>${fmtDT(l.visited_at)}</small></td>
-    </tr>
-  `).join('');
-
-  return `
-    <div style="overflow-x:auto;max-height:60vh;overflow-y:auto;">
-      <table style="width:100%;border-collapse:collapse;font-size:0.78rem;">
-        <thead style="position:sticky;top:0;background:#1a5c5c;color:white;z-index:1;">
-          <tr>
-            <th style="padding:10px 8px;text-align:left;font-size:0.7rem;text-transform:uppercase;">IP</th>
-            <th style="padding:10px 8px;text-align:left;font-size:0.7rem;text-transform:uppercase;">Kota</th>
-            <th style="padding:10px 8px;text-align:left;font-size:0.7rem;text-transform:uppercase;">Browser</th>
-            <th style="padding:10px 8px;text-align:left;font-size:0.7rem;text-transform:uppercase;">OS</th>
-            <th style="padding:10px 8px;text-align:left;font-size:0.7rem;text-transform:uppercase;">Device</th>
-            <th style="padding:10px 8px;text-align:left;font-size:0.7rem;text-transform:uppercase;">ISP</th>
-            <th style="padding:10px 8px;text-align:left;font-size:0.7rem;text-transform:uppercase;">Referer</th>
-            <th style="padding:10px 8px;text-align:left;font-size:0.7rem;text-transform:uppercase;">Waktu</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${rows}
-        </tbody>
-      </table>
-    </div>
-    <div style="margin-top:12px;font-size:0.78rem;color:#5a7373;text-align:center;">
-      Menampilkan ${logs.length} log terakhir
-    </div>
-  `;
-}
-
-// Close modal logs
-document.querySelectorAll('[data-close-logs]').forEach(b =>
-  b.addEventListener('click', () => document.getElementById('modal-logs').classList.remove('open')));
-document.getElementById('modal-logs').addEventListener('click', (e) => {
-  if (e.target.id === 'modal-logs') {
-    document.getElementById('modal-logs').classList.remove('open');
-  }
-});
-
-// ─── Export CSV ────────────────────────────────────────────
-async function exportLogsCsv() {
-  try {
-    const data = await api('/analytics/logs?limit=500');
-    const logs = data.logs || [];
-    
-    if (!logs.length) {
-      alert('Belum ada log untuk di-export');
-      return;
-    }
-
-    const headers = ['IP', 'Country', 'Country Name', 'City', 'Region', 'Timezone',
-                     'Latitude', 'Longitude', 'ISP', 'Browser', 'Browser Version',
-                     'OS', 'Device', 'Referer', 'Path', 'Waktu'];
-    
-    const rows = logs.map(l => [
-      l.ip || '',
-      l.country || '',
-      l.country_name || '',
-      l.city || '',
-      l.region || '',
-      l.timezone || '',
-      l.latitude || '',
-      l.longitude || '',
-      l.isp || '',
-      l.browser || '',
-      l.browser_version || '',
-      l.os || '',
-      l.device_type || '',
-      l.referer || '',
-      l.path || '',
-      l.visited_at || ''
-    ]);
-
-    const csv = [headers, ...rows]
-      .map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(','))
-      .join('\n');
-
-    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `visitor-logs-${todayISO()}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
-  } catch (err) {
-    alert('Gagal export: ' + err.message);
-  }
-}
-
-    
-  `;
-}
 
 // ─── Init ──────────────────────────────────────────────────
 async function init() {
@@ -1115,7 +839,6 @@ function fillRoomSelect(currentEditingId = null) {
   const fr = document.getElementById('f-room');
   const today = todayISO();
 
-  // Cari room_id yang sedang di-edit (kalau mode Edit)
   let editingRoomId = null;
   if (currentEditingId) {
     const editingOcc = OCCS.find(x => x.id === currentEditingId);
@@ -1123,18 +846,14 @@ function fillRoomSelect(currentEditingId = null) {
   }
 
   fr.innerHTML = ROOMS.map(r => {
-    // Cek apakah kamar ini sedang terisi (ada okupansi aktif hari ini)
     const activeOcc = OCCS.find(o =>
       o.room_id === r.id &&
       o.tanggal_mulai <= today &&
       o.tanggal_selesai >= today
     );
 
-    // Kalau terisi DAN bukan kamar yang sedang di-edit → disabled
     const isDisabled = activeOcc && activeOcc.room_id !== editingRoomId;
     const disabledAttr = isDisabled ? 'disabled' : '';
-
-    // Kalau disabled, tambahkan keterangan
     const label = isDisabled
       ? `${r.nama_kamar} (${r.tipe}) — TERISI`
       : `${r.nama_kamar} (${r.tipe})`;
@@ -1150,7 +869,6 @@ function openModal(id) {
   fillRoomSelect(id);
   setupAutoHarga();
 
-  // Reset upload UI
   const status = document.getElementById('upload-status');
   const preview = document.getElementById('link-preview');
   if (status) { status.innerHTML = ''; status.className = 'upload-status'; }
@@ -1179,14 +897,12 @@ function openModal(id) {
     document.getElementById('f-hp-ortu').value = o.no_hp_ortu || '';
     document.getElementById('f-catatan').value = o.catatan || '';
 
-    // Kalau ada link kontrak tersimpan, tampilkan preview
     if (o.link_kontrak && preview) {
       preview.innerHTML = `<a href="${escapeHtml(o.link_kontrak)}" target="_blank">📄 Lihat file yang tersimpan</a>`;
     }
   } else {
     document.getElementById('modal-title').textContent = 'Tambah Okupansi';
     document.getElementById('f-mulai').value = todayISO();
-    // Auto-isi harga sesuai tipe default (bulanan)
     updateHargaOtomatis();
   }
   modalOcc.classList.add('open');
@@ -1269,7 +985,6 @@ async function uploadKontrak(file) {
   const preview = document.getElementById('link-preview');
   const btn = document.getElementById('btn-upload-file');
 
-  // Validasi tipe file
   const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
   if (!allowedTypes.includes(file.type)) {
     status.innerHTML = '❌ Hanya PDF, JPG, PNG';
@@ -1277,7 +992,6 @@ async function uploadKontrak(file) {
     return;
   }
 
-  // Validasi ukuran
   const MAX_SIZE = 5 * 1024 * 1024;
   if (file.size > MAX_SIZE) {
     status.innerHTML = '❌ File terlalu besar (max 5 MB)';
@@ -1285,7 +999,6 @@ async function uploadKontrak(file) {
     return;
   }
 
-  // UI: uploading
   status.innerHTML = '⏳ Mengunggah... 0%';
   status.className = 'upload-status loading';
   btn.disabled = true;
@@ -1294,7 +1007,6 @@ async function uploadKontrak(file) {
     const formData = new FormData();
     formData.append('file', file);
 
-    // Pakai XMLHttpRequest untuk progress
     const result = await new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.open('POST', `${API}/upload`);
@@ -1328,7 +1040,6 @@ async function uploadKontrak(file) {
       xhr.send(formData);
     });
 
-    // Sukses
     linkInput.value = result.url;
     status.innerHTML = '✅ Upload berhasil';
     status.className = 'upload-status success';
@@ -1505,6 +1216,278 @@ document.getElementById('modal-import-result').addEventListener('click', e => {
     document.getElementById('modal-import-result').classList.remove('open');
   }
 });
+
+// ═══════════════════════════════════════════════════════════
+// ANALYTICS
+// ═══════════════════════════════════════════════════════════
+
+document.getElementById('btn-analytics').addEventListener('click', async () => {
+  document.getElementById('modal-analytics').classList.add('open');
+  await loadAnalytics();
+});
+
+document.getElementById('analytics-period').addEventListener('change', loadAnalytics);
+
+document.querySelectorAll('[data-close-analytics]').forEach(b =>
+  b.addEventListener('click', () => document.getElementById('modal-analytics').classList.remove('open')));
+
+document.getElementById('modal-analytics').addEventListener('click', e => {
+  if (e.target.id === 'modal-analytics') {
+    document.getElementById('modal-analytics').classList.remove('open');
+  }
+});
+
+async function loadAnalytics() {
+  const wrap = document.getElementById('analytics-content');
+  wrap.innerHTML = '<div class="analytics-loading">⏳ Memuat data...</div>';
+
+  const days = document.getElementById('analytics-period').value;
+
+  try {
+    const data = await api(`/analytics?days=${days}`);
+    wrap.innerHTML = renderAnalytics(data, Number(days));
+  } catch (err) {
+    wrap.innerHTML = `<div class="analytics-loading" style="color:#e74c3c;">❌ Gagal memuat: ${escapeHtml(err.message)}</div>`;
+  }
+}
+
+function renderAnalytics(d, days) {
+  const pct = (n, total) => total > 0 ? Math.round((n / total) * 100) : 0;
+
+  const maxDaily = Math.max(...d.daily.map(x => x.n), 1);
+  const dailyBars = d.daily.map(x => {
+    const h = Math.round((x.n / maxDaily) * 100);
+    const tgl = new Date(x.tanggal).toLocaleDateString('id-ID', { day: '2-digit', month: 'short' });
+    return `<div class="bar-item" title="${tgl}: ${x.n} visitor (${x.unique_ip} unique)">
+      <div class="bar" style="height:${h}%"></div>
+      <div class="bar-label">${tgl}</div>
+    </div>`;
+  }).join('');
+
+  const renderList = (arr, key1, key2 = null) => {
+    if (!arr.length) return '<div class="analytics-empty">—</div>';
+    const total = arr.reduce((s, x) => s + x.n, 0);
+    return arr.map(x => `
+      <div class="analytics-list-item">
+        <div class="ali-label">
+          <strong>${escapeHtml(x[key1] || 'Unknown')}</strong>
+          ${key2 && x[key2] ? `<small>${escapeHtml(x[key2])}</small>` : ''}
+        </div>
+        <div class="ali-bar-wrap">
+          <div class="ali-bar" style="width:${pct(x.n, total)}%"></div>
+        </div>
+        <div class="ali-count">${x.n} <small>(${pct(x.n, total)}%)</small></div>
+      </div>
+    `).join('');
+  };
+
+  return `
+    <div class="analytics-stats">
+      <div class="astat">
+        <div class="astat-label">Hari Ini</div>
+        <div class="astat-num">${d.today_total}</div>
+        <div class="astat-sub">${d.today_unique} unique IP</div>
+      </div>
+      <div class="astat">
+        <div class="astat-label">${days} Hari Terakhir</div>
+        <div class="astat-num">${d.total}</div>
+        <div class="astat-sub">${d.unique_ips} unique IP</div>
+      </div>
+    </div>
+
+    <div class="analytics-block">
+      <h4>📈 Visitor ${days} Hari Terakhir</h4>
+      <div class="bar-chart">${dailyBars || '<div class="analytics-empty">Belum ada data</div>'}</div>
+    </div>
+
+    <div class="analytics-grid-2">
+      <div class="analytics-block">
+        <h4>🌐 Browser</h4>
+        ${renderList(d.browsers, 'browser')}
+      </div>
+      <div class="analytics-block">
+        <h4>💻 Sistem Operasi</h4>
+        ${renderList(d.os_list, 'os')}
+      </div>
+      <div class="analytics-block">
+        <h4>📱 Device</h4>
+        ${renderList(d.devices, 'device_type')}
+      </div>
+      <div class="analytics-block">
+        <h4>🔗 Sumber Traffic</h4>
+        ${renderList(d.referers, 'source')}
+      </div>
+      <div class="analytics-block">
+        <h4>📍 Kota</h4>
+        ${renderList(d.cities, 'city', 'country_name')}
+      </div>
+      <div class="analytics-block">
+        <h4>📡 ISP</h4>
+        ${renderList(d.isps, 'isp')}
+      </div>
+    </div>
+
+    <div class="analytics-footer">
+      <button class="btn-ghost" id="btn-view-logs">📋 Lihat Detail Log</button>
+      <button class="btn-ghost" id="btn-export-logs">⬇ Export CSV</button>
+    </div>
+  `;
+}
+
+// ─── Handle klik tombol di dalam modal analitik ────────────
+document.getElementById('modal-analytics').addEventListener('click', (e) => {
+  if (e.target.id === 'btn-view-logs') {
+    openLogsModal();
+  }
+  if (e.target.id === 'btn-export-logs') {
+    exportLogsCsv();
+  }
+});
+
+async function openLogsModal() {
+  document.getElementById('modal-logs').classList.add('open');
+  await loadLogsModal();
+}
+
+async function loadLogsModal() {
+  const wrap = document.getElementById('logs-content');
+  wrap.innerHTML = '<div class="analytics-loading">⏳ Memuat log...</div>';
+
+  try {
+    const data = await api('/analytics/logs?limit=200');
+    window.__logsCache = data.logs || [];
+    wrap.innerHTML = renderLogsTable(window.__logsCache);
+
+    const searchInput = document.getElementById('log-search');
+    if (searchInput && !searchInput.dataset.bound) {
+      searchInput.addEventListener('input', (e) => {
+        const q = e.target.value.toLowerCase().trim();
+        const filtered = window.__logsCache.filter(l =>
+          (l.ip || '').toLowerCase().includes(q) ||
+          (l.city || '').toLowerCase().includes(q) ||
+          (l.browser || '').toLowerCase().includes(q) ||
+          (l.os || '').toLowerCase().includes(q) ||
+          (l.isp || '').toLowerCase().includes(q)
+        );
+        document.getElementById('logs-content').innerHTML = renderLogsTable(filtered);
+      });
+      searchInput.dataset.bound = 'true';
+    }
+  } catch (err) {
+    wrap.innerHTML = `<div class="analytics-loading" style="color:#e74c3c;">❌ Gagal memuat: ${escapeHtml(err.message)}</div>`;
+  }
+}
+
+function renderLogsTable(logs) {
+  if (!logs.length) {
+    return '<div class="analytics-empty">Belum ada log</div>';
+  }
+
+  const fmtDT = (s) => {
+    if (!s) return '—';
+    const d = new Date(s);
+    return d.toLocaleString('id-ID', {
+      day: '2-digit', month: 'short', year: 'numeric',
+      hour: '2-digit', minute: '2-digit'
+    });
+  };
+
+  const rows = logs.map(l => `
+    <tr>
+      <td><code style="font-size:0.72rem;">${escapeHtml(l.ip || '—')}</code></td>
+      <td>${escapeHtml(l.city || '—')}<br><small style="color:#5a7373;">${escapeHtml(l.country_name || '')}</small></td>
+      <td>${escapeHtml(l.browser || '—')} ${l.browser_version ? '<small>v' + escapeHtml(l.browser_version) + '</small>' : ''}</td>
+      <td>${escapeHtml(l.os || '—')}</td>
+      <td><span style="display:inline-block;padding:2px 8px;border-radius:50px;background:#e0f0f0;color:#1a5c5c;font-size:0.7rem;font-weight:700;">${escapeHtml(l.device_type || '—')}</span></td>
+      <td><small style="color:#5a7373;">${escapeHtml((l.isp || '—').substring(0, 30))}</small></td>
+      <td><small style="color:#5a7373;">${escapeHtml((l.referer || 'Direct').substring(0, 40))}</small></td>
+      <td><small>${fmtDT(l.visited_at)}</small></td>
+    </tr>
+  `).join('');
+
+  return `
+    <div style="overflow-x:auto;max-height:60vh;overflow-y:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:0.78rem;">
+        <thead style="position:sticky;top:0;background:#1a5c5c;color:white;z-index:1;">
+          <tr>
+            <th style="padding:10px 8px;text-align:left;font-size:0.7rem;text-transform:uppercase;">IP</th>
+            <th style="padding:10px 8px;text-align:left;font-size:0.7rem;text-transform:uppercase;">Kota</th>
+            <th style="padding:10px 8px;text-align:left;font-size:0.7rem;text-transform:uppercase;">Browser</th>
+            <th style="padding:10px 8px;text-align:left;font-size:0.7rem;text-transform:uppercase;">OS</th>
+            <th style="padding:10px 8px;text-align:left;font-size:0.7rem;text-transform:uppercase;">Device</th>
+            <th style="padding:10px 8px;text-align:left;font-size:0.7rem;text-transform:uppercase;">ISP</th>
+            <th style="padding:10px 8px;text-align:left;font-size:0.7rem;text-transform:uppercase;">Referer</th>
+            <th style="padding:10px 8px;text-align:left;font-size:0.7rem;text-transform:uppercase;">Waktu</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows}
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:12px;font-size:0.78rem;color:#5a7373;text-align:center;">
+      Menampilkan ${logs.length} log terakhir
+    </div>
+  `;
+}
+
+document.querySelectorAll('[data-close-logs]').forEach(b =>
+  b.addEventListener('click', () => document.getElementById('modal-logs').classList.remove('open')));
+
+document.getElementById('modal-logs').addEventListener('click', (e) => {
+  if (e.target.id === 'modal-logs') {
+    document.getElementById('modal-logs').classList.remove('open');
+  }
+});
+
+async function exportLogsCsv() {
+  try {
+    const data = await api('/analytics/logs?limit=500');
+    const logs = data.logs || [];
+
+    if (!logs.length) {
+      alert('Belum ada log untuk di-export');
+      return;
+    }
+
+    const headers = ['IP', 'Country', 'Country Name', 'City', 'Region', 'Timezone',
+                     'Latitude', 'Longitude', 'ISP', 'Browser', 'Browser Version',
+                     'OS', 'Device', 'Referer', 'Path', 'Waktu'];
+
+    const rows = logs.map(l => [
+      l.ip || '',
+      l.country || '',
+      l.country_name || '',
+      l.city || '',
+      l.region || '',
+      l.timezone || '',
+      l.latitude || '',
+      l.longitude || '',
+      l.isp || '',
+      l.browser || '',
+      l.browser_version || '',
+      l.os || '',
+      l.device_type || '',
+      l.referer || '',
+      l.path || '',
+      l.visited_at || ''
+    ]);
+
+    const csv = [headers, ...rows]
+      .map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(','))
+      .join('\n');
+
+    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `visitor-logs-${todayISO()}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch (err) {
+    alert('Gagal export: ' + err.message);
+  }
+}
 
 // ─── Users Modal ───────────────────────────────────────────
 const modalUsers = document.getElementById('modal-users');
