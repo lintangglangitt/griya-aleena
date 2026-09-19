@@ -280,6 +280,163 @@ function renderAnalytics(d, days) {
   `;
 }
 
+// ─── Detail Log Visitor ────────────────────────────────────
+document.getElementById('modal-analytics').addEventListener('click', (e) => {
+  if (e.target.id === 'btn-view-logs') {
+    openLogsModal();
+  }
+  if (e.target.id === 'btn-export-logs') {
+    exportLogsCsv();
+  }
+});
+
+async function openLogsModal() {
+  document.getElementById('modal-logs').classList.add('open');
+  await loadLogsModal();
+}
+
+async function loadLogsModal() {
+  const wrap = document.getElementById('logs-content');
+  wrap.innerHTML = '<div class="analytics-loading">⏳ Memuat log...</div>';
+
+  try {
+    const data = await api('/analytics/logs?limit=200');
+    window.__logsCache = data.logs || [];
+    wrap.innerHTML = renderLogsTable(window.__logsCache);
+    
+    // Attach event search
+    document.getElementById('log-search').addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      const filtered = window.__logsCache.filter(l => 
+        (l.ip || '').toLowerCase().includes(q) ||
+        (l.city || '').toLowerCase().includes(q) ||
+        (l.browser || '').toLowerCase().includes(q) ||
+        (l.os || '').toLowerCase().includes(q) ||
+        (l.isp || '').toLowerCase().includes(q)
+      );
+      document.getElementById('logs-content').innerHTML = renderLogsTable(filtered);
+    });
+  } catch (err) {
+    wrap.innerHTML = `<div class="analytics-loading" style="color:#e74c3c;">❌ Gagal memuat: ${escapeHtml(err.message)}</div>`;
+  }
+}
+
+function renderLogsTable(logs) {
+  if (!logs.length) {
+    return '<div class="analytics-empty">Belum ada log</div>';
+  }
+
+  const fmtDT = (s) => {
+    if (!s) return '—';
+    const d = new Date(s);
+    return d.toLocaleString('id-ID', {
+      day: '2-digit', month: 'short', year: 'numeric',
+      hour: '2-digit', minute: '2-digit'
+    });
+  };
+
+  const rows = logs.map(l => `
+    <tr>
+      <td><code style="font-size:0.72rem;">${escapeHtml(l.ip || '—')}</code></td>
+      <td>${escapeHtml(l.city || '—')}<br><small style="color:#5a7373;">${escapeHtml(l.country_name || '')}</small></td>
+      <td>${escapeHtml(l.browser || '—')} ${l.browser_version ? '<small>v'+escapeHtml(l.browser_version)+'</small>' : ''}</td>
+      <td>${escapeHtml(l.os || '—')}</td>
+      <td><span style="display:inline-block;padding:2px 8px;border-radius:50px;background:#e0f0f0;color:#1a5c5c;font-size:0.7rem;font-weight:700;">${escapeHtml(l.device_type || '—')}</span></td>
+      <td><small style="color:#5a7373;">${escapeHtml((l.isp || '—').substring(0, 30))}</small></td>
+      <td><small style="color:#5a7373;">${escapeHtml(l.referer || 'Direct').substring(0, 40)}</small></td>
+      <td><small>${fmtDT(l.visited_at)}</small></td>
+    </tr>
+  `).join('');
+
+  return `
+    <div style="overflow-x:auto;max-height:60vh;overflow-y:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:0.78rem;">
+        <thead style="position:sticky;top:0;background:#1a5c5c;color:white;z-index:1;">
+          <tr>
+            <th style="padding:10px 8px;text-align:left;font-size:0.7rem;text-transform:uppercase;">IP</th>
+            <th style="padding:10px 8px;text-align:left;font-size:0.7rem;text-transform:uppercase;">Kota</th>
+            <th style="padding:10px 8px;text-align:left;font-size:0.7rem;text-transform:uppercase;">Browser</th>
+            <th style="padding:10px 8px;text-align:left;font-size:0.7rem;text-transform:uppercase;">OS</th>
+            <th style="padding:10px 8px;text-align:left;font-size:0.7rem;text-transform:uppercase;">Device</th>
+            <th style="padding:10px 8px;text-align:left;font-size:0.7rem;text-transform:uppercase;">ISP</th>
+            <th style="padding:10px 8px;text-align:left;font-size:0.7rem;text-transform:uppercase;">Referer</th>
+            <th style="padding:10px 8px;text-align:left;font-size:0.7rem;text-transform:uppercase;">Waktu</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows}
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:12px;font-size:0.78rem;color:#5a7373;text-align:center;">
+      Menampilkan ${logs.length} log terakhir
+    </div>
+  `;
+}
+
+// Close modal logs
+document.querySelectorAll('[data-close-logs]').forEach(b =>
+  b.addEventListener('click', () => document.getElementById('modal-logs').classList.remove('open')));
+document.getElementById('modal-logs').addEventListener('click', (e) => {
+  if (e.target.id === 'modal-logs') {
+    document.getElementById('modal-logs').classList.remove('open');
+  }
+});
+
+// ─── Export CSV ────────────────────────────────────────────
+async function exportLogsCsv() {
+  try {
+    const data = await api('/analytics/logs?limit=500');
+    const logs = data.logs || [];
+    
+    if (!logs.length) {
+      alert('Belum ada log untuk di-export');
+      return;
+    }
+
+    const headers = ['IP', 'Country', 'Country Name', 'City', 'Region', 'Timezone',
+                     'Latitude', 'Longitude', 'ISP', 'Browser', 'Browser Version',
+                     'OS', 'Device', 'Referer', 'Path', 'Waktu'];
+    
+    const rows = logs.map(l => [
+      l.ip || '',
+      l.country || '',
+      l.country_name || '',
+      l.city || '',
+      l.region || '',
+      l.timezone || '',
+      l.latitude || '',
+      l.longitude || '',
+      l.isp || '',
+      l.browser || '',
+      l.browser_version || '',
+      l.os || '',
+      l.device_type || '',
+      l.referer || '',
+      l.path || '',
+      l.visited_at || ''
+    ]);
+
+    const csv = [headers, ...rows]
+      .map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(','))
+      .join('\n');
+
+    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `visitor-logs-${todayISO()}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch (err) {
+    alert('Gagal export: ' + err.message);
+  }
+}
+
+    
+  `;
+}
+
 // ─── Init ──────────────────────────────────────────────────
 async function init() {
   document.getElementById('user-name').textContent = USER.nama_lengkap || USER.username || '—';
