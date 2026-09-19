@@ -1,4 +1,4 @@
-/* admin.css */
+/* ngadmin.css — Dashboard Okupansi Griya Aleena */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
@@ -198,22 +198,37 @@ body {
 }
 .section-h small { font-weight: 400; color: var(--muted); font-size: 0.8rem; margin-left: 8px; }
 
-/* ── ROOM CARDS ── */
+/* ═══════════════════════════════════════════ */
+/* ROOM CARDS — CENTER ALL CONTENT */
+/* ═══════════════════════════════════════════ */
 .rooms-grid {
   display: grid;
   grid-template-columns: 0.7fr repeat(6, 1fr);
   gap: 12px;
   padding: 8px 0;
 }
+
 .room-card {
-  border-radius: 14px; padding: 14px 12px;
+  border-radius: 14px; padding: 16px 12px;
   border: 2px solid var(--border);
   background: var(--gray);
   transition: transform 0.2s, box-shadow 0.2s;
   cursor: pointer;
+  /* Center all content */
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 130px;
 }
-.room-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
 
+.room-card:hover { 
+  transform: translateY(-3px); 
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08); 
+}
+
+/* Status warna */
 .room-card.status-terisi { background: #e8f7ee; border-color: var(--green); }
 .room-card.status-kosong { background: #fff8e1; border-color: var(--amber); }
 .status-kosong .room-status { background: var(--amber); color: var(--navy); }
@@ -239,30 +254,79 @@ body {
   box-shadow: 0 2px 8px rgba(231, 76, 60, 0.4);
 }
 
-.room-card h3 { font-family: 'Sora', sans-serif; font-size: 0.92rem; color: var(--text); margin-bottom: 4px; }
-.room-card .room-tipe { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
-.room-card .room-penyewa { font-weight: 600; font-size: 0.85rem; color: var(--text); margin-bottom: 2px; }
-.room-card .room-tanggal { font-size: 0.7rem; color: var(--muted); line-height: 1.4; }
+/* Konten kamar */
+.room-card h3 { 
+  font-family: 'Sora', sans-serif; 
+  font-size: 0.92rem; 
+  color: var(--text); 
+  margin-bottom: 4px;
+  text-align: center;
+}
+.room-card .room-tipe { 
+  font-size: 0.68rem; 
+  color: var(--muted); 
+  text-transform: uppercase; 
+  letter-spacing: 0.08em; 
+  margin-bottom: 10px;
+  text-align: center;
+}
+.room-card .room-penyewa { 
+  font-weight: 600; 
+  font-size: 0.85rem; 
+  color: var(--text); 
+  margin-bottom: 2px;
+  text-align: center;
+}
+.room-card .room-tanggal { 
+  font-size: 0.7rem; 
+  color: var(--muted); 
+  line-height: 1.4;
+  text-align: center;
+  margin-bottom: 4px;
+}
 .room-card .room-status {
-  display: inline-block; margin-top: 10px;
-  font-size: 0.7rem; font-weight: 700;
-  padding: 3px 10px; border-radius: 50px;
-  text-transform: uppercase; letter-spacing: 0.06em;
+  display: inline-block; 
+  margin-top: 8px;
+  font-size: 0.7rem; 
+  font-weight: 700;
+  padding: 3px 10px; 
+  border-radius: 50px;
+  text-transform: uppercase; 
+  letter-spacing: 0.06em;
+  align-self: center;
 }
 .status-terisi .room-status { background: var(--green); color: white; }
 
+/* ALL card */
 .room-card.all-card {
   background: linear-gradient(135deg, var(--teal) 0%, #0d3d3d 100%);
-  color: white; border-color: var(--teal);
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  text-align: center; min-height: 130px; padding: 14px 10px;
+  color: white; 
+  border-color: var(--teal);
+  text-align: center;
 }
-.room-card.all-card:hover { background: linear-gradient(135deg, var(--teal-lt) 0%, var(--teal) 100%); }
-.room-card.all-card.active { box-shadow: 0 0 0 3px var(--amber); }
-.room-card.all-card h3 { color: white; font-size: 1.1rem; margin-bottom: 4px; font-family: 'Sora', sans-serif; }
-.room-card.all-card .room-tipe { color: rgba(255,255,255,0.7); font-size: 0.6rem; letter-spacing: 0.1em; margin-bottom: 0; }
-.room-card.active { box-shadow: 0 0 0 3px var(--amber); transform: translateY(-2px); }
+.room-card.all-card:hover { 
+  background: linear-gradient(135deg, var(--teal-lt) 0%, var(--teal) 100%); 
+}
+.room-card.all-card.active { 
+  box-shadow: 0 0 0 3px var(--amber); 
+  transform: translateY(-2px);
+}
+.room-card.all-card h3 { 
+  color: white; 
+  font-size: 1.1rem; 
+  margin-bottom: 4px; 
+  font-family: 'Sora', sans-serif; 
+}
+.room-card.all-card .room-tipe { 
+  color: rgba(255,255,255,0.7); 
+  font-size: 0.6rem; 
+  letter-spacing: 0.1em; 
+  margin-bottom: 0;
+}
+.room-card.active { 
+  box-shadow: 0 0 0 3px var(--amber); 
+  transform: translateY(-2px);
+}
 
 /* ── TABLE ── */
 .table-head {
@@ -362,6 +426,7 @@ tbody tr.akan-habis td:first-child { border-left: 4px solid var(--red); }
   padding: 28px; width: 100%; max-width: 680px;
   box-shadow: 0 20px 60px rgba(0,0,0,0.3);
 }
+.modal-card-wide { max-width: 620px; }
 .modal-card h3 {
   font-family: 'Sora', sans-serif;
   margin-bottom: 20px; color: var(--teal);
@@ -387,41 +452,7 @@ tbody tr.akan-habis td:first-child { border-left: 4px solid var(--red); }
 .modal-card small { color: var(--muted); font-size: 0.75rem; display: block; margin-top: 4px; }
 .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
 
-/* ── USERS LIST ── */
-.user-item {
-  display: flex; align-items: center;
-  justify-content: space-between; padding: 10px 12px;
-  border: 1px solid var(--border); border-radius: 8px;
-  margin-bottom: 8px; font-size: 0.88rem;
-}
-.user-item .u-info strong { color: var(--text); }
-.user-item .u-info small { color: var(--muted); margin-left: 8px; }
-
-/* ── RESPONSIVE ── */
-@media (max-width: 1100px) {
-  .rooms-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
-  .room-card.all-card { min-height: 120px; }
-}
-@media (max-width: 640px) {
-  .admin-body .stats-grid,
-  .admin-body .section-block { width: calc(100% - 24px); margin: 14px auto; }
-  .admin-header { padding: 12px 16px; }
-  .admin-user span { display: none; }
-  .grid-2 { grid-template-columns: 1fr; }
-  .table-head { flex-direction: column; align-items: stretch; }
-  .table-actions { flex-wrap: wrap; }
-  .table-actions > * { flex: 1 1 auto; }
-  .rooms-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-  .room-card.all-card { grid-column: 1 / 3; min-height: 80px; }
-}
-/* ============================================ */
-/* UPDATE: Form section styling */
-/* ============================================ */
-
-.modal-card-wide {
-  max-width: 620px;
-}
-
+/* Form section grouping */
 .form-section {
   margin-bottom: 24px;
   padding-bottom: 20px;
@@ -447,44 +478,19 @@ tbody tr.akan-habis td:first-child { border-left: 4px solid var(--red); }
   margin-left: 4px;
 }
 
-.auto-hint {
-  background: #fff7e6;
-  color: #a06800;
-  font-size: 0.65rem;
-  font-weight: 700;
-  padding: 2px 6px;
-  border-radius: 4px;
-  margin-left: 4px;
-  letter-spacing: 0.03em;
+/* ── USERS LIST ── */
+.user-item {
+  display: flex; align-items: center;
+  justify-content: space-between; padding: 10px 12px;
+  border: 1px solid var(--border); border-radius: 8px;
+  margin-bottom: 8px; font-size: 0.88rem;
 }
-
-/* Data Penyewa & Ortu: 1 kolom (full width) */
-.form-section .form-section-title + label,
-.form-section label {
-  display: block;
-  width: 100%;
-}
-/* ============================================ */
-/* UPDATE: Styling dropdown kamar terisi */
-/* ============================================ */
-
-/* Option yang disabled — dibuat lebih pudar */
-select option:disabled {
-  color: #999;
-  background: #f5f5f5;
-  font-style: italic;
-}
-
-/* Select utama saat semua option disabled */
-select option:disabled:checked {
-  color: #999;
-}
-
+.user-item .u-info strong { color: var(--text); }
+.user-item .u-info small { color: var(--muted); margin-left: 8px; }
 
 /* ═══════════════════════════════════════════ */
-/* Upload Box Kontrak */
+/* UPLOAD BOX KONTRAK */
 /* ═══════════════════════════════════════════ */
-
 .upload-box {
   border: 2px dashed #c5d4d4;
   border-radius: 10px;
@@ -547,4 +553,22 @@ select option:disabled:checked {
 }
 .link-preview a:hover {
   text-decoration: underline;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1100px) {
+  .rooms-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+  .room-card.all-card { min-height: 120px; }
+}
+@media (max-width: 640px) {
+  .admin-body .stats-grid,
+  .admin-body .section-block { width: calc(100% - 24px); margin: 14px auto; }
+  .admin-header { padding: 12px 16px; }
+  .admin-user span { display: none; }
+  .grid-2 { grid-template-columns: 1fr; }
+  .table-head { flex-direction: column; align-items: stretch; }
+  .table-actions { flex-wrap: wrap; }
+  .table-actions > * { flex: 1 1 auto; }
+  .rooms-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .room-card.all-card { grid-column: 1 / 3; min-height: 80px; }
 }
