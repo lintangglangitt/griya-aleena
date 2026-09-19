@@ -1394,30 +1394,50 @@ function renderLogsTable(logs) {
 
   const rows = logs.map(l => `
     <tr>
+      <td><code style="font-size:0.68rem;">${escapeHtml(String(l.id || '—'))}</code></td>
+      <td><small style="white-space:nowrap;">${fmtDT(l.visited_at)}</small></td>
       <td><code style="font-size:0.72rem;">${escapeHtml(l.ip || '—')}</code></td>
-      <td>${escapeHtml(l.city || '—')}<br><small style="color:#5a7373;">${escapeHtml(l.country_name || '')}</small></td>
-      <td>${escapeHtml(l.browser || '—')} ${l.browser_version ? '<small>v' + escapeHtml(l.browser_version) + '</small>' : ''}</td>
+      <td>${escapeHtml(l.country || '—')}</td>
+      <td>${escapeHtml(l.country_name || '—')}</td>
+      <td>${escapeHtml(l.city || '—')}</td>
+      <td>${escapeHtml(l.region || '—')}</td>
+      <td><small>${escapeHtml(l.timezone || '—')}</small></td>
+      <td><small>${escapeHtml(l.latitude || '—')}</small></td>
+      <td><small>${escapeHtml(l.longitude || '—')}</small></td>
+      <td><small style="color:#5a7373;">${escapeHtml(l.isp || '—')}</small></td>
+      <td>${escapeHtml(l.browser || '—')}</td>
+      <td><small>${escapeHtml(l.browser_version || '—')}</small></td>
       <td>${escapeHtml(l.os || '—')}</td>
       <td><span style="display:inline-block;padding:2px 8px;border-radius:50px;background:#e0f0f0;color:#1a5c5c;font-size:0.7rem;font-weight:700;">${escapeHtml(l.device_type || '—')}</span></td>
-      <td><small style="color:#5a7373;">${escapeHtml((l.isp || '—').substring(0, 30))}</small></td>
-      <td><small style="color:#5a7373;">${escapeHtml((l.referer || 'Direct').substring(0, 40))}</small></td>
-      <td><small>${fmtDT(l.visited_at)}</small></td>
+      <td><small style="color:#5a7373;">${escapeHtml((l.referer || 'Direct').substring(0, 50))}</small></td>
+      <td><code style="font-size:0.7rem;">${escapeHtml(l.path || '/')}</code></td>
+      <td><small style="color:#8b9494;font-size:0.68rem;">${escapeHtml((l.user_agent || '—').substring(0, 60))}${(l.user_agent || '').length > 60 ? '…' : ''}</small></td>
     </tr>
   `).join('');
 
   return `
-    <div style="overflow-x:auto;max-height:60vh;overflow-y:auto;">
-      <table style="width:100%;border-collapse:collapse;font-size:0.78rem;">
+    <div style="overflow-x:auto;max-height:65vh;overflow-y:auto;border:1px solid #e3ebeb;border-radius:8px;">
+      <table style="width:100%;border-collapse:collapse;font-size:0.78rem;min-width:1800px;">
         <thead style="position:sticky;top:0;background:#1a5c5c;color:white;z-index:1;">
           <tr>
-            <th style="padding:10px 8px;text-align:left;font-size:0.7rem;text-transform:uppercase;">IP</th>
-            <th style="padding:10px 8px;text-align:left;font-size:0.7rem;text-transform:uppercase;">Kota</th>
-            <th style="padding:10px 8px;text-align:left;font-size:0.7rem;text-transform:uppercase;">Browser</th>
-            <th style="padding:10px 8px;text-align:left;font-size:0.7rem;text-transform:uppercase;">OS</th>
-            <th style="padding:10px 8px;text-align:left;font-size:0.7rem;text-transform:uppercase;">Device</th>
-            <th style="padding:10px 8px;text-align:left;font-size:0.7rem;text-transform:uppercase;">ISP</th>
-            <th style="padding:10px 8px;text-align:left;font-size:0.7rem;text-transform:uppercase;">Referer</th>
-            <th style="padding:10px 8px;text-align:left;font-size:0.7rem;text-transform:uppercase;">Waktu</th>
+            <th style="padding:10px 8px;text-align:left;font-size:0.68rem;text-transform:uppercase;white-space:nowrap;">ID</th>
+            <th style="padding:10px 8px;text-align:left;font-size:0.68rem;text-transform:uppercase;white-space:nowrap;">Waktu</th>
+            <th style="padding:10px 8px;text-align:left;font-size:0.68rem;text-transform:uppercase;white-space:nowrap;">IP</th>
+            <th style="padding:10px 8px;text-align:left;font-size:0.68rem;text-transform:uppercase;white-space:nowrap;">Kode Negara</th>
+            <th style="padding:10px 8px;text-align:left;font-size:0.68rem;text-transform:uppercase;white-space:nowrap;">Negara</th>
+            <th style="padding:10px 8px;text-align:left;font-size:0.68rem;text-transform:uppercase;white-space:nowrap;">Kota</th>
+            <th style="padding:10px 8px;text-align:left;font-size:0.68rem;text-transform:uppercase;white-space:nowrap;">Provinsi</th>
+            <th style="padding:10px 8px;text-align:left;font-size:0.68rem;text-transform:uppercase;white-space:nowrap;">Timezone</th>
+            <th style="padding:10px 8px;text-align:left;font-size:0.68rem;text-transform:uppercase;white-space:nowrap;">Lat</th>
+            <th style="padding:10px 8px;text-align:left;font-size:0.68rem;text-transform:uppercase;white-space:nowrap;">Lon</th>
+            <th style="padding:10px 8px;text-align:left;font-size:0.68rem;text-transform:uppercase;white-space:nowrap;">ISP</th>
+            <th style="padding:10px 8px;text-align:left;font-size:0.68rem;text-transform:uppercase;white-space:nowrap;">Browser</th>
+            <th style="padding:10px 8px;text-align:left;font-size:0.68rem;text-transform:uppercase;white-space:nowrap;">Versi</th>
+            <th style="padding:10px 8px;text-align:left;font-size:0.68rem;text-transform:uppercase;white-space:nowrap;">OS</th>
+            <th style="padding:10px 8px;text-align:left;font-size:0.68rem;text-transform:uppercase;white-space:nowrap;">Device</th>
+            <th style="padding:10px 8px;text-align:left;font-size:0.68rem;text-transform:uppercase;white-space:nowrap;">Referer</th>
+            <th style="padding:10px 8px;text-align:left;font-size:0.68rem;text-transform:uppercase;white-space:nowrap;">Path</th>
+            <th style="padding:10px 8px;text-align:left;font-size:0.68rem;text-transform:uppercase;white-space:nowrap;">User Agent</th>
           </tr>
         </thead>
         <tbody>
@@ -1426,11 +1446,10 @@ function renderLogsTable(logs) {
       </table>
     </div>
     <div style="margin-top:12px;font-size:0.78rem;color:#5a7373;text-align:center;">
-      Menampilkan ${logs.length} log terakhir
+      Menampilkan ${logs.length} log terakhir — scroll horizontal untuk lihat semua kolom →
     </div>
   `;
 }
-
 document.querySelectorAll('[data-close-logs]').forEach(b =>
   b.addEventListener('click', () => document.getElementById('modal-logs').classList.remove('open')));
 
