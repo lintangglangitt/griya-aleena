@@ -781,3 +781,53 @@ tbody tr.akan-habis td:first-child { border-left: 4px solid var(--red); }
     font-size: 0.75rem;
   }
 }
+
+/* ═══════════════════════════════════════════ */
+/* DETAIL LOG MODAL */
+/* ═══════════════════════════════════════════ */
+
+.modal-logs .modal-card-logs {
+  max-width: 1200px;
+  width: 95%;
+}
+
+.modal-logs table thead th {
+  background: #1a5c5c;
+  color: white;
+}
+
+.modal-logs table tbody tr:hover {
+  background: #f0f8f8;
+}
+
+.modal-logs table tbody tr {
+  border-bottom: 1px solid #e3ebeb;
+}
+
+.modal-logs table td {
+  padding: 8px;
+  vertical-align: top;
+  color: #1c2e2e;
+}
+
+.modal-logs table code {
+  background: #f4f7f7;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'SF Mono', Monaco, monospace;
+}
+
+@media (max-width: 700px) {
+  .modal-logs .modal-card-logs {
+    width: 100%;
+    max-width: 100%;
+    padding: 16px;
+  }
+  .modal-logs table {
+    font-size: 0.7rem;
+  }
+  .modal-logs table td,
+  .modal-logs table th {
+    padding: 6px 4px !important;
+  }
+}
