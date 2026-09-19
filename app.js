@@ -7,6 +7,29 @@
 let CONFIG = null;
 const API = 'https://griya-api.lintangglangitt.workers.dev';
 
+// ─── Visitor Tracking (hanya 1x per session) ──────────────
+(function trackVisitor() {
+  // Cek apakah sudah track di session ini
+  if (sessionStorage.getItem('ga_tracked')) return;
+  
+  // Kirim ping ke Worker
+  fetch(`${API}/track`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Path': window.location.pathname,
+    },
+    body: JSON.stringify({})
+  })
+  .then(() => {
+    sessionStorage.setItem('ga_tracked', '1');
+  })
+  .catch(err => {
+    // Silent fail — jangan ganggu user kalau tracking gagal
+    console.log('Tracking skip:', err.message);
+  });
+})();
+
 // ─── HELPER FUNCTIONS ──────────────────────────────────────────
 function formatRupiah(num) {
   if (typeof num !== 'number' || isNaN(num)) return '0';
