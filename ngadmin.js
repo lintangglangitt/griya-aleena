@@ -24,7 +24,7 @@ const PEMILIK = {
 // ─── Harga Default per Tipe Sewa ───────────────────────────
 // Sesuaikan nilainya dengan harga kos Anda
 const HARGA_DEFAULT = {
-  harian: 150000,       // sesuaikan
+  harian: 100000,       // sesuaikan
   mingguan: 500000,    // sesuaikan
   bulanan: 800000,
   semesteran: 4600000,
